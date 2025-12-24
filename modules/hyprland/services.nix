@@ -155,7 +155,7 @@ in
     home.activation.xdgDesktopWarning = mkIf (!isNixOS) (
       lib.hm.dag.entryAfter
         [
-          "writeBoundary"
+          "setupHomenixConfigFolder"
         ]
         ''
           echo "=========================="

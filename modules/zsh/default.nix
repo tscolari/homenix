@@ -31,7 +31,7 @@ in
 
   config = mkIf cfg.enable {
     home = {
-      activation.createZshAutoLoadFolder = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      activation.createZshAutoLoadFolder = lib.hm.dag.entryAfter [ "setupHomenixConfigFolder" ] ''
         mkdir -p ~/.config/zsh
       '';
     };

@@ -265,7 +265,7 @@ in
       };
     };
 
-    home.activation.cbtopCurrentThemeLink = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+    home.activation.cbtopCurrentThemeLink = lib.hm.dag.entryAfter [ "setupHomenixConfigFolder" ] ''
       mkdir -p ~/.config/btop/themes
       ln -sf ~/.config/homenix/current/theme/btop.theme ~/.config/btop/themes/current.theme
     '';

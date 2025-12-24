@@ -70,7 +70,7 @@ in
       '';
     };
 
-    home.activation.createUserManagedFolder = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    home.activation.createUserManagedFolder = lib.hm.dag.entryAfter [ "setupHomenixConfigFolder" ] ''
       mkdir -p ${cfg.userManagedFolder}
       if [ ! -f ${cfg.userManagedFolder}/theme.lua ]; then
         cat > ${cfg.userManagedFolder}/theme.lua << 'EOF'

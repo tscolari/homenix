@@ -4,6 +4,7 @@ with lib;
 
 {
   imports = [
+    ./setup.nix
     ./non-nixos-compat.nix
     ./firefox_profiles
     ./git
@@ -27,4 +28,5 @@ with lib;
   # pamShim is only enabled on non-nixos environments.
   # It's required to allow hyprlock to authenticate using the PAM.
   config.pamShim.enable = (!config.programs.homenix.isNixOS);
+
 }

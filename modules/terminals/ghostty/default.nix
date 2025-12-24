@@ -76,7 +76,7 @@ in
     };
 
     home.activation.setGhosttyDefaultTerminal = mkIf cfg.defaultTerminal (
-      lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      lib.hm.dag.entryAfter [ "setupHomenixConfigFolder" ] ''
         rm -rf ~/.config/xdg-terminals.list
         echo "com.mitchellh.ghostty.desktop" > ~/.config/xdg-terminals.list
       ''
