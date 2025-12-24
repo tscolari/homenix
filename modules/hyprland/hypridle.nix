@@ -38,11 +38,11 @@ in
           # runs hyprlock if it is not already running (this is always run when "loginctl lock-session" is called)
           lock_cmd = "pidof hyprlock || hyprlock";
 
-          # ensures that the session is locked before going to sleep
+          # kill hyprlock before suspend to avoid stale Wayland handles
           before_sleep_cmd = "loginctl lock-session";
 
-          # turn of screen after sleep (not strictly necessary, but just in case)
-          after_sleep_cmd = "hyprctl dispatch dpms on";
+          # after resume: wait for compositor to stabilize, turn on display, and lock the session
+          after_sleep_cmd = "sleep 2 && hyprctl dispatch dpms on && loginctl lock-session";
 
           # whether to ignore dbus-sent idle-inhibit requests (used by e.g. firefox or steam)
           ignore_dbus_inhibit = cfg.screenlock.ignoreInhibits;
