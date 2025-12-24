@@ -173,13 +173,12 @@ in
         nerd-fonts.caskaydia-mono
       ]
       ++ lib.optional (!cfg.skipFirefox) (nixGLWrapIfReq firefox)
-      ++ lib.optional (isNixOS) [
+      ++ lib.optionals (isNixOS) [
         xdg-desktop-portal
         xdg-desktop-portal-gtk
         gnome-keyring
       ];
-
-    # Rust / cargo:
+    # # Rust / cargo:
     # * bluetui
   };
 }
