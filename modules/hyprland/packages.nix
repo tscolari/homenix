@@ -18,16 +18,16 @@ let
 
   wifitui = pkgs.buildGoModule rec {
     pname = "wifitui";
-    version = "latest";
+    version = "v0.8.0";
 
     src = pkgs.fetchFromGitHub {
       owner = "shazow";
       repo = "wifitui";
-      rev = "main";
-      hash = "sha256-xFZ8NBK0rEaHuk4bH78owHNY6ZKDOzQv8Mhy0pGoEj0=";
+      rev = "v0.8.0";
+      hash = "sha256-JFs+7MDc0/hIDrefSRLWXurwJvvpR7LHJmCvmO1lpHA=";
     };
 
-    vendorHash = "sha256-znA4bsmPUQHWPXdBObbEKe+yK95SFJK+tbdOlx+oLsw=";
+    vendorHash = "sha256-SEQPc13cefzT8SyuD3UmNtTDgcrXUGTX54SBrnOHJJw=";
   };
 
 in
