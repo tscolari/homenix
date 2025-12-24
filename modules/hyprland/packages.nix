@@ -33,53 +33,50 @@ let
 in
 {
   config = mkIf cfg.enable {
-    home.packages = lib.mkMerge [
-      (
-        with pkgs;
-        [
-          # nm-tray
-          (nixGLWrapIfReq imv)
-          (nixGLWrapIfReq swaybg)
-          (nixGLWrapIfReq nwg-displays)
-          (nixGLWrapIfReq nwg-look)
-          (nixGLWrapIfReq quickshell)
-          (nixGLWrapIfReq hyprsunset)
-          (nixGLWrapIfReq swaynotificationcenter)
+    home.packages =
+      with pkgs;
+      [
+        # nm-tray
+        (nixGLWrapIfReq imv)
+        (nixGLWrapIfReq swaybg)
+        (nixGLWrapIfReq nwg-displays)
+        (nixGLWrapIfReq nwg-look)
+        (nixGLWrapIfReq quickshell)
+        (nixGLWrapIfReq hyprsunset)
+        (nixGLWrapIfReq swaynotificationcenter)
 
-          bc
-          bluetuith
-          bluez
-          brightnessctl
-          btop
-          calcure
-          cliphist
-          fastfetch
-          fcitx5
-          ffmpeg
-          fontconfig
-          grim
-          imagemagick
-          jq
-          khal
-          networkmanagerapplet
-          polkit
-          qt6Packages.qt6ct
-          slurp
-          # swappy
-          swayosd
-          uwsm
-          wallust
-          wifitui
-          wiremix
-          wl-clipboard
-          xdg-terminal-exec
-        ]
-        ++ optionals (isNixOS) [
-          xdg-desktop-portal
-          xdg-desktop-portal-gtk
-          xdg-desktop-portal-hyprland
-        ]
-      )
-    ];
+        bc
+        bluetuith
+        bluez
+        brightnessctl
+        btop
+        calcure
+        cliphist
+        fastfetch
+        fcitx5
+        ffmpeg
+        fontconfig
+        grim
+        imagemagick
+        jq
+        khal
+        networkmanagerapplet
+        polkit
+        qt6Packages.qt6ct
+        slurp
+        # swappy
+        swayosd
+        uwsm
+        wallust
+        wifitui
+        wiremix
+        wl-clipboard
+        xdg-terminal-exec
+      ]
+      ++ optionals (isNixOS) [
+        xdg-desktop-portal
+        xdg-desktop-portal-gtk
+        xdg-desktop-portal-hyprland
+      ];
   };
 }
