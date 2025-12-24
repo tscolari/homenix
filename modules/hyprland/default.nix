@@ -35,6 +35,13 @@ in
       default = 600;
       description = "Timeout to lock the screen (in seconds)";
     };
+
+    wallustPalette = mkOption {
+      type = types.str;
+      default = "dark16";
+      description = "Color palette to use: dark, dark16, harddark, harddark16, light, light16, softdark, softdark16, softlight, softlight16";
+    };
+
   };
 
   imports = [
@@ -47,6 +54,7 @@ in
     ./swaync.nix
     ./swayosd.nix
     ./uwsm.nix
+    ./wallust.nix
     ./waybar.nix
     ./wlogout.nix
   ];

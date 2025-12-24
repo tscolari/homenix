@@ -14,341 +14,81 @@ let
 in
 {
   config = mkIf cfg.enable {
-    programs.waybar = {
+    programs.wallust = {
       enable = true;
-      package = (nixGLWrapIfReq pkgs.waybar);
-
-      # Only enable for NixOS.
-      # On non-nixos it will be started in services.nix with a proper nixGL wrapper.
-      # BUG: waybar systemd unit won't use the `package` set.
-      systemd = {
-        enable = isNixOS;
-        target = "graphical-session.target";
-      };
 
       settings = {
-        mainBar = {
-          "include" = [
-            # "$HOME/.config/waybar/Modules"
-            # "$HOME/.config/waybar/ModulesWorkspaces"
-            # "$HOME/.config/waybar/ModulesCustom"
-            # "$HOME/.config/waybar/ModulesGroups"
-            # "$HOME/.config/waybar/UserModules"
-          ];
-          "reload_style_on_change" = true;
-          "layer" = "top";
-          "position" = "top";
-          "spacing" = 0;
-          "height" = 26;
-          "modules-left" = [
-            "hyprland/workspaces"
-          ];
-          "modules-center" = [
-            "group/notify"
-            "custom/separator#blank_2"
-            "custom/calendar-clock"
-            "custom/screenrecording-indicator"
-            "custom/separator#blank_2"
-            "custom/weather"
-          ];
-          "modules-right" = [
-            "group/tray-expander"
-            "bluetooth"
-            "network"
-            "pulseaudio"
-            "cpu"
-            "battery"
-          ];
-          "hyprland/workspaces" = {
-            "on-click" = "activate";
-            "format" = "{icon}";
-            "format-icons" = {
-              "default" = "";
-              "1" = "1";
-              "2" = "2";
-              "3" = "3";
-              "4" = "4";
-              "5" = "5";
-              "6" = "6";
-              "7" = "7";
-              "8" = "8";
-              "9" = "9";
-              "10" = "0";
-              "active" = "󱓻";
-            };
-            "persistent-workspaces" = {
-              "1" = [ ];
-              "2" = [ ];
-              "3" = [ ];
-              "4" = [ ];
-              "5" = [ ];
-            };
-          };
-          # "custom/update" = {
-          #   "format" = "";
-          #   "exec" = "omarchy-update-available";
-          #   "on-click" = "omarchy-launch-floating-terminal-with-presentation omarchy-update";
-          #   "tooltip-format" = "Omarchy update available";
-          #   "signal" = 7;
-          #   "interval" = 21600;
-          # };
+        # /* ---- 💫 https://github.com/JaKooLit 💫 ---- */  #
+        # wallust configuration - for wallust version 3.0
 
-          "cpu" = {
-            "interval" = 5;
-            "format" = "󰍛";
-            "on-click" = "${config.home.homeDirectory}/.config/homenix/bin/launch-or-focus-tui btop";
-          };
+        # How the image is parse, in order to get the colors:
+        # full - resized - wal - thumb -  fastresize - kmeans
+        backend = "kmeans";
 
-          "group/notify" = {
-            "orientation" = "inherit";
-            "drawer" = {
-              "transition-duration" = 500;
-              "children-class" = "custom/swaync";
-              "transition-left-to-right" = false;
-            };
-            "modules" = [
-              "custom/swaync"
-              "custom/dot_update"
-            ];
-          };
+        # What color space to use to produce and select the most prominent colors:
+        # lab - labmixed - lch - lchmixed
+        color_space = "labmixed";
 
-          "custom/swaync" = {
-            "tooltip" = true;
-            "tooltip-format" = "Left Click= Launch Notification Center\nRight Click= Do not Disturb";
-            "format" = "{} {icon} ";
-            "format-icons" = {
-              "notification" = "<span foreground='red'><sup></sup></span>";
-              "none" = "";
-              "dnd-notification" = "<span foreground='red'><sup></sup></span>";
-              "dnd-none" = "";
-              "inhibited-notification" = "<span foreground='red'><sup></sup></span>";
-              "inhibited-none" = "";
-              "dnd-inhibited-notification" = "<span foreground='red'><sup></sup></span>";
-              "dnd-inhibited-none" = "";
-            };
-            "return-type" = "json";
-            "exec-if" = "which swaync-client";
-            "exec" = "swaync-client -swb";
-            "on-click" = "sleep 0.1 && swaync-client -t -sw";
-            "on-click-right" = "swaync-client -d -sw";
-            "escape" = true;
-          };
+        # NOTE: All filters will fill 16 colors (from color0 to color15), 16 color
+        #       variations are the "ilusion" of more colors by opaquing color1 to color5.
+        # Use the most prominent colors in a way that makes sense, a scheme:
+        #  * dark        - 8 dark colors, dark background and light contrast
+        #  * dark16      - Same as `dark` but uses the 16 colors trick
+        #  * harddark    - Same as `dark` with hard hue colors
+        #  * harddark16  - Harddark with 16 color variation
+        #  * light       - Light bg, dark fg
+        #  * light16     - Same as `light` but uses the 16 color trick
+        #  * softdark    - Variant of softlight, uses the lightest colors and a dark
+        #                   background (could be interpreted as `dark` inversed)
+        #  * softdark16  - softdark with 16 color variation
+        #  * softlight   - Light with soft pastel colors, counterpart of `harddark`
+        #  * softlight16 - softlight with 16 color variation
+        palette = cfg.wallustPalette;
 
-          "custom/calendar-clock" = {
-            "exec" = "${config.home.homeDirectory}/.config/hypr/scripts/calendar_clock.sh";
-            "return-type" = "json";
-            "interval" = 3;
-            "on-click" =
-              "swaync-client -cp && ${config.home.homeDirectory}/.config/homenix/bin/launch-floating ${config.home.homeDirectory}/.config/homenix/bin/launch-or-focus-tui calcure";
-          };
+        # Difference between similar colors, used by the colorspace:
+        #  1          Not perceptible by human eyes.
+        #  1 - 2      Perceptible through close observation.
+        #  2 - 10     Perceptible at a glance.
+        #  11 - 49    Colors are more similar than opposite
+        #  100        Colors are exact opposite
+        threshold = 11;
 
-          "custom/weather" = {
-            "format" = "{}";
-            "format-alt" = "{alt}= {}";
-            "format-alt-click" = "click";
-            "interval" = 3600;
-            "return-type" = "json";
-            "exec" = "${config.home.homeDirectory}/.config/hypr/scripts/weather.sh";
-            "tooltip" = true;
-          };
+        templates = {
+          cava.template = "colors-cava";
+          cava.target = "~/.config/cava/config";
 
-          "network" = {
-            "format-icons" = [
-              "󰤯"
-              "󰤟"
-              "󰤢"
-              "󰤥"
-              "󰤨"
-            ];
-            "format" = "{icon}";
-            "format-wifi" = "{icon}";
-            "format-ethernet" = "󰀂";
-            "format-disconnected" = "󰤮";
-            "tooltip-format-wifi" = "{essid} ({frequency} GHz)\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
-            "tooltip-format-ethernet" = "⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}";
-            "tooltip-format-disconnected" = "Disconnected";
-            "interval" = 3;
-            "spacing" = 1;
-            "on-click" = "${config.home.homeDirectory}/.config/homenix/bin/launch-or-focus-tui wifitui";
-          };
-          "battery" = {
-            "format" = "{capacity}% {icon}";
-            "format-discharging" = "{icon}";
-            "format-charging" = "{icon}";
-            "format-plugged" = "";
-            "format-icons" = {
-              "charging" = [
-                "󰢜"
-                "󰂆"
-                "󰂇"
-                "󰂈"
-                "󰢝"
-                "󰂉"
-                "󰢞"
-                "󰂊"
-                "󰂋"
-                "󰂅"
-              ];
-              "default" = [
-                "󰁺"
-                "󰁻"
-                "󰁼"
-                "󰁽"
-                "󰁾"
-                "󰁿"
-                "󰂀"
-                "󰂁"
-                "󰂂"
-                "󰁹"
-              ];
-            };
-            "format-full" = "󰂅";
-            "tooltip-format-discharging" = "{power=>1.0f}W↓ {capacity}%";
-            "tooltip-format-charging" = "{power=>1.0f}W↑ {capacity}%";
-            "interval" = 5;
-            "on-click" = "${config.home.homeDirectory}/.config/hypr/scripts/power_menu.sh";
-            "states" = {
-              "warning" = 20;
-              "critical" = 10;
-            };
-          };
-          "bluetooth" = {
-            "format" = "";
-            "format-disabled" = "󰂲";
-            "format-connected" = "󰂱";
-            "format-no-controller" = "";
-            "tooltip-format" = "Devices connected= {num_connections}";
-            "on-click" = "${config.home.homeDirectory}/.config/homenix/bin/launch-or-focus-tui bluetui";
-          };
-          "pulseaudio" = {
-            "format" = "{icon}";
-            "on-click" =
-              "${config.home.homeDirectory}/.config/homenix/bin/launch-floating /home/tiagoscolari/.config/homenix/bin/launch-or-focus-tui wiremix";
-            "on-click-right" = "pamixer -t";
-            "tooltip-format" = "Playing at {volume}%";
-            "scroll-step" = 5;
-            "format-muted" = "";
-            "format-icons" = {
-              "default" = [
-                ""
-                ""
-                ""
-              ];
-            };
-          };
-          "group/tray-expander" = {
-            "orientation" = "inherit";
-            "drawer" = {
-              "transition-duration" = 600;
-              "children-class" = "tray-group-item";
-            };
-            "modules" = [
-              "custom/expand-icon"
-              "tray"
-            ];
-          };
-          "custom/expand-icon" = {
-            "format" = "";
-            "tooltip" = false;
-          };
-          # "custom/screenrecording-indicator" = {
-          #   "on-click" = "omarchy-cmd-screenrecord";
-          #   "exec" = "$OMARCHY_PATH/default/waybar/indicators/screen-recording.sh";
-          #   "signal" = 8;
-          #   "return-type" = "json";
-          # };
-          "tray" = {
-            "icon-size" = 12;
-            "spacing" = 17;
-          };
+          hypr.template = "colors-hyprland.conf";
+          hypr.target = "~/.config/hypr/wallust/wallust-hyprland.conf";
+
+          rofi.template = "colors-rofi.rasi";
+          rofi.target = "~/.config/rofi/wallust/colors-rofi.rasi";
+
+          waybar.template = "colors-waybar.css";
+          waybar.target = "~/.config/waybar/wallust/colors-waybar.css";
+
+          kitty.template = "colors-kitty.conf";
+          kitty.target = "~/.config/kitty/kitty-themes/01-Wallust.conf";
+
+          quickshell.template = "qml_color.json";
+          quickshell.target = "~/.config/quickshell/qml_color.json";
+
+          swaync.template = "colors-swaync.css";
+          swaync.target = "~/.config/swaync/wallust/colors-wallust.css";
+
+          #macchina.template = "colors-macchina.toml";
+          #macchina.target = "~/.config/macchina/themes/wallust.toml";
+
+          #wezterm.template = "colors-wezterm.toml";
+          #wezterm.target = "~/.config/wezterm/colors/wallust.toml";
+
+          #zathura.template = "colors-zathura";
+          #zathura.target = "~/.config/zathura/zathurarc";
         };
       };
+    };
 
-      style = ''
-        @import "${config.home.homeDirectory}/.config/homenix/current/theme/waybar.css";
-
-        * {
-          background-color: @background;
-          color: @foreground;
-
-          border: none;
-          border-radius: 0;
-          min-height: 0;
-          font-family: 'JetBrainsMono Nerd Font';
-          font-size: 12px;
-        }
-
-        .modules-left {
-          margin-left: 8px;
-        }
-
-        .modules-right {
-          margin-right: 8px;
-        }
-
-        #workspaces button {
-          all: initial;
-          padding: 0 6px;
-          margin: 0 1.5px;
-          min-width: 9px;
-        }
-
-        #workspaces button.empty {
-          opacity: 0.5;
-        }
-
-        #cpu,
-        #battery,
-        #pulseaudio,
-        #custom-omarchy,
-        #custom-screenrecording-indicator,
-        #custom-update {
-          min-width: 12px;
-          margin: 0 7.5px;
-        }
-
-        #tray {
-          margin-right: 16px;
-        }
-
-        #bluetooth {
-          margin-right: 17px;
-        }
-
-        #network {
-          margin-right: 13px;
-        }
-
-        #custom-expand-icon {
-          margin-right: 18px;
-        }
-
-        tooltip {
-          padding: 2px;
-        }
-
-        #custom-update {
-          font-size: 10px;
-        }
-
-        #clock {
-          margin-left: 8.75px;
-        }
-
-        .hidden {
-          opacity: 0;
-        }
-
-        #custom-screenrecording-indicator {
-          min-width: 12px;
-          margin-left: 8.75px;
-          font-size: 10px;
-        }
-
-        #custom-screenrecording-indicator.active {
-          color: #a55555;
-        }
-      '';
+    home.file = {
+      ".config/wallust/templates".source = ../../configs/wallust/templates;
     };
   };
 }
