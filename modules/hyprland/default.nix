@@ -52,12 +52,16 @@ in
   ];
 
   config = mkIf cfg.enable {
-    # wayland.windowManager.hyprland = {
-    #   enable = true;
-    #   package = (nixGLWrapIfReq pkgs.hyprland);
-    #
-    #   xwayland.enable = true;
-    #   systemd.enable = !cfg.useUWSM;
-    # };
+    wayland.windowManager.hyprland = {
+      enable = true;
+      package = (nixGLWrapIfReq pkgs.hyprland);
+
+      xwayland.enable = true;
+      # systemd.enable = !cfg.useUWSM;
+
+      settings = {
+        source = "hyprland_main.conf";
+      };
+    };
   };
 }
