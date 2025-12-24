@@ -45,6 +45,7 @@ in
     ./services.nix
     ./settings
     ./swaync.nix
+    ./swayosd.nix
     ./uwsm.nix
     ./waybar.nix
     ./wlogout.nix

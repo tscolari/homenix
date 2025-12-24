@@ -65,7 +65,6 @@ in
         qt6Packages.qt6ct
         slurp
         # swappy
-        swayosd
         uwsm
         wallust
         wifitui

@@ -98,7 +98,7 @@ in
           PartOf = [ "graphical-session.target" ];
         };
         Service = {
-          ExecStart = "${pkgs.swaybg}/bin/swaybg -i %h/.config/homenix/current/background -m fill";
+          ExecStart = "${nixGLWrapIfReq pkgs.swaybg}/bin/swaybg -i %h/.config/homenix/current/background -m fill";
           Restart = "on-failure";
         };
         Install = {
