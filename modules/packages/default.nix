@@ -27,6 +27,10 @@ in
     skipFirefox = mkEnableOption "skips installatio of firefox";
   };
 
+  imports = [
+    ./btop.nix
+  ];
+
   config = mkIf cfg.enable {
     home.packages =
       with pkgs;
@@ -178,6 +182,7 @@ in
         xdg-desktop-portal-gtk
         gnome-keyring
       ];
+
     # # Rust / cargo:
     # * bluetui
   };
