@@ -1,0 +1,40 @@
+#!/bin/bash
+# UWSM Session Environment Configuration
+# This file is sourced when the UWSM session starts
+
+# Add Omarchy PATHs to ensure compatibility
+export OMARCHY_PATH=$HOME/.local/share/omarchy
+export PATH=$OMARCHY_PATH/bin:$PATH
+
+# Add tiagoland scripts to PATH
+export TIAGOLAND_PATH="$HOME/.config/tiagoland"
+export PATH="$TIAGOLAND_PATH/scripts/tools:$PATH"
+
+# Nix profile paths
+export PATH="${HOME}/.nix-profile/bin:/nix/var/nix/profiles/default/bin:/nix/var/nix/profiles/default/share/go/bin:${HOME}/.nix-profile/share/go/bin:${PATH}"
+
+# Go path
+export PATH="${HOME}/go/bin:$PATH"
+
+# Wayland environment
+export XDG_CURRENT_DESKTOP=Hyprland
+export XDG_SESSION_TYPE=wayland
+export XDG_SESSION_DESKTOP=Hyprland
+
+# Backend preferences
+export GDK_BACKEND=wayland,x11
+export QT_QPA_PLATFORM=wayland;xcb
+export SDL_VIDEODRIVER=wayland
+export CLUTTER_BACKEND=wayland
+
+# QT theme
+export QT_QPA_PLATFORMTHEME=qt6ct
+
+# Cursor theme
+export XCURSOR_THEME=Adwaita
+export XCURSOR_SIZE=24
+
+# Source user defaults
+if [ -f "$HOME/.config/uwsm/default" ]; then
+    source "$HOME/.config/uwsm/default"
+fi

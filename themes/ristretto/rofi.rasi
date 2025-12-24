@@ -1,0 +1,13 @@
+/**
+ * Ristretto - Rofi Color Scheme
+ * Based on Monokai Pro (Filter Ristretto)
+ **/
+
+* {
+    background:     #2C2525FF;
+    background-alt: #3D2F2AFF;
+    foreground:     #E6D9DBFF;
+    selected:       #F9CC6CFF;
+    active:         #ADDA78FF;
+    urgent:         #FD6883FF;
+}

@@ -1,0 +1,13 @@
+/**
+ * Matte Black - Rofi Color Scheme
+ * By tahayvr - Minimalist dark theme
+ **/
+
+* {
+    background:     #121212FF;
+    background-alt: #333333FF;
+    foreground:     #BEBEFEFF;
+    selected:       #F59E0BFF;
+    active:         #FFC107FF;
+    urgent:         #D35F5FFF;
+}

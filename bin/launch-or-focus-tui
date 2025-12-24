@@ -1,0 +1,16 @@
+#!/bin/bash
+
+if (($# == 0)); then
+  echo "Usage: launch-or-focus-tui <command> [args...]"
+  exit 1
+fi
+
+APP_ID="org.homenix.$(basename $1)"
+WINDOW_ADDRESS=$(hyprctl clients -j | jq -r --arg p "$APP_ID" '.[]|select((.class|test("\\b" + $p + "\\b";"i")) or (.title|test("\\b" + $p + "\\b";"i")))|.address' | head -n1)
+
+if [[ -n $WINDOW_ADDRESS ]]; then
+  hyprctl dispatch focuswindow "address:$WINDOW_ADDRESS"
+else
+  # exec setsid uwsm-app -- xdg-terminal-exec --app-id="$APP_ID" -e "$1" "${@:2}"
+  exec xdg-terminal-exec --app-id="$APP_ID" -e "$1" "${@:2}"
+fi

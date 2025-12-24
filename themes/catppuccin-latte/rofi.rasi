@@ -1,0 +1,13 @@
+/**
+ * Catppuccin Latte - Rofi Color Scheme
+ * Based on https://github.com/catppuccin/catppuccin
+ **/
+
+* {
+    background:     #EFF1F5FF;
+    background-alt: #BCC0CCFF;
+    foreground:     #4C4F69FF;
+    selected:       #1E66F5FF;
+    active:         #40A02BFF;
+    urgent:         #D20F39FF;
+}

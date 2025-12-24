@@ -1,0 +1,12 @@
+/**
+ * Ethereal - Rofi Color Scheme
+ **/
+
+* {
+    background:     #060B1EFF;
+    background-alt: #6D7DB6FF;
+    foreground:     #FFCEADFF;
+    selected:       #7D82D9FF;
+    active:         #92A593FF;
+    urgent:         #ED5B5AFF;
+}

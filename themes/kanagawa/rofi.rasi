@@ -1,0 +1,13 @@
+/**
+ * Kanagawa Wave - Rofi Color Scheme
+ * Based on https://github.com/rebelot/kanagawa.nvim
+ **/
+
+* {
+    background:     #1F1F28FF;
+    background-alt: #223249FF;
+    foreground:     #DCD7BAFF;
+    selected:       #7E9CD8FF;
+    active:         #98BB6CFF;
+    urgent:         #C34043FF;
+}

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+if (($# < 2)); then
+  echo "Usage: launch-floating <launcher-script> <command> [args...]"
+  exit 1
+fi
+
+LAUNCHER="$1"
+shift
+
+APP_ID="org.homenix.$(basename $1)"
+
+hyprctl keyword windowrulev2 "float,class:^${APP_ID}$"
+
+exec "$LAUNCHER" "$@"

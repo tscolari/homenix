@@ -1,0 +1,13 @@
+/**
+ * Osaka Jade - Rofi Color Scheme
+ * Ocean green dark theme
+ **/
+
+* {
+    background:     #111C18FF;
+    background-alt: #23372BFF;
+    foreground:     #C1C497FF;
+    selected:       #2DD5B7FF;
+    active:         #549E6AFF;
+    urgent:         #FF5345FF;
+}

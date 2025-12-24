@@ -1,0 +1,10 @@
+#!/bin/bash
+# User Default Applications and Preferences
+
+# Terminal and editor
+export TERMINAL=xdg-terminal-exec
+export EDITOR=nvim
+export VISUAL=nvim
+
+# Tiagoland configuration path
+export TIAGOLAND_CONFIG="$HOME/.config/tiagoland"
