@@ -148,8 +148,6 @@ in
         (nixGLWrapIfReq _1password-gui)
         (nixGLWrapIfReq cameractrls-gtk4)
         (nixGLWrapIfReq evince)
-        (nixGLWrapIfReq ghostty)
-        (nixGLWrapIfReq kitty)
         (nixGLWrapIfReq obsidian)
         (nixGLWrapIfReq satty)
         (nixGLWrapIfReq slack)

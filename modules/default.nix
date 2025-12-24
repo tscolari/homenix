@@ -11,6 +11,7 @@ with lib;
     ./hyprland
     ./nvim
     ./packages
+    ./terminals
     ./tmux
     ./zsh
   ];
@@ -23,5 +24,7 @@ with lib;
     };
   };
 
+  # pamShim is only enabled on non-nixos environments.
+  # It's required to allow hyprlock to authenticate using the PAM.
   config.pamShim.enable = (!config.programs.homenix.isNixOS);
 }
