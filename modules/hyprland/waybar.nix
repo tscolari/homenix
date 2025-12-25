@@ -264,6 +264,38 @@ in
             "icon-size" = 12;
             "spacing" = 17;
           };
+
+          # Separators
+          "custom/separator#dot" = {
+            "format" = "";
+            "interval" = "once";
+            "tooltip" = false;
+          };
+          "custom/separator#dot-line" = {
+            "format" = "";
+            "interval" = "once";
+            "tooltip" = false;
+          };
+          "custom/separator#line" = {
+            "format" = "|";
+            "interval" = "once";
+            "tooltip" = false;
+          };
+          "custom/separator#blank" = {
+            "format" = "";
+            "interval" = "once";
+            "tooltip" = false;
+          };
+          "custom/separator#blank_2" = {
+            "format" = "  ";
+            "interval" = "once";
+            "tooltip" = false;
+          };
+          "custom/separator#blank_3" = {
+            "format" = "   ";
+            "interval" = "once";
+            "tooltip" = false;
+          };
         };
       };
 
