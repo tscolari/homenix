@@ -9,7 +9,7 @@ with lib;
 
 let
 
-  cfg = config.programs.homenix.nvim;
+  enabled = (config.programs.homenix.enable && config.programs.homenix.nvim.enable);
 
   grammarPackages = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
     c
@@ -67,7 +67,7 @@ let
 
 in
 {
-  config = mkIf cfg.enable {
+  config = mkIf enabled {
     # programs.nixvim = {
     #   extraConfigLua = ''
     #     require('nvim-ts-autotag').setup()

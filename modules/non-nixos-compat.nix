@@ -26,7 +26,7 @@ let
 
 in
 {
-  config = mkIf isNonNixOS {
+  config = mkIf (config.programs.homenix.enable && isNonNixOS) {
     home.sessionVariables = {
       # Ensure system XDG data dirs are included (for portals, icons, themes, etc.)
       XDG_DATA_DIRS = mkForce (

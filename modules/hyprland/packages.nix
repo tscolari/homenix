@@ -32,7 +32,7 @@ let
 
 in
 {
-  config = mkIf cfg.enable {
+  config = mkIf (config.programs.homenix.enable && cfg.enable) {
     home.packages =
       with pkgs;
       [

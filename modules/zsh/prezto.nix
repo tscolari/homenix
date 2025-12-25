@@ -12,7 +12,7 @@ let
 
 in
 {
-  config = mkIf cfg.enable {
+  config = mkIf (config.programs.homenix.enable && cfg.enable) {
     programs.zsh = {
       prezto = {
         enable = true;

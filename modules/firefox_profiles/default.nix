@@ -13,25 +13,29 @@ let
 
   cfg = config.programs.homenix.firefox_profiles;
 
-  firefoxBin = "${cfg.package}/bin/firefox";
+  firefoxBin = "${config.programs.homenix.firefox_profiles.package}/bin/firefox";
 
 in
 {
 
   options.programs.homenix.firefox_profiles = {
-    enable = mkEnableOption "homenix git configuration";
+    enable = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Enable firefox work/personal profiles desktop files";
+    };
 
     package = mkOption {
       type = types.package;
-      default = (nixGLWrapIfReq pkgs.firefox);
+      default = pkgs.firefox;
       description = "Firefox package";
     };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf (config.programs.homenix.enable && cfg.enable) {
     home = {
       packages = [
-        cfg.package
+        (nixGLWrapIfReq cfg.package)
       ];
 
       file = {

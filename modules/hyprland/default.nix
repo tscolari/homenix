@@ -16,7 +16,11 @@ let
 in
 {
   options.programs.homenix.hyprland = {
-    enable = mkEnableOption "homenix hyprland configuration";
+    enable = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Enable Hyprland Configuration";
+    };
 
     useUWSM = mkOption {
       type = types.bool;
@@ -59,7 +63,7 @@ in
     ./wlogout.nix
   ];
 
-  config = mkIf cfg.enable {
+  config = mkIf (config.programs.homenix.enable && cfg.enable) {
     wayland.windowManager.hyprland = {
       enable = true;
       package = (nixGLWrapIfReq pkgs.hyprland);

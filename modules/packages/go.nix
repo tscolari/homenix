@@ -32,7 +32,7 @@ let
 in
 
 {
-  config = mkIf cfg.enable {
+  config = mkIf (cfg.enable && config.programs.homenix.enable) {
     home.packages = [
       godevmcp
     ];

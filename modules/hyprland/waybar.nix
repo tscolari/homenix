@@ -10,13 +10,14 @@ with lib;
 let
 
   cfg = config.programs.homenix.hyprland;
+
   isNixOS = config.programs.homenix.isNixOS;
 
   nixGLWrapIfReq = pkg: if config.lib ? nixGL then config.lib.nixGL.wrap pkg else pkg;
 
 in
 {
-  config = mkIf cfg.enable {
+  config = mkIf (config.programs.homenix.enable && cfg.enable) {
     programs.waybar = {
       enable = true;
       package = (nixGLWrapIfReq pkgs.waybar);

@@ -13,7 +13,7 @@ let
 
 in
 {
-  config = mkIf cfg.enable {
+  config = mkIf (config.programs.homenix.enable && cfg.enable) {
     gtk = {
       cursorTheme = {
         name = "Numix-Cursor";

@@ -8,11 +8,11 @@ with lib;
 
 let
 
-  cfg = config.programs.homenix.nvim;
+  enabled = (config.programs.homenix.enable && config.programs.homenix.nvim.enable);
 
 in
 {
-  config = mkIf cfg.enable {
+  config = mkIf enabled {
     programs.nixvim = {
       globals = {
         "incsearch#auto_nohlsearch" = 0;

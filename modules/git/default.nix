@@ -15,7 +15,11 @@ in
 {
 
   options.programs.homenix.git = {
-    enable = mkEnableOption "homenix git configuration";
+    enable = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Enable Git Configuration";
+    };
 
     githubUser = mkOption {
       type = types.str;
@@ -34,7 +38,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf (config.programs.homenix.enable && cfg.enable) {
     home = {
       sessionVariables = {
         GIT_DUET_GLOBAL = "true";

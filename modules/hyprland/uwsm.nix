@@ -12,7 +12,7 @@ let
 
 in
 {
-  config = mkIf cfg.enable {
+  config = mkIf (config.programs.homenix.enable && cfg.enable) {
     xdg.configFile = mkIf cfg.useUWSM {
       "uwsm/env".text = ''
         if [ -e "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh" ]; then

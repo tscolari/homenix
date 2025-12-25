@@ -14,7 +14,7 @@ let
 in
 {
 
-  config = mkIf cfg.enable {
+  config = mkIf (config.programs.homenix.enable && cfg.enable) {
     home = {
       sessionVariables = rec {
         PATH = "$HOME/.local/bin:$HOME/.npm-packages/bin:$PATH";

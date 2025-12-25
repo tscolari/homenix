@@ -20,7 +20,11 @@ in
   ];
 
   options.programs.homenix.zsh = {
-    enable = mkEnableOption "homenix zsh configuration";
+    enable = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Enable zsh Configurations";
+    };
 
     extraConfig = mkOption {
       type = types.lines;
@@ -29,7 +33,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf (config.programs.homenix.enable && cfg.enable) {
     home = {
       activation.createZshAutoLoadFolder = lib.hm.dag.entryAfter [ "setupHomenixConfigFolder" ] ''
         mkdir -p ~/.config/zsh

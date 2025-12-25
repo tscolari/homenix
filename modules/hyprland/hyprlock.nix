@@ -20,7 +20,7 @@ let
 
 in
 {
-  config = mkIf cfg.enable {
+  config = mkIf (config.programs.homenix.enable && cfg.enable) {
     programs.hyprlock = {
       enable = true;
       package = (nixGLWrapIfReq (pamShimPkg pkgs.hyprlock));

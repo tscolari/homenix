@@ -14,7 +14,11 @@ let
 in
 {
   options.programs.homenix.gnome = {
-    enable = mkEnableOption "homenix gnome configuration";
+    enable = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Enable GNOME Configuration";
+    };
 
     accentColor = mkOption {
       default = "blue";
@@ -44,7 +48,7 @@ in
     ./keybindings.nix
   ];
 
-  config = mkIf cfg.enable {
+  config = mkIf (config.programs.homenix.enable && cfg.enable) {
     home = {
       packages = with pkgs; [
         desktop-file-utils

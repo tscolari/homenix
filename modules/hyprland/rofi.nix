@@ -15,7 +15,7 @@ let
 
 in
 {
-  config = mkIf cfg.enable {
+  config = mkIf (config.programs.homenix.enable && cfg.enable) {
     programs.rofi = {
       enable = true;
       package = (nixGLWrapIfReq pkgs.rofi);

@@ -15,7 +15,11 @@ in
 
 {
   options.programs.homenix.terminals = {
-    enable = mkEnableOption "homenix terminals configuration";
+    enable = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Enable Termoinal Configurations";
+    };
   };
 
   imports = [

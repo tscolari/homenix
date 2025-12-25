@@ -11,7 +11,7 @@ let
 
   customPlugins = import ./custom.nix { inherit pkgs; };
 
-  cfg = config.programs.homenix.nvim;
+  enabled = (config.programs.homenix.enable && config.programs.homenix.nvim.enable);
 
 in
 {
@@ -29,7 +29,7 @@ in
     ./ui.nix
   ];
 
-  config = mkIf cfg.enable {
+  config = mkIf enabled {
     programs.nixvim = {
 
       plugins = {

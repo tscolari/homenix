@@ -14,7 +14,11 @@ let
 in
 {
   options.programs.homenix.tmux = {
-    enable = mkEnableOption "homenix git configuration";
+    enable = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Enable Tmux Configurations";
+    };
 
     extraConfig = mkOption {
       type = types.lines;
@@ -23,7 +27,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf (config.programs.homenix.enable && cfg.enable) {
     programs.tmux = {
       enable = true;
 

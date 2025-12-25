@@ -10,7 +10,7 @@ in
 {
   imports = [ ];
 
-  config = mkIf cfg.enable {
+  config = mkIf (config.programs.homenix.enable && cfg.enable) {
     home = {
       file = {
         ".config/hypr/animations".source = ../../../configs/hypr/animations;

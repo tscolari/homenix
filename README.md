@@ -37,31 +37,33 @@ and still be fully compatible with my original NixOS configuration/machine.
 
         {
             programs.homenix = {
-
+              enable = true;
               isNixOS = false; # If using on non-nixos (defaults to true)
 
-              git = {
-                enable = true;
-                name = "Your commit name";
-                email = "git@example.com";
-                githubUser = "example";
-              };
+              enableAllByDefault = true; # (true by default)
 
-              firefox_profiles = {
-                enable = true;
-                package = pkgs.unstable.firefox;
-              };
+              # git = {
+              #   enable = true;
+              #   name = "Your commit name";
+              #   email = "git@example.com";
+              #   githubUser = "example";
+              # };
 
-              packages = {
-                enable = true;
-                skipFirefox = true;
-              };
+              # firefox_profiles = {
+              #   enable = true;
+              #   package = pkgs.unstable.firefox;
+              # };
 
-              tmux.enable = true;
-              zsh.enable = true;
+              # packages = {
+              #   enable = true;
+              #   skipFirefox = true;
+              # };
 
-              hyprland.enable = true;
-              nvim.enable = true;
+              # tmux.enable = true;
+              # zsh.enable = true;
+
+              # hyprland.enable = true;
+              # nvim.enable = true;
             };
         }
 

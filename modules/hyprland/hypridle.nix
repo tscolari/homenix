@@ -11,8 +11,6 @@ let
 
   cfg = config.programs.homenix.hyprland;
 
-  nixGLWrapIfReq = pkg: if config.lib ? nixGL then config.lib.nixGL.wrap pkg else pkg;
-
 in
 {
   options.programs.homenix.hyprland.screenlock = {
@@ -29,7 +27,7 @@ in
     };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf (config.programs.homenix.enable && cfg.enable) {
     services.hypridle = {
       enable = true;
 

@@ -10,7 +10,7 @@ let
   cfg = config.programs.homenix.zsh;
 in
 {
-  config = mkIf cfg.enable {
+  config = mkIf (config.programs.homenix.enable && cfg.enable) {
     programs.fzf = {
       enable = true;
       enableZshIntegration = true;

@@ -10,6 +10,7 @@ with lib;
 let
 
   cfg = config.programs.homenix.packages;
+
   isNixOS = config.programs.homenix.isNixOS;
 
   nixGLWrapIfReq = pkg: if config.lib ? nixGL then config.lib.nixGL.wrap pkg else pkg;
@@ -22,7 +23,11 @@ in
 
 {
   options.programs.homenix.packages = {
-    enable = mkEnableOption "install homenix additional packages";
+    enable = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Enable Additional Packages";
+    };
 
     skipFirefox = mkEnableOption "skips installatio of firefox";
   };
@@ -33,7 +38,7 @@ in
     ./rust.nix
   ];
 
-  config = mkIf cfg.enable {
+  config = mkIf (cfg.enable && config.programs.homenix.enable) {
     programs.direnv = {
       enable = true;
       nix-direnv.enable = true;

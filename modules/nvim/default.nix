@@ -9,11 +9,16 @@ with lib;
 let
 
   cfg = config.programs.homenix.nvim;
+  enabled = (config.programs.homenix.enable && config.programs.homenix.nvim.enable);
 
 in
 {
   options.programs.homenix.nvim = {
-    enable = mkEnableOption "homenix gnome configuration";
+    enable = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Enable Neovim Configuration";
+    };
 
     userManagedFolder = mkOption {
       default = "~/.config/nvim/user";
@@ -33,7 +38,7 @@ in
     ./spelling.nix
   ];
 
-  config = mkIf cfg.enable {
+  config = mkIf enabled {
     programs.nixvim = {
       enable = true;
       defaultEditor = true;

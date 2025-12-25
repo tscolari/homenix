@@ -15,7 +15,7 @@ let
 
 in
 {
-  config = mkIf cfg.enable {
+  config = mkIf (config.programs.homenix.enable && cfg.enable) {
     home.file = {
       ".config/homenix/swaync".source = ../../configs/swaync;
     };
