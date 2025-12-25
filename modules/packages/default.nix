@@ -29,9 +29,25 @@ in
 
   imports = [
     ./btop.nix
+    ./go.nix
+    ./rust.nix
   ];
 
   config = mkIf cfg.enable {
+    programs.direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+    };
+
+    programs.obs-studio = {
+      enable = true;
+      plugins = with pkgs.obs-studio-plugins; [
+        wlrobs
+        obs-backgroundremoval
+        obs-pipewire-audio-capture
+      ];
+    };
+
     home.packages =
       with pkgs;
       [
@@ -51,7 +67,6 @@ in
         delve
         devenv
         dig
-        direnv
         distrobox
         docker-compose
         dust
