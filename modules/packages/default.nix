@@ -25,7 +25,7 @@ in
   options.programs.homenix.packages = {
     enable = mkOption {
       type = types.bool;
-      default = true;
+      default = config.programs.homenix.enableAllByDefault;
       description = "Enable Additional Packages";
     };
 

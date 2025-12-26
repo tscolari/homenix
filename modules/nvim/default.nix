@@ -16,7 +16,7 @@ in
   options.programs.homenix.nvim = {
     enable = mkOption {
       type = types.bool;
-      default = true;
+      default = config.programs.homenix.enableAllByDefault;
       description = "Enable Neovim Configuration";
     };
 

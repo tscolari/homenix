@@ -22,7 +22,7 @@ in
   options.programs.homenix.zsh = {
     enable = mkOption {
       type = types.bool;
-      default = true;
+      default = config.programs.homenix.enableAllByDefault;
       description = "Enable zsh Configurations";
     };
 

@@ -21,7 +21,7 @@ in
   options.programs.homenix.firefox_profiles = {
     enable = mkOption {
       type = types.bool;
-      default = true;
+      default = config.programs.homenix.enableAllByDefault;
       description = "Enable firefox work/personal profiles desktop files";
     };
 

@@ -26,14 +26,14 @@ with lib;
       description = "Whether this is being installed in NixOS or generic Linux";
     };
 
-    # enableAllByDefault = mkOption {
-    #   type = types.bool;
-    #   default = true;
-    #   description = ''
-    #     This will enable all modules automatically when homenix is enabled.
-    #     Disabling will allow/require each individual module to be enabled.
-    #   '';
-    # };
+    enableAllByDefault = mkOption {
+      type = types.bool;
+      default = true;
+      description = ''
+        This will enable all modules automatically when homenix is enabled.
+        Disabling will allow/require each individual module to be enabled.
+      '';
+    };
   };
 
   config = mkIf config.programs.homenix.enable {

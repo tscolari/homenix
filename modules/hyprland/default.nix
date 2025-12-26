@@ -18,7 +18,7 @@ in
   options.programs.homenix.hyprland = {
     enable = mkOption {
       type = types.bool;
-      default = true;
+      default = config.programs.homenix.enableAllByDefault;
       description = "Enable Hyprland Configuration";
     };
 
