@@ -50,7 +50,7 @@ in
             "group/notify"
             "custom/separator#blank_2"
             "custom/calendar-clock"
-            "custom/screenrecording-indicator"
+            # "custom/screenrecording-indicator"
             "custom/separator#blank_2"
             "custom/weather"
           ];
@@ -111,7 +111,6 @@ in
             };
             "modules" = [
               "custom/swaync"
-              "custom/dot_update"
             ];
           };
 
@@ -206,8 +205,8 @@ in
               ];
             };
             "format-full" = "󰂅";
-            "tooltip-format-discharging" = "{power=>1.0f}W↓ {capacity}%";
-            "tooltip-format-charging" = "{power=>1.0f}W↑ {capacity}%";
+            # "tooltip-format-discharging" = "{power=>1.0f}W↓ {capacity}%";
+            # "tooltip-format-charging" = "{power=>1.0f}W↑ {capacity}%";
             "interval" = 5;
             "on-click" = "${config.home.homeDirectory}/.config/hypr/scripts/power_menu.sh";
             "states" = {
