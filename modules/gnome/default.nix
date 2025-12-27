@@ -56,26 +56,6 @@ in
         gnome-tweaks
         pinentry-gnome3
         gnome.gvfs
-        arc-icon-theme
-        arc-theme
-        fluent-icon-theme
-        (pkgs.graphite-gtk-theme.override {
-          colorVariants = [
-            "light"
-            "dark"
-          ];
-          themeVariants = [
-            "default"
-            "purple"
-            "blue"
-            "red"
-          ];
-          sizeVariants = [ "standard" ];
-          tweaks = [ "rimless" ];
-        })
-        numix-cursor-theme
-        papirus-icon-theme
-        reversal-icon-theme
       ];
     };
 

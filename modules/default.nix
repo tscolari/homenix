@@ -4,14 +4,15 @@ with lib;
 
 {
   imports = [
-    ./setup.nix
-    ./non-nixos-compat.nix
     ./firefox_profiles
     ./git
     ./gnome
+    ./gtk
     ./hyprland
+    ./non-nixos-compat.nix
     ./nvim
     ./packages
+    ./setup.nix
     ./terminals
     ./tmux
     ./zsh
