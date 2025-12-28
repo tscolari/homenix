@@ -98,10 +98,12 @@ in
         govulncheck
         grpcurl
         gtop
+        gum
         helmfile
         htop
         hub
         inxi
+        inkscape-with-extensions
         jq
         jwt-cli
         khal
@@ -149,6 +151,7 @@ in
         slurp
         socat
         ssh-copy-id
+        steam
         sysprof
         terraform
         tig
@@ -171,6 +174,7 @@ in
         # UI
         (nixGLWrapIfReq _1password-gui)
         (nixGLWrapIfReq cameractrls-gtk4)
+        (nixGLWrapIfReq google-chrome)
         (nixGLWrapIfReq evince)
         (nixGLWrapIfReq obsidian)
         (nixGLWrapIfReq satty)
