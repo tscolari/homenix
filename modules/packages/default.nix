@@ -174,6 +174,7 @@ in
         # UI
         (nixGLWrapIfReq _1password-gui)
         (nixGLWrapIfReq cameractrls-gtk4)
+        (nixGLWrapIfReq chromium)
         (nixGLWrapIfReq google-chrome)
         (nixGLWrapIfReq evince)
         (nixGLWrapIfReq obsidian)

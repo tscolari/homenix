@@ -41,11 +41,11 @@ fi
 if [[ -n $CUSTOM_EXEC ]]; then
   EXEC_COMMAND="$CUSTOM_EXEC"
 else
-  EXEC_COMMAND="omarchy-launch-webapp $APP_URL"
+  EXEC_COMMAND="~/.config/homenix/bin/omarchy-launch-webapp $APP_URL"
 fi
 
 # Create application .desktop file
-DESKTOP_FILE="$HOME/.local/share/applications/$APP_NAME.desktop"
+DESKTOP_FILE="$HOME/.local/share/applications/homenix.webapp.$APP_NAME.desktop"
 
 cat >"$DESKTOP_FILE" <<EOF
 [Desktop Entry]
