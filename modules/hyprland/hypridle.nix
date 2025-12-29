@@ -14,9 +14,15 @@ let
 in
 {
   options.programs.homenix.hyprland.screenlock = {
-    timeout = mkOption {
+    lockTimeout = mkOption {
       type = types.int;
-      default = 600;
+      default = 360;
+      description = "Timeout to lock the screen (in seconds)";
+    };
+
+    screenTimeout = mkOption {
+      type = types.int;
+      default = 660;
       description = "Timeout to lock the screen (in seconds)";
     };
 
@@ -44,13 +50,24 @@ in
 
           # whether to ignore dbus-sent idle-inhibit requests (used by e.g. firefox or steam)
           ignore_dbus_inhibit = cfg.screenlock.ignoreInhibits;
+
+          inhibit_sleep = 3;
         };
 
-        listener = {
-          timeout = cfg.screenlock.timeout;
-          # command to run when timeout has passed
-          on-timeout = "loginctl lock-session";
-        };
+        listener = [
+          {
+            # Lock Screen
+            timeout = cfg.screenlock.lockTimeout;
+            # command to run when timeout has passed
+            on-timeout = "loginctl lock-session";
+          }
+          {
+            # Screen off
+            timeout = cfg.screenlock.screenTimeout;
+            on-timeout = "hyprctl dispatch dpms off";
+            on-resume = "hyprctl dispatch dpms on && brightnessctl - r";
+          }
+        ];
       };
     };
   };
