@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Get current time
 current_time="  $(date '+%H:%M:%S')   $(date '+%d, %A')"
