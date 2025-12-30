@@ -35,7 +35,9 @@ in
   imports = [
     ./btop.nix
     ./go.nix
+    ./lazydocker.nix
     ./lazygit.nix
+    ./lazysql.nix
     ./rust.nix
   ];
 
@@ -114,7 +116,6 @@ in
         kubectl
         kubectx
         kubernetes
-        lazydocker
         lazyjournal
         libsecret
         lsof
