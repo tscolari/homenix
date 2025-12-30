@@ -35,6 +35,7 @@ in
   imports = [
     ./btop.nix
     ./go.nix
+    ./lazygit.nix
     ./rust.nix
   ];
 
