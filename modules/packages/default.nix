@@ -56,6 +56,14 @@ in
       ];
     };
 
+    programs = {
+      gh.enable = true;
+      zsh.enable = true;
+      distrobox.enable = true;
+      k9s.enable = true;
+      khal.enable = true;
+    };
+
     home.packages =
       with pkgs;
       [
@@ -83,7 +91,6 @@ in
         fd
         fly
         gcloud
-        gh
         git-crypt
         gnupg
         go
@@ -109,10 +116,8 @@ in
         inkscape-with-extensions
         jq
         jwt-cli
-        khal
         killall
         kind
-        k9s
         kubectl
         kubectx
         kubernetes
@@ -171,7 +176,6 @@ in
         yarn
         yq
         zoxide
-        zsh
 
         # UI
         (nixGLWrapIfReq _1password-gui)

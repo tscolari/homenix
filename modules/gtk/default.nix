@@ -32,8 +32,7 @@ in
       };
 
       theme = {
-        name = "Arc-Dark";
-        package = pkgs.arc-theme;
+        name = "Adwaita-dark";
       };
 
       iconTheme = {
