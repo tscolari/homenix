@@ -27,7 +27,7 @@ in
     };
 
     iconTheme = mkOption {
-      default = "Papirus";
+      default = "Papirus-Dark";
       type = types.str;
       description = "Icon theme";
     };

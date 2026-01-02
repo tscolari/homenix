@@ -29,8 +29,8 @@ in
       gtk4.enable = true;
 
       cursorTheme = {
-        name = "Rose-Pine";
-        package = pkgs.rose-pine-cursor;
+        name = mkForce "Rose-Pine";
+        package = mkForce pkgs.rose-pine-cursor;
         size = 35;
       };
 
@@ -39,8 +39,8 @@ in
       };
 
       iconTheme = {
-        name = "Papirus-Dark";
-        package = pkgs.papirus-icon-theme;
+        name = mkForce "Papirus-Dark";
+        package = mkForce pkgs.papirus-icon-theme;
       };
 
       gtk3.extraConfig = {
