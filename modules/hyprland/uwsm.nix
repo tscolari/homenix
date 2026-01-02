@@ -27,7 +27,8 @@ in
         export GDK_BACKEND=wayland,x11
         export SDL_VIDEODRIVER=wayland
         export QT_QPA_PLATFORM="wayland;xcb"
-        export QT_QPA_PLATFORMTHEME=qt6ct
+        export QT_QPA_PLATFORMTHEME=gtk
+        export GTK_USE_PORTAL=1
 
         # Source user defaults
         if [ -f "${config.home.homeDirectory}/.config/uwsm/default" ]; then

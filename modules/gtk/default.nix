@@ -25,6 +25,9 @@ in
     gtk = {
       enable = true;
 
+      gtk3.enable = true;
+      gtk4.enable = true;
+
       cursorTheme = {
         name = "Rose-Pine";
         package = pkgs.rose-pine-cursor;
@@ -51,6 +54,9 @@ in
 
     home = {
       packages = with pkgs; [
+        gtk3
+        gtk4
+
         numix-cursor-theme
         arc-icon-theme
         arc-theme
