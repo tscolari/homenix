@@ -61,7 +61,6 @@ in
       zsh.enable = true;
       distrobox.enable = true;
       k9s.enable = true;
-      khal.enable = true;
     };
 
     home.packages =
@@ -116,6 +115,7 @@ in
         inkscape-with-extensions
         jq
         jwt-cli
+        khal
         killall
         kind
         kubectl
