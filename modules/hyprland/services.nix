@@ -80,15 +80,15 @@ in
         execStart = "${nixGLWrapIfReq pkgs.waybar}/bin/waybar";
       });
 
-      # fcitx5 - Input method framework
-      fcitx5 = mkGraphicalService {
-        description = "Fcitx5 Input Method";
-        execStart = "${pkgs.fcitx5}/bin/fcitx5";
-        extraConfig = {
-          Type = "dbus";
-          BusName = "org.fcitx.Fcitx5";
-        };
-      };
+      # # fcitx5 - Input method framework
+      # fcitx5 = mkIf (!isNixOS) (mkGraphicalService {
+      #   description = "Fcitx5 Input Method";
+      #   execStart = "${pkgs.fcitx5}/bin/fcitx5";
+      #   extraConfig = {
+      #     Type = "dbus";
+      #     BusName = "org.fcitx.Fcitx5";
+      #   };
+      # });
 
       # Swaybg - Wallpaper
       swaybg = {

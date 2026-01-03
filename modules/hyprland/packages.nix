@@ -53,7 +53,7 @@ in
         calcure
         cliphist
         fastfetch
-        fcitx5
+        # fcitx5
         ffmpeg
         fontconfig
         grim
