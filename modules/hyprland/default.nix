@@ -45,19 +45,6 @@ in
       default = "dark16";
       description = "Color palette to use: dark, dark16, harddark, harddark16, light, light16, softdark, softdark16, softlight, softlight16";
     };
-
-    package = mkOption {
-      type = types.package;
-      default = pkgs.hyprland;
-      description = "Hyprland package to use";
-    };
-
-    portalPackage = mkOption {
-      type = types.package;
-      default = pkgs.xdg-desktop-portal-hyprland;
-      description = "Hyprland package to use";
-    };
-
   };
 
   imports = [
@@ -78,12 +65,8 @@ in
   config = mkIf (config.programs.homenix.enable && cfg.enable) {
     wayland.windowManager.hyprland = {
       enable = true;
-      # package = if config.programs.homenix.isNixOS then null else (nixGLWrapIfReq cfg.package);
-      # portalPackage =
-      #   if config.programs.homenix.isNixOS then null else (nixGLWrapIfReq cfg.portalPackage);
-
-      package = null;
-      portalPackage = null;
+      package = mkIf config.programs.homenix.isNixOS (null);
+      portalPackage = mkIf config.programs.homenix.isNixOS (null);
 
       xwayland.enable = true;
       systemd.enable = !cfg.useUWSM;

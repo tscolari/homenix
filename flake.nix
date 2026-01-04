@@ -23,8 +23,6 @@
       url = "github:Cu3PO42/pam_shim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    hyprland.url = "github:hyprwm/Hyprland";
   };
 
   outputs =
@@ -33,7 +31,6 @@
       nixneovimplugins,
       nixvim,
       pam_shim,
-      hyprland,
       ags,
       ...
     }:
@@ -49,14 +46,6 @@
             ags.homeManagerModules.default
             pam_shim.homeModules.default
           ];
-
-          programs.homenix.hyprland.package = lib.mkDefault (
-            hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland
-          );
-
-          programs.homenix.hyprland.portalPackage = lib.mkDefault (
-            hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland
-          );
         };
 
       # Overlays ##############################################################

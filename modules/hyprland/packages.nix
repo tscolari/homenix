@@ -73,9 +73,9 @@ in
         xdg-terminal-exec
       ]
       ++ optionals (isNixOS) [
-        xdg-desktop-portal
-        xdg-desktop-portal-gtk
-        xdg-desktop-portal-hyprland
+        # xdg-desktop-portal
+        # xdg-desktop-portal-gtk
+        # xdg-desktop-portal-hyprland
       ];
   };
 }

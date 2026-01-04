@@ -209,8 +209,8 @@ in
       ]
       ++ lib.optional (!cfg.skipFirefox) (nixGLWrapIfReq firefox)
       ++ lib.optionals (isNixOS) [
-        xdg-desktop-portal
-        xdg-desktop-portal-gtk
+        # xdg-desktop-portal
+        # xdg-desktop-portal-gtk
         gnome-keyring
       ];
 
