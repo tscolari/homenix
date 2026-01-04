@@ -143,45 +143,45 @@ in
       };
     };
 
-    xdg.portal = mkIf isNixOS {
-      enable = true;
-      extraPortals = with pkgs; [
-        xdg-desktop-portal-gtk
-        xdg-desktop-portal-hyprland
-      ];
-      config = {
-        common = {
-          default = [ "gtk" ];
-        };
-        hyprland = {
-          default = [
-            "gtk"
-            "hyprland"
-          ];
-          "org.freedesktop.impl.portal.FileChooser" = [ "gtk" ];
-          "org.freedesktop.impl.portal.Print" = [ "gtk" ];
-        };
-      };
-    };
+    # xdg.portal = mkIf isNixOS {
+    #   enable = lib.mkForce true;
+    #   extraPortals = with pkgs; [
+    #     xdg-desktop-portal-gtk
+    #     xdg-desktop-portal-hyprland
+    #   ];
+    #   config = {
+    #     common = {
+    #       default = [ "gtk" ];
+    #     };
+    #     hyprland = {
+    #       default = [
+    #         "gtk"
+    #         "hyprland"
+    #       ];
+    #       "org.freedesktop.impl.portal.FileChooser" = [ "gtk" ];
+    #       "org.freedesktop.impl.portal.Print" = [ "gtk" ];
+    #     };
+    #   };
+    # };
 
-    # On Ubuntu, we configure portals but don't install them via Nix
-    xdg.configFile."xdg-desktop-portal/portals.conf" = mkIf (!isNixOS) {
-      text = ''
-        [preferred]
-        default=gtk
-        org.freedesktop.impl.portal.FileChooser=gtk
-        org.freedesktop.impl.portal.Print=gtk
-      '';
-    };
+    # # On Ubuntu, we configure portals but don't install them via Nix
+    # xdg.configFile."xdg-desktop-portal/portals.conf" = mkIf (!isNixOS) {
+    #   text = ''
+    #     [preferred]
+    #     default=gtk
+    #     org.freedesktop.impl.portal.FileChooser=gtk
+    #     org.freedesktop.impl.portal.Print=gtk
+    #   '';
+    # };
 
-    xdg.configFile."xdg-desktop-portal/hyprland-portals.conf" = mkIf (!isNixOS) {
-      text = ''
-        [preferred]
-        default=gtk;hyprland
-        org.freedesktop.impl.portal.FileChooser=gtk
-        org.freedesktop.impl.portal.Print=gtk
-      '';
-    };
+    # xdg.configFile."xdg-desktop-portal/hyprland-portals.conf" = mkIf (!isNixOS) {
+    #   text = ''
+    #     [preferred]
+    #     default=gtk;hyprland
+    #     org.freedesktop.impl.portal.FileChooser=gtk
+    #     org.freedesktop.impl.portal.Print=gtk
+    #   '';
+    # };
 
     home.activation.xdgDesktopWarning = mkIf (!isNixOS) (
       lib.hm.dag.entryAfter
