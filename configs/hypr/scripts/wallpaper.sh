@@ -201,6 +201,8 @@ main() {
   else
     apply_image_wallpaper "$selected_file"
   fi
+
+  $scripts_dir/refresh.sh
 }
 
 # Check if rofi is already running

@@ -55,6 +55,8 @@ apply_theme() {
         ln -s "$theme_path" "$CURRENT_THEME_PATH"
 
         notify-send "Theme Switcher" "Switched to: $theme_name" -i preferences-desktop-theme 2>/dev/null
+
+        ~/.config/hypr/scripts/refresh.sh
     fi
 }
 
