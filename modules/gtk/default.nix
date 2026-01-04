@@ -28,12 +28,6 @@ in
       gtk3.enable = true;
       gtk4.enable = true;
 
-      cursorTheme = {
-        name = mkForce "rose-pine";
-        package = mkForce pkgs.rose-pine-cursor;
-        size = 64;
-      };
-
       theme = {
         name = "Adwaita-dark";
       };
@@ -82,11 +76,11 @@ in
       ];
 
       pointerCursor = {
-        name = "rose-pine";
-        size = 64;
-        package = pkgs.rose-pine-hyprcursor;
         gtk.enable = true;
         x11.enable = true;
+        package = pkgs.bibata-cursors;
+        name = "Bibata-Modern-Classic";
+        size = 24;
         hyprcursor.enable = true;
       };
     };
