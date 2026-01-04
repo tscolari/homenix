@@ -29,9 +29,9 @@ in
       gtk4.enable = true;
 
       cursorTheme = {
-        name = mkForce "Rose-Pine";
+        name = mkForce "rose-pine";
         package = mkForce pkgs.rose-pine-cursor;
-        size = 35;
+        size = 64;
       };
 
       theme = {
@@ -82,9 +82,9 @@ in
       ];
 
       pointerCursor = {
-        name = "Rose-Pine";
-        size = 24;
-        package = pkgs.rose-pine-cursor;
+        name = "rose-pine";
+        size = 64;
+        package = pkgs.rose-pine-hyprcursor;
         gtk.enable = true;
         x11.enable = true;
         hyprcursor.enable = true;
