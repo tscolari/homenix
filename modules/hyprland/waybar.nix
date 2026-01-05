@@ -142,7 +142,7 @@ in
             "return-type" = "json";
             "interval" = 3;
             "on-click" =
-              "swaync-client -cp && ${config.home.homeDirectory}/.config/homenix/bin/launch-floating ${config.home.homeDirectory}/.config/homenix/bin/launch-or-focus-tui calcure";
+              "swaync-client -cp && ${config.home.homeDirectory}/.config/homenix/bin/launch-floating ${config.home.homeDirectory}/.config/homenix/bin/launch-or-focus-tui ${pkgs.calcure}/bin/calcure";
           };
 
           "custom/weather" = {
