@@ -175,6 +175,7 @@ in
         xmlstarlet
         yarn
         yq
+        zellij
         zoxide
 
         # UI
