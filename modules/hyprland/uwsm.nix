@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  pkgs,
   ...
 }:
 
@@ -13,6 +14,30 @@ let
 in
 {
   config = mkIf (config.programs.homenix.enable && cfg.enable) {
+
+    home.file = mkIf (!config.programs.homenix.isNixOS) {
+      ".local/share/wayland-sessions/hyprland-uwsm.desktop".text = ''
+        [Desktop Entry]
+        Name=Hyprland (UWSM)
+        Comment=Hyprland Wayland Compositor with UWSM Session Management
+        Exec=uwsm start ${pkgs.hyprland}/bin/start-hyprland
+        Type=Application
+        DesktopNames=Hyprland
+      '';
+    };
+
+    home.activation.hyprland-desktop-warning = mkIf (!config.programs.homenix.isNixOS) (
+      lib.hm.dag.entryAfter [ "setupHomenixConfigFolder" ] ''
+        echo "========================================="
+        echo "If you can't see the Hyprland (UWSM) entry in your display manager"
+        echo "You might need to copy the desktop entry to the system path:"
+        echo ""
+        echo "sudo cp ~/.local/share/wayland-sessions/hyprland-uwsm.desktop /usr/share/wayland-sessions/"
+        echo ""
+        echo "========================================="
+      ''
+    );
+
     xdg.configFile = mkIf cfg.useUWSM {
       "uwsm/env".text = ''
         if [ -e "${config.home.profileDirectory}/etc/profile.d/hm-session-vars.sh" ]; then
