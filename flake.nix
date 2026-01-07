@@ -55,5 +55,8 @@
           homenix.vimExtraPlugins = nixneovimplugins.packages.${final.stdenv.hostPlatform.system};
         };
       };
+
+      # Lib ###################################################################
+      lib.hyprlandMonitors = import ./lib/monitors.nix;
     };
 }

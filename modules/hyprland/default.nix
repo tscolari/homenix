@@ -45,6 +45,43 @@ in
       default = "dark16";
       description = "Color palette to use: dark, dark16, harddark, harddark16, light, light16, softdark, softdark16, softlight, softlight16";
     };
+
+    presetMonitors = mkOption {
+      type = types.listOf (
+        types.submodule {
+          options = {
+            name = mkOption {
+              type = types.str;
+              description = "Name identifier for this monitor preset";
+              example = "home-office";
+            };
+
+            config = mkOption {
+              type = types.lines;
+              description = "Full monitors.conf content for this preset";
+              example = ''
+                monitor=DP-1,2560x1440@144,0x0,1
+                monitor=HDMI-A-1,1920x1080@60,2560x0,1
+              '';
+            };
+
+            workspaces = mkOption {
+              type = types.lines;
+              description = "Workspace configuration for this monitor preset";
+              default = "";
+              example = ''
+                workspace=1,monitor:DP-1,default:true
+                workspace=2,monitor:DP-1
+                workspace=9,monitor:HDMI-A-1
+              '';
+            };
+          };
+        }
+      );
+      default = [ ];
+      description = "List of monitor preset configurations";
+    };
+
   };
 
   imports = [
@@ -75,5 +112,26 @@ in
         source = "hyprland_main.conf";
       };
     };
+
+    xdg.configFile = builtins.listToAttrs (
+      (map (preset: {
+        name = "hypr/monitors/${preset.name}.conf";
+        value = {
+          text = ''
+            # Monitor configuration: ${preset.name}
+            ${preset.config}
+          '';
+        };
+      }) cfg.presetMonitors)
+      ++ (map (preset: {
+        name = "hypr/monitors/workspaces/${preset.name}.conf";
+        value = {
+          text = ''
+            # Workspaces: ${preset.name}
+            ${preset.workspaces}
+          '';
+        };
+      }) cfg.presetMonitors)
+    );
   };
 }

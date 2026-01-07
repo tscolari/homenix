@@ -9,7 +9,7 @@ fi
 
 # Variables
 scripts_dir="$HOME/.config/hypr/scripts"
-monitor_dir="$HOME/.config/hypr/monitor_profiles"
+monitor_dir="$HOME/.config/hypr/monitors"
 monitors_target="$HOME/.config/hypr/monitors.conf"
 workspaces_target="$HOME/.config/hypr/workspaces.conf"
 
