@@ -109,7 +109,18 @@ in
       systemd.enable = !cfg.useUWSM;
 
       settings = {
-        source = "hyprland_main.conf";
+        source = [
+          "bindings.conf"
+          "autostart.conf"
+          "envs.conf"
+          "laptop.conf"
+          "window_rules.conf"
+          "decorations.conf"
+          "current_animation*.conf"
+          "settings.conf"
+          "monitors.conf"
+          "workspaces.conf"
+        ];
       };
     };
 
