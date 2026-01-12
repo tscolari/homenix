@@ -56,6 +56,7 @@ in
         # fcitx5
         ffmpeg
         fontconfig
+        gnome-calendar
         grim
         imagemagick
         jq

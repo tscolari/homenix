@@ -141,8 +141,7 @@ in
             "exec" = "${config.home.homeDirectory}/.config/hypr/scripts/calendar_clock.sh";
             "return-type" = "json";
             "interval" = 3;
-            "on-click" =
-              "swaync-client -cp && ${config.home.homeDirectory}/.config/homenix/bin/launch-floating ${config.home.homeDirectory}/.config/homenix/bin/launch-or-focus-tui ${pkgs.calcure}/bin/calcure";
+            "on-click" = "swaync-client -cp && ${pkgs.gnome-calendar}/bin/gnome-calendar";
           };
 
           "custom/weather" = {
