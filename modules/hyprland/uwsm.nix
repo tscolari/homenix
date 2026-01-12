@@ -56,7 +56,7 @@ in
 
         # Source user defaults
         if [ -f "${config.home.homeDirectory}/.config/uwsm/default" ]; then
-            source "${config.home.homeDirectory}/.config/uwsm/default"
+            . "${config.home.homeDirectory}/.config/uwsm/default"
         fi
       '';
 
