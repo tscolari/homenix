@@ -102,8 +102,9 @@ in
   config = mkIf (config.programs.homenix.enable && cfg.enable) {
     wayland.windowManager.hyprland = {
       enable = true;
-      package = mkIf config.programs.homenix.isNixOS (null);
-      portalPackage = mkIf config.programs.homenix.isNixOS (null);
+
+      package = if config.programs.homenix.isNixOS then null else (nixGLWrapIfReq pkgs.hyprland);
+      portalPackage = if config.programs.homenix.isNixOS then null else pkgs.xdg-desktop-portal-hyprland;
 
       xwayland.enable = true;
       systemd.enable = !cfg.useUWSM;
