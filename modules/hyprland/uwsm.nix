@@ -11,6 +11,8 @@ let
 
   cfg = config.programs.homenix.hyprland;
 
+  nixGLWrapIfReq = pkg: if config.lib ? nixGL then config.lib.nixGL.wrap pkg else pkg;
+
 in
 {
   config = mkIf (config.programs.homenix.enable && cfg.enable) {
@@ -20,7 +22,7 @@ in
         [Desktop Entry]
         Name=Hyprland (UWSM)
         Comment=Hyprland Wayland Compositor with UWSM Session Management
-        Exec=uwsm start ${pkgs.hyprland}/bin/start-hyprland
+        Exec=uwsm start ${nixGLWrapIfReq pkgs.hyprland}/bin/start-hyprland
         Type=Application
         DesktopNames=Hyprland
       '';
