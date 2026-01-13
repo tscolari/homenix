@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  pkgs,
   ...
 }:
 
@@ -27,6 +28,8 @@ in
         auto_save = false;
         extra_whitespace_ignored_filetypes = [ "alpha" ];
         do_filetype_lua = 1;
+
+        VimuxTmuxCommand = mkForce "${pkgs.tmux}/bin/tmux";
       };
     };
   };
