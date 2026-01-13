@@ -217,7 +217,7 @@ in
 
         nil_ls.enable = true;
         postgres_language_server.enable = true;
-        buf_ls.enable = true;
+        buf_ls.enable = false;
         protols.enable = false;
         ruby_lsp.enable = false;
 
