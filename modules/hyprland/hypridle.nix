@@ -43,7 +43,7 @@ in
           lock_cmd = "pidof hyprlock || hyprlock";
 
           # kill hyprlock before suspend to avoid stale Wayland handles
-          before_sleep_cmd = "loginctl lock-session";
+          before_sleep_cmd = "pkill -x hyprlock";
 
           # after resume: wait for compositor to stabilize, turn on display, and lock the session
           after_sleep_cmd = "sleep 2 && hyprctl dispatch dpms on && loginctl lock-session";
