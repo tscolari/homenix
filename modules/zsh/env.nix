@@ -17,7 +17,7 @@ in
   config = mkIf (config.programs.homenix.enable && cfg.enable) {
     home = {
       sessionVariables = rec {
-        PATH = "$HOME/.local/bin:$HOME/.npm-packages/bin:$PATH";
+        PATH = "$HOME/.local/bin:$HOME/.npm-global/bin:$PATH";
         VISUAL = lib.mkDefault "nvim";
 
         GREP_COLOR = "1;33";
@@ -28,6 +28,8 @@ in
         GOPATH = "$HOME/go:$GOPATH";
         GO111MODULE = "on";
         GOPRIVATE = "github.com/redpanda-data,github.com/tscolari";
+
+        NPM_CONFIG_PREFIX = "$HOME/.npm-global";
       };
     };
 
