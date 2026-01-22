@@ -20,6 +20,12 @@ in
       description = "Timeout to lock the screen (in seconds)";
     };
 
+    screensaverTimeout = mkOption {
+      type = types.int;
+      default = 120;
+      description = "Timeout to start screensaver";
+    };
+
     screenTimeout = mkOption {
       type = types.int;
       default = 660;
@@ -55,6 +61,12 @@ in
         };
 
         listener = [
+          {
+            # Screensaver
+            timeout = cfg.screenlock.screensaverTimeout;
+            # command to run when timeout has passed
+            on-timeout = "jc_reborn";
+          }
           {
             # Lock Screen
             timeout = cfg.screenlock.lockTimeout;

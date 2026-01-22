@@ -44,6 +44,7 @@ in
         (nixGLWrapIfReq quickshell)
         (nixGLWrapIfReq hyprsunset)
         (nixGLWrapIfReq swaynotificationcenter)
+        (nixGLWrapIfReq johnny-reborn)
 
         bc
         bluetuith
