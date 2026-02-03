@@ -61,12 +61,12 @@ in
         };
 
         listener = [
-          {
-            # Screensaver
-            timeout = cfg.screenlock.screensaverTimeout;
-            # command to run when timeout has passed
-            on-timeout = "jc_reborn";
-          }
+          # {
+          #   # Screensaver
+          #   timeout = cfg.screenlock.screensaverTimeout;
+          #   # command to run when timeout has passed
+          #   on-timeout = "jc_reborn";
+          # }
           {
             # Lock Screen
             timeout = cfg.screenlock.lockTimeout;
