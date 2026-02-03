@@ -16,18 +16,18 @@ let
   # Detect if we're on non-NixOS (nixGL is only needed on non-NixOS systems)
   isNixOS = config.programs.homenix.isNixOS;
 
-  wifitui = pkgs.buildGoModule rec {
+  mywifitui = pkgs.buildGoModule rec {
     pname = "wifitui";
-    version = "v0.8.0";
+    version = "v0.10.0";
 
     src = pkgs.fetchFromGitHub {
       owner = "shazow";
       repo = "wifitui";
-      rev = "v0.8.0";
-      hash = "sha256-JFs+7MDc0/hIDrefSRLWXurwJvvpR7LHJmCvmO1lpHA=";
+      rev = "v0.10.0";
+      hash = "sha256-ZhVMcpua9foigtkaN4EFjugwrEwUBOkXGLIIAaq9+zs=";
     };
 
-    vendorHash = "sha256-SEQPc13cefzT8SyuD3UmNtTDgcrXUGTX54SBrnOHJJw=";
+    vendorHash = "sha256-HZEE8bJC9bsSYmyu7NBoxEprW08DO5+uApVnyNkKgMk=";
   };
 
 in
@@ -69,7 +69,7 @@ in
         # swappy
         uwsm
         wallust
-        wifitui
+        mywifitui
         wiremix
         wl-clipboard
         xdg-terminal-exec
