@@ -131,8 +131,8 @@ in
         customPlugins.goalt-nvim
         # nvim-neotest-neotest-vim-test
 
-        pkgs.homenix.vimExtraPlugins.guihua-lua
-        pkgs.homenix.vimExtraPlugins.vgit-nvim
+        pkgs.homenix.vimExtraPlugins.guihua-lua-ray-x
+        pkgs.homenix.vimExtraPlugins.vgit-nvim-tanvirtin
       ];
     };
   };
