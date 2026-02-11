@@ -3,6 +3,11 @@
     name = "Laptop";
     config = ''
       monitor=eDP-1,3072x1920@60.0,0x0,1.5
+
+      general {
+        layout = dwindle
+      }
+
     '';
     workspaces = ''
       workspace=1,monitor:eDP-1,default:true
@@ -22,6 +27,10 @@
     name = "Laptop";
     config = ''
       monitor=eDP-1,2880x1800@90.0,0x0,1.8
+
+      general {
+        layout = dwindle
+      }
     '';
     workspaces = ''
       workspace=1,monitor:eDP-1,default:true
