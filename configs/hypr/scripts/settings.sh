@@ -18,6 +18,7 @@ Configure Monitors (nwg-displays)
 Choose Monitor Profiles
 Wallpapers
 Animations
+Power Profiles
 Hyprsunset
 Change Theme
 Toggle Master/Dwindle Layout
@@ -68,6 +69,9 @@ main() {
             ;;
         "Animations")
             $scriptsDir/animations.sh
+            ;;
+        "Power Profiles")
+            $scriptsDir/power_profiles.sh
             ;;
         "Hyprsunset")
             $scriptsDir/hyprsunset.sh toggle
