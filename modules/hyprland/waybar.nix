@@ -45,23 +45,22 @@ in
           "spacing" = 0;
           "height" = 26;
           "modules-left" = [
+            "group/notify"
             "hyprland/workspaces"
           ];
           "modules-center" = [
-            "group/notify"
-            "custom/separator#blank_2"
-            "custom/calendar-clock"
-            # "custom/screenrecording-indicator"
-            "custom/separator#blank_2"
-            "custom/weather"
+            "hyprland/window"
           ];
           "modules-right" = [
-            "group/tray-expander"
+            "tray"
             "bluetooth"
             "network"
             "pulseaudio"
             "cpu"
             "battery"
+            "custom/separator#blank_2"
+            "custom/weather"
+            "clock"
           ];
           "hyprland/workspaces" = {
             "on-click" = "activate";
@@ -103,6 +102,38 @@ in
             "on-click" = "${config.home.homeDirectory}/.config/homenix/bin/launch-or-focus-tui btop";
           };
 
+          "hyprland/window" = {
+            "format" = "{}";
+            "rewrite" = {
+              "(.*) — Mozilla Firefox" = "$1";
+            };
+            "max-length" = 120;
+            "separate-outputs" = true;
+          };
+
+          "clock" = {
+            "format" = "  {:%H:%M:%S (%Z)    %d, %A}";
+            "format-alt" = "  {:%H:%M:%S}";
+            "on-click" =
+              "swaync-client -cp && /nix/store/k9ja157afyxx0y8q4ijzs2zr0r1a3f51-gnome-calendar-49.0.1/bin/gnome-calendar";
+            "tooltip-format" = "<span>{tz_list}</span><span>{calendar}</span>";
+            "timezones" = [
+              "Etc/UTC"
+              "America/New_York"
+              "America/Sao_Paulo"
+              "America/Los_Angeles"
+            ];
+            "calendar" = {
+              "mode" = "month";
+              "format" = {
+                "months" = "<span color='#ff6699'><b>{}</b></span>";
+                "days" = "<span color='#cdd6f4'><b>{}</b></span>";
+                "weekdays" = "<span color='#7CD37C'><b>{}</b></span>";
+                "today" = "<span color='#ffcc66'><b>{}</b></span>";
+              };
+            };
+          };
+
           "group/notify" = {
             "orientation" = "inherit";
             "drawer" = {
@@ -135,13 +166,6 @@ in
             "on-click" = "sleep 0.1 && swaync-client -t -sw";
             "on-click-right" = "swaync-client -d -sw";
             "escape" = true;
-          };
-
-          "custom/calendar-clock" = {
-            "exec" = "${config.home.homeDirectory}/.config/hypr/scripts/calendar_clock.sh";
-            "return-type" = "json";
-            "interval" = 3;
-            "on-click" = "swaync-client -cp && ${pkgs.gnome-calendar}/bin/gnome-calendar";
           };
 
           "custom/weather" = {
@@ -238,27 +262,6 @@ in
               ];
             };
           };
-          "group/tray-expander" = {
-            "orientation" = "inherit";
-            "drawer" = {
-              "transition-duration" = 600;
-              "children-class" = "tray-group-item";
-            };
-            "modules" = [
-              "custom/expand-icon"
-              "tray"
-            ];
-          };
-          "custom/expand-icon" = {
-            "format" = "";
-            "tooltip" = false;
-          };
-          # "custom/screenrecording-indicator" = {
-          #   "on-click" = "omarchy-cmd-screenrecord";
-          #   "exec" = "$OMARCHY_PATH/default/waybar/indicators/screen-recording.sh";
-          #   "signal" = 8;
-          #   "return-type" = "json";
-          # };
           "tray" = {
             "icon-size" = 12;
             "spacing" = 17;
@@ -302,85 +305,126 @@ in
         @import "${config.home.homeDirectory}/.config/homenix/current/theme/waybar.css";
 
         * {
-          background-color: @background;
-          color: @foreground;
-
-          border: none;
-          border-radius: 0;
           min-height: 0;
-          font-family: 'JetBrainsMono Nerd Font';
+          min-width: 0;
+          font-family: Lexend, "JetBrainsMono NFP";
           font-size: 12px;
+          font-weight: 600;
         }
 
-        .modules-left {
-          margin-left: 8px;
-        }
-
-        .modules-right {
-          margin-right: 8px;
+        window#waybar {
+          transition-property: background-color;
+          transition-duration: 0.5s;
+          /* background-color: #1e1e2e; */
+          /* background-color: #181825; */
+          /* background-color: @background; */
+          /* background-color: rgba(24, 24, 37, 0.6); */
+          background-color: rgba(24, 24, 37, 0);
         }
 
         #workspaces button {
-          all: initial;
-          padding: 0 6px;
-          margin: 0 1.5px;
-          min-width: 9px;
+          padding: 0.3rem 0.6rem;
+          margin: 0.2rem 0.25rem;
+          border-radius: 6px;
+          /* background-color: @foreground; */
+          background-color: @background;
+          color: @foreground;
         }
 
-        #workspaces button.empty {
-          opacity: 0.5;
+        #workspaces button:hover {
+          color: #1e1e2e;
+          background-color: #cdd6f4;
         }
 
-        #cpu,
+        #workspaces button.active {
+          background-color: #1e1e2e;
+          color: #89b4fa;
+        }
+
+        #workspaces button.urgent {
+          background-color: #1e1e2e;
+          color: #f38ba8;
+        }
+
+        #clock,
         #battery,
+        #custom-weather,
+        #bluetooth,
         #pulseaudio,
-        #custom-omarchy,
-        #custom-screenrecording-indicator,
-        #custom-update {
-          min-width: 12px;
-          margin: 0 7.5px;
+        #custom-logo,
+        #custom-power,
+        #notify,
+        #network,
+        #custom-spotify,
+        #custom-notification,
+        #cpu,
+        #tray,
+        #memory,
+        #window,
+        #mpris {
+          padding: 0.3rem 0.6rem;
+          margin: 0.2rem 0.25rem;
+          border-radius: 6px;
+          /* background-color: #181825; */
+          background-color: @background;
         }
 
-        #tray {
-          margin-right: 16px;
+        #mpris.playing {
+          color: #a6e3a1;
         }
 
-        #bluetooth {
-          margin-right: 17px;
+        #mpris.paused {
+          color: #9399b2;
         }
 
-        #network {
-          margin-right: 13px;
+        #custom-sep {
+          padding: 0px;
+          color: #585b70;
         }
 
-        #custom-expand-icon {
-          margin-right: 18px;
+        window#waybar.empty #window {
+          background-color: transparent;
         }
 
-        tooltip {
-          padding: 2px;
+        #cpu {
+          color: #94e2d5;
         }
 
-        #custom-update {
-          font-size: 10px;
+        #memory {
+          color: #cba6f7;
         }
 
         #clock {
-          margin-left: 8.75px;
+          color: #74c7ec;
         }
 
-        .hidden {
-          opacity: 0;
+        #window {
+          color: #cba6f7;
         }
 
-        #custom-screenrecording-indicator {
-          min-width: 12px;
-          margin-left: 8.75px;
-          font-size: 10px;
+        #custom-weather {
+          color: #f38ba8;
         }
 
-        #custom-screenrecording-indicator.active {
-          color: #a55555;
+        #pulseaudio {
+          color: #b4befe;
+        }
+
+        #pulseaudio.muted {
+          color: #a6adc8;
+        }
+
+        #custom-logo {
+          color: #89b4fa;
+        }
+
+        #custom-power {
+          color: #f38ba8;
+        }
+
+        tooltip {
+          background-color: #181825;
+          border: 2px solid #89b4fa;
         }
       '';
     };
