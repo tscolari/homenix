@@ -113,7 +113,6 @@ in
 
           "clock" = {
             "format" = "  {:%H:%M:%S (%Z)    %d, %A}";
-            "format-alt" = "  {:%H:%M:%S}";
             "on-click" =
               "swaync-client -cp && /nix/store/k9ja157afyxx0y8q4ijzs2zr0r1a3f51-gnome-calendar-49.0.1/bin/gnome-calendar";
             "tooltip-format" = "<span>{tz_list}</span><span>{calendar}</span>";
