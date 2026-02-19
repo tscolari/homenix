@@ -15,16 +15,16 @@ let
 
   godevmcp = pkgs.buildGoModule rec {
     pname = "godevmcp";
-    version = "latest";
+    version = "v0.1.6";
 
     src = pkgs.fetchFromGitHub {
       owner = "fpt";
       repo = "go-dev-mcp";
-      rev = "main";
-      hash = "sha256-xFZ8NBK0rEaHuk4bH78owHNY6ZKDOzQv8Mhy0pGoEj0=";
+      rev = "v0.1.6";
+      hash = "sha256-sDn0eNIcvmw373JkFQx1fACuKc0TikNMR71oF+fiqSc=";
     };
 
-    vendorHash = "sha256-znA4bsmPUQHWPXdBObbEKe+yK95SFJK+tbdOlx+oLsw=";
+    vendorHash = "sha256-0V7+641G/MYQL1IQaFxrQIqJcTmUhGnO2eonujr56zg=";
 
     subPackages = [ "godevmcp" ];
   };
