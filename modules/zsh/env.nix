@@ -16,8 +16,12 @@ in
 
   config = mkIf (config.programs.homenix.enable && cfg.enable) {
     home = {
+      sessionPath = [
+        "$HOME/.local/bin"
+        "$HOME/.npm-global/bin"
+      ];
+
       sessionVariables = rec {
-        PATH = "$HOME/.local/bin:$HOME/.npm-global/bin:$PATH";
         VISUAL = lib.mkDefault "nvim";
 
         GREP_COLOR = "1;33";
