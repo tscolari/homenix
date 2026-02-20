@@ -22,7 +22,8 @@ in
         [Desktop Entry]
         Name=Hyprland (UWSM)
         Comment=Hyprland Wayland Compositor with UWSM Session Management
-        Exec=uwsm start ${nixGLWrapIfReq pkgs.hyprland}/bin/start-hyprland
+        Exec=uwsm start ${config.home.profileDirectory}/bin/hyprland
+        TryExec=uwsm
         Type=Application
         DesktopNames=Hyprland
       '';
