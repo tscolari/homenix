@@ -160,6 +160,7 @@ in
         ssh-copy-id
         steam
         sysprof
+        teleport
         terraform
         tig
         tldr
