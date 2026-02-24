@@ -32,6 +32,12 @@ in
       description = "Timeout to lock the screen (in seconds)";
     };
 
+    suspendTimeout = mkOption {
+      type = types.int;
+      default = 1800;
+      description = "Timeout to suspend the system (in seconds)";
+    };
+
     ignoreInhibits = mkOption {
       type = types.bool;
       default = false;
@@ -48,8 +54,8 @@ in
           # runs hyprlock if it is not already running (this is always run when "loginctl lock-session" is called)
           lock_cmd = "pidof hyprlock || hyprlock";
 
-          # kill hyprlock before suspend to avoid stale Wayland handles
-          before_sleep_cmd = "pkill -x hyprlock";
+          # lock the session before suspend (triggers lock_cmd to start hyprlock)
+          before_sleep_cmd = "loginctl lock-session";
 
           # after resume: wait for compositor to stabilize, turn on display, and lock the session
           after_sleep_cmd = "sleep 2 && hyprctl dispatch dpms on && loginctl lock-session";
@@ -57,7 +63,6 @@ in
           # whether to ignore dbus-sent idle-inhibit requests (used by e.g. firefox or steam)
           ignore_dbus_inhibit = cfg.screenlock.ignoreInhibits;
 
-          inhibit_sleep = 3;
         };
 
         listener = [
@@ -78,6 +83,11 @@ in
             timeout = cfg.screenlock.screenTimeout;
             on-timeout = "hyprctl dispatch dpms off";
             on-resume = "hyprctl dispatch dpms on && brightnessctl - r";
+          }
+          {
+            # Suspend
+            timeout = cfg.screenlock.suspendTimeout;
+            on-timeout = "systemctl suspend";
           }
         ];
       };
