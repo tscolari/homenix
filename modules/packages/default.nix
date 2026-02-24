@@ -91,6 +91,7 @@ in
         fly
         gcloud
         git-crypt
+        gnumake
         gnupg
         go
         go-migrate
