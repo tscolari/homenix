@@ -24,6 +24,8 @@ in
       sessionVariables = rec {
         VISUAL = lib.mkDefault "nvim";
 
+        CGO_ENABLED = "0";
+
         GREP_COLOR = "1;33";
 
         ELECTRON_DISABLE_SANDBOX = "1";
