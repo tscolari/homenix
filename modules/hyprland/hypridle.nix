@@ -26,12 +26,6 @@ in
       description = "Timeout to start screensaver";
     };
 
-    screenTimeout = mkOption {
-      type = types.int;
-      default = 660;
-      description = "Timeout to lock the screen (in seconds)";
-    };
-
     suspendTimeout = mkOption {
       type = types.int;
       default = 1800;
@@ -58,7 +52,7 @@ in
           before_sleep_cmd = "loginctl lock-session";
 
           # after resume: wait for compositor to stabilize, turn on display, and lock the session
-          after_sleep_cmd = "sleep 2 && hyprctl dispatch dpms on && loginctl lock-session";
+          after_sleep_cmd = "hyprctl dispatch dpms on";
 
           # whether to ignore dbus-sent idle-inhibit requests (used by e.g. firefox or steam)
           ignore_dbus_inhibit = cfg.screenlock.ignoreInhibits;
@@ -77,12 +71,6 @@ in
             timeout = cfg.screenlock.lockTimeout;
             # command to run when timeout has passed
             on-timeout = "loginctl lock-session";
-          }
-          {
-            # Screen off
-            timeout = cfg.screenlock.screenTimeout;
-            on-timeout = "hyprctl dispatch dpms off";
-            on-resume = "hyprctl dispatch dpms on && brightnessctl - r";
           }
           {
             # Suspend
