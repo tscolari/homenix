@@ -21,7 +21,7 @@ let
       owner = "fpt";
       repo = "go-dev-mcp";
       rev = "v0.1.6";
-      hash = "sha256-sDn0eNIcvmw373JkFQx1fACuKc0TikNMR71oF+fiqSc=";
+      hash = "sha256-Fkdmoea+HtlBitUcW0+6UDVZxTyjSi8iW4SXPxKKz8Y=";
     };
 
     vendorHash = "sha256-0V7+641G/MYQL1IQaFxrQIqJcTmUhGnO2eonujr56zg=";
