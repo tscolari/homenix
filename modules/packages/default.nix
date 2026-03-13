@@ -133,6 +133,7 @@ in
         mise
         mockgen
         mutter
+        ngrok
         nil
         nix-index
         nodejs
