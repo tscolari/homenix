@@ -49,9 +49,8 @@
   office = {
     name = "Office";
     config = ''
-      monitor=eDP-1,1920x1200@120.0,2132x1440,1.6
-      monitor=eDP-1,disable
       monitor=HDMI-A-1,3440x1440@59.97,1365x0,1.0
+      monitor=eDP-1,preferred,10000x10000,1
     '';
     workspaces = ''
       workspace=1,monitor:DP-1,default:true
@@ -70,22 +69,21 @@
   shed = {
     name = "Shed";
     config = ''
-      monitor=eDP-1,3072x1920@120.0,0x1440,1.0
-      monitor=eDP-1,disable
-      monitor=DP-1,5120x1440@120.0,0x0,1.0
+      monitor=desc:Samsung Electric Company LC49G95T,5120x1440@120,0x0,1
+      monitor=eDP-1,preferred,10000x10000,1
     '';
     workspaces = ''
-      workspace=1,monitor:DP-1,default:true
-      workspace=2,monitor:DP-1
-      workspace=3,monitor:DP-1
-      workspace=4,monitor:DP-1
-      workspace=5,monitor:DP-1
-      workspace=6,monitor:DP-1
-      workspace=7,monitor:DP-1
-      workspace=8,monitor:DP-1
-      workspace=9,monitor:DP-1
-      workspace=10,monitor:DP-1
-
+      workspace=1,monitor:desc:Samsung Electric Company LC49G95T,default:true
+      workspace=2,monitor:desc:Samsung Electric Company LC49G95T
+      workspace=3,monitor:desc:Samsung Electric Company LC49G95T
+      workspace=4,monitor:desc:Samsung Electric Company LC49G95T
+      workspace=5,monitor:desc:Samsung Electric Company LC49G95T
+      workspace=6,monitor:desc:Samsung Electric Company LC49G95T
+      workspace=7,monitor:desc:Samsung Electric Company LC49G95T
+      workspace=8,monitor:desc:Samsung Electric Company LC49G95T
+      workspace=9,monitor:desc:Samsung Electric Company LC49G95T
+      workspace=10,monitor:desc:Samsung Electric Company LC49G95T
+      workspace=1-10,monitor:eDP-1
     '';
   };
 }
