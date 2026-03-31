@@ -117,7 +117,7 @@ in
               "swaync-client -cp && /nix/store/k9ja157afyxx0y8q4ijzs2zr0r1a3f51-gnome-calendar-49.0.1/bin/gnome-calendar";
             "tooltip-format" = "<span>{tz_list}</span><span>{calendar}</span>";
             "timezones" = [
-              "Etc/UTC"
+              "Europe/London"
               "America/New_York"
               "America/Sao_Paulo"
               "America/Los_Angeles"
