@@ -93,18 +93,18 @@ in
         git-crypt
         gnumake
         gnupg
-        go
+        unstable.go
         go-migrate
         go-mockery
-        gofumpt
-        golangci-lint
+        unstable.gofumpt
+        unstable.golangci-lint
         golines
         gomodifytags
         gonzo
-        gopls
+        unstable.gopls
         gotests
         gotestsum
-        gotools
+        unstable.gotools
         govulncheck
         grpcurl
         gtop
