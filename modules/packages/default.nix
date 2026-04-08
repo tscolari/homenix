@@ -141,6 +141,7 @@ in
         pamixer
         pciutils
         pgcli
+        pinta
         playerctl
         pmutils
         podman
