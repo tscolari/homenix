@@ -67,9 +67,11 @@ in
         qt6Packages.qt6ct
         slurp
         # swappy
+        mywifitui
+        master.tcld
+        master.temporal-cli
         uwsm
         wallust
-        mywifitui
         wiremix
         wl-clipboard
         xdg-terminal-exec
