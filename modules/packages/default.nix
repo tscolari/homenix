@@ -72,6 +72,7 @@ in
         bat
         btop
         buf
+        unstable.buildkite-cli
         calcure
         calibre
         cargo
