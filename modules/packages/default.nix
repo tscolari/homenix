@@ -139,6 +139,8 @@ in
         nix-index
         nodejs
         unstable.opencode
+        unstable.opencode-claude-auth
+        unstable.opencode-desktop
         p11-kit
         pamixer
         pciutils
