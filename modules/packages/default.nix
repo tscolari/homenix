@@ -77,6 +77,7 @@ in
         calibre
         cargo
         cilium-cli
+        claude-code
         cloudflared
         concurrently
         curl
@@ -99,7 +100,7 @@ in
         go-mockery
         unstable.gofumpt
         unstable.golangci-lint
-        golines
+        (lib.lowPrio golines)
         gomodifytags
         gonzo
         unstable.gopls
@@ -130,7 +131,6 @@ in
         luarocks
         lyrebird
         mariadb.client
-        claude-code
         mise
         mockgen
         mutter
@@ -138,6 +138,7 @@ in
         nil
         nix-index
         nodejs
+        unstable.opencode
         p11-kit
         pamixer
         pciutils
