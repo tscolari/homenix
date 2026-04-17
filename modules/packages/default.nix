@@ -106,7 +106,7 @@ in
         unstable.gopls
         gotests
         gotestsum
-        unstable.gotools
+        (lib.lowPrio unstable.gotools)
         govulncheck
         grpcurl
         gtop
