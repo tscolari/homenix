@@ -24,16 +24,16 @@ in
       sessionVariables = rec {
         VISUAL = lib.mkDefault "nvim";
 
-        CGO_ENABLED = "0";
-
         GREP_COLOR = "1;33";
 
         ELECTRON_DISABLE_SANDBOX = "1";
         ELECTRON_OZONE_PLATFORM_HINT = "wayland";
 
+        CGO_ENABLED = "0";
         GOPATH = "$HOME/go:$GOPATH";
         GO111MODULE = "on";
         GOPRIVATE = "github.com/redpanda-data,github.com/tscolari";
+        GOTMPDIR = "/tmp/go";
 
         NPM_CONFIG_PREFIX = "$HOME/.npm-global";
       };
