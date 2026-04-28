@@ -37,6 +37,16 @@ in
 
         NPM_CONFIG_PREFIX = "$HOME/.npm-global";
       };
+
+      activation.zshCreatePaths = (
+        lib.hm.dag.entryAfter
+          [
+            "setupHomenixConfigFolder"
+          ]
+          ''
+            mkdir -p /tmp/go
+          ''
+      );
     };
 
     programs.zsh = {
