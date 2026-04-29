@@ -248,7 +248,7 @@ in
           "pulseaudio" = {
             "format" = "{icon}";
             "on-click" =
-              "${config.home.homeDirectory}/.config/homenix/bin/launch-floating /home/tiagoscolari/.config/homenix/bin/launch-or-focus-tui wiremix";
+              "${config.home.homeDirectory}/.config/homenix/bin/launch-floating ${config.home.homeDirectory}/.config/homenix/bin/launch-or-focus-tui wiremix";
             "on-click-right" = "pamixer -t";
             "tooltip-format" = "Playing at {volume}%";
             "scroll-step" = 5;
