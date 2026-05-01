@@ -25,7 +25,7 @@ in
         '';
 
         sources = [
-          { name = "copilot"; }
+          # { name = "copilot"; }
           { name = "nvim_lsp"; }
           { name = "nvim_lua"; }
           { name = "vsnip"; }

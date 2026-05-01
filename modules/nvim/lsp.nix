@@ -47,6 +47,8 @@ in
 
       plugins.lsp = {
         preConfig = ''
+          vim.lsp.set_log_level("warn")
+
           vim.lsp.config('*', {
               root_markers = { '.git/', 'go.mod' },
           })
