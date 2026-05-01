@@ -44,8 +44,8 @@ in
         cmp-vsnip.enable = true;
         comment.enable = true;
         conform-nvim.enable = true;
-        copilot-cmp.enable = true;
-        copilot-lua.enable = true;
+        copilot-cmp.enable = false;
+        copilot-lua.enable = false;
         dap-ui.enable = true;
         dap-virtual-text.enable = true;
         dap.enable = true;
