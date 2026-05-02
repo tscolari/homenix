@@ -49,8 +49,8 @@
   office = {
     name = "Office";
     config = ''
-      monitor=HDMI-A-1,3440x1440@59.97,1365x0,1.0
-      monitor=eDP-1,preferred,10000x10000,1
+      monitor=desc:Samsung Electric Company LC34G55T,3440x1440@59.97,1365x0,1.0
+      monitor=eDP-1,disable
     '';
     workspaces = ''
       workspace=1,monitor:DP-1,default:true
