@@ -91,6 +91,7 @@ in
         fasd
         fd
         fly
+        gcc
         gcloud
         git-crypt
         gnumake
