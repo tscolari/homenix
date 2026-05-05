@@ -33,7 +33,7 @@ in
         GOPATH = "$HOME/go:$GOPATH";
         GO111MODULE = "on";
         GOPRIVATE = "github.com/redpanda-data,github.com/tscolari";
-        GOTMPDIR = "/tmp/go";
+        GOTMPDIR = "/tmp";
 
         NPM_CONFIG_PREFIX = "$HOME/.npm-global";
       };
