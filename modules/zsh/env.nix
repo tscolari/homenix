@@ -29,7 +29,6 @@ in
         ELECTRON_DISABLE_SANDBOX = "1";
         ELECTRON_OZONE_PLATFORM_HINT = "wayland";
 
-        CGO_ENABLED = "0";
         GOPATH = "$HOME/go:$GOPATH";
         GO111MODULE = "on";
         GOPRIVATE = "github.com/redpanda-data,github.com/tscolari";
