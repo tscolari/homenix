@@ -21,13 +21,15 @@ in
         "$HOME/.npm-global/bin"
       ];
 
-      sessionVariables = rec {
+      sessionVariables = {
         VISUAL = lib.mkDefault "nvim";
 
         GREP_COLOR = "1;33";
 
         ELECTRON_DISABLE_SANDBOX = "1";
         ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+
+        PATH = "$HOME/go/bin:$PATH";
 
         GOPATH = "$HOME/go:$GOPATH";
         GO111MODULE = "on";
