@@ -139,6 +139,7 @@ in
         nil
         nix-index
         nodejs
+        openssl
         unstable.opencode
         unstable.opencode-claude-auth
         unstable.opencode-desktop
