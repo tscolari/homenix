@@ -26,7 +26,7 @@
   laptop-home = {
     name = "Laptop";
     config = ''
-      monitor=eDP-1,2880x1800@90.0,0x0,1.8
+      monitor=eDP-1,2880x1800@90.0,0x0,1.5
 
       general {
         layout = dwindle
