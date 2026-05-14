@@ -72,6 +72,13 @@ in
             vim.notify('Error loading user config ' .. file .. ': ' .. err, vim.log.levels.ERROR)
           end
         end
+
+        if vim.g.config_colorscheme then
+          local ok, err = pcall(vim.cmd.colorscheme, vim.g.config_colorscheme)
+          if not ok then
+            vim.notify('Failed to apply colorscheme ' .. vim.g.config_colorscheme .. ': ' .. err, vim.log.levels.WARN)
+          end
+        end
       '';
     };
 
@@ -79,8 +86,8 @@ in
       mkdir -p ${cfg.userManagedFolder}
       if [ ! -f ${cfg.userManagedFolder}/theme.lua ]; then
         cat > ${cfg.userManagedFolder}/theme.lua << 'EOF'
-        vim.g.lualine_theme = "catppuccin-frappe"
-        vim.g.config_colorscheme = "catppuccin-frappe"
+        vim.g.lualine_theme = "dracula-soft"
+        vim.g.config_colorscheme = "dracula-soft"
       EOF
       fi
     '';

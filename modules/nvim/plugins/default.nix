@@ -92,8 +92,11 @@ in
 
       extraPlugins = with pkgs.vimPlugins; [
         asyncrun-vim
-        incsearch-vim
+        dracula-nvim
         fzf-vim
+        incsearch-vim
+        kanagawa-nvim
+        kanagawa-paper-nvim
         lsp-colors-nvim
         mason-lspconfig-nvim
         mason-nvim
@@ -104,6 +107,7 @@ in
         nvim-treesitter-endwise
         plenary-nvim
         popup-nvim
+        rose-pine
         splitjoin-vim
         telescope-dap-nvim
         telescope-github-nvim

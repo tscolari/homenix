@@ -14,25 +14,25 @@ in
 {
   config = mkIf enabled {
     programs.nixvim = {
-      colorschemes.catppuccin = {
-        enable = true;
-        settings = {
-          flavour = "frappe";
-          term_colors = true;
-          transparent_background = false;
-          integrations = {
-            cmp = true;
-            gitsigns = true;
-            nvimtree = true;
-            treesitter = true;
-            notify = true;
-            mini.enabled = true;
-            telescope.enabled = true;
-            which_key = true;
-            lualine = true;
-          };
-        };
-      };
+      # colorschemes.catppuccin = {
+      #   enable = false;
+      #   settings = {
+      #     flavour = "frappe";
+      #     term_colors = true;
+      #     transparent_background = false;
+      #     integrations = {
+      #       cmp = true;
+      #       gitsigns = true;
+      #       nvimtree = true;
+      #       treesitter = true;
+      #       notify = true;
+      #       mini.enabled = true;
+      #       telescope.enabled = true;
+      #       which_key = true;
+      #       lualine = true;
+      #     };
+      #   };
+      # };
 
       # globals = {
       #   lualine_theme = "catppuccin-frappe";
