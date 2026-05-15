@@ -12,6 +12,7 @@ with lib;
     ./non-nixos-compat.nix
     ./nvim
     ./packages
+    ./qt
     ./setup.nix
     ./terminals
     ./tmux
