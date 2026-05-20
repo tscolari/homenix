@@ -140,9 +140,9 @@ in
         nix-index
         nodejs
         openssl
-        unstable.opencode
-        unstable.opencode-claude-auth
-        unstable.opencode-desktop
+        master.opencode
+        master.opencode-claude-auth
+        master.opencode-desktop
         p11-kit
         pamixer
         pciutils

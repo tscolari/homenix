@@ -23,6 +23,8 @@ in
   config = mkIf (config.programs.homenix.enable && cfg.enable) {
     qt = {
       enable = true;
+      platformTheme.name = "gtk3";
+      style.name = "gtk2";
     };
   };
 }
