@@ -194,7 +194,7 @@ in
         (nixGLWrapIfReq chromium)
         (nixGLWrapIfReq google-chrome)
         (nixGLWrapIfReq evince)
-        (nixGLWrapIfReq obsidian)
+        (nixGLWrapIfReq master.obsidian)
         (nixGLWrapIfReq satty)
         (nixGLWrapIfReq slack)
         (nixGLWrapIfReq spotify)
