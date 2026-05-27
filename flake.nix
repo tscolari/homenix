@@ -38,20 +38,14 @@
     {
       # Modules ##############################################################
       homeModules.default =
-        { lib, ... }:
-        let
-          isLinux = !(lib.hasSuffix "-darwin" builtins.currentSystem);
-        in
+        { ... }:
         {
-          imports =
-            [
-              nixvim.homeModules.nixvim
-              ./modules
-            ]
-            ++ lib.optionals isLinux [
-              ags.homeManagerModules.default
-              pam_shim.homeModules.default
-            ];
+          imports = [
+            nixvim.homeModules.nixvim
+            ./modules
+            ags.homeManagerModules.default
+            pam_shim.homeModules.default
+          ];
         };
 
       # Overlays ##############################################################

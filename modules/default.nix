@@ -1,14 +1,11 @@
 {
   lib,
+  pkgs,
   config,
   ...
 }:
 
 with lib;
-
-let
-  isLinux = !(lib.hasSuffix "-darwin" builtins.currentSystem);
-in
 
 {
   imports = [
@@ -49,11 +46,19 @@ in
   };
 
   config = mkIf config.programs.homenix.enable (mkMerge [
-    (mkIf isLinux {
+    (mkIf pkgs.stdenv.isLinux {
       # pamShim is only enabled on non-nixos Linux environments.
       # It's required to allow hyprlock to authenticate using the PAM.
       # pam_shim module is not imported on Darwin so this option doesn't exist there.
       pamShim.enable = (!config.programs.homenix.isNixOS);
+    })
+
+    (mkIf pkgs.stdenv.isDarwin {
+      # Linux-only modules default to disabled on Darwin.
+      # gtk defaults to (hyprland.enable || gnome.enable) and qt defaults to hyprland.enable,
+      # so they will also be false by cascade.
+      programs.homenix.hyprland.enable = mkDefault false;
+      programs.homenix.gnome.enable = mkDefault false;
     })
   ]);
 }
