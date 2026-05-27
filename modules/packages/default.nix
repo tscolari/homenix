@@ -11,13 +11,14 @@ let
 
   cfg = config.programs.homenix.packages;
 
-  isNixOS = config.programs.homenix.isNixOS;
-
-  nixGLWrapIfReq = pkg: if config.lib ? nixGL then config.lib.nixGL.wrap pkg else pkg;
-
   gcloud = pkgs.google-cloud-sdk.withExtraComponents [
     pkgs.google-cloud-sdk.components.gke-gcloud-auth-plugin
   ];
+
+  # On Linux, wraps with nixGL when available (for non-NixOS GL support).
+  # On Darwin, always a no-op — native GL works without wrapping.
+  nixGLWrapIfReq =
+    pkg: if pkgs.stdenv.isLinux && config.lib ? nixGL then config.lib.nixGL.wrap pkg else pkg;
 
 in
 
@@ -33,6 +34,8 @@ in
   };
 
   imports = [
+    ./_linux.nix
+    ./_darwin.nix
     ./btop.nix
     ./go.nix
     ./lazydocker.nix
@@ -47,185 +50,122 @@ in
       nix-direnv.enable = true;
     };
 
-    programs.obs-studio = {
-      enable = true;
-      plugins = with pkgs.obs-studio-plugins; [
-        wlrobs
-        obs-backgroundremoval
-        obs-pipewire-audio-capture
-      ];
-    };
-
     programs = {
       gh.enable = true;
       zsh.enable = true;
-      distrobox.enable = true;
       k9s.enable = true;
     };
 
-    home.packages =
-      with pkgs;
-      [
-        (lib.hiPrio ruby)
-        awscli2
-        azure-cli
-        bat
-        btop
-        buf
-        unstable.buildkite-cli
-        calcure
-        calibre
-        cargo
-        cilium-cli
-        claude-code
-        cloudflared
-        concurrently
-        curl
-        delve
-        devenv
-        dig
-        distrobox
-        docker-compose
-        dust
-        eza
-        fasd
-        fd
-        fly
-        gcc
-        gcloud
-        git-crypt
-        gnumake
-        gnupg
-        unstable.go
-        go-migrate
-        go-mockery
-        unstable.gofumpt
-        unstable.golangci-lint
-        (lib.lowPrio golines)
-        gomodifytags
-        gonzo
-        unstable.gopls
-        gotests
-        gotestsum
-        (lib.lowPrio unstable.gotools)
-        govulncheck
-        grpcurl
-        gtop
-        gum
-        helmfile
-        htop
-        hub
-        inxi
-        inkscape-with-extensions
-        jq
-        jwt-cli
-        khal
-        killall
-        kind
-        kubectl
-        kubectx
-        kubernetes
-        lazyjournal
-        libsecret
-        lsof
-        lua
-        luarocks
-        lyrebird
-        mariadb.client
-        mise
-        mockgen
-        mutter
-        ngrok
-        nil
-        nix-index
-        nodejs
-        openssl
-        master.opencode
-        master.opencode-claude-auth
-        unstable.opencode-desktop
-        p11-kit
-        pamixer
-        pciutils
-        pgcli
-        pinta
-        playerctl
-        pmutils
-        podman
-        postgresql
-        procps
-        protobuf
-        protoc-gen-go
-        protoc-gen-go-grpc
-        pstree
-        pulumi
-        pulumiPackages.pulumi-go
-        redpanda-client
-        ripgrep
-        rustc
-        shellcheck
-        silver-searcher
-        slurp
-        socat
-        ssh-copy-id
-        steam
-        sysprof
-        teleport
-        terraform
-        tig
-        tldr
-        tmate
-        tmux
-        tree
-        tree-sitter
-        universal-ctags
-        unzip
-        watch
-        wget
-        wl-clipboard
-        xmlstarlet
-        yarn
-        yq
-        zellij
-        zoxide
+    home.packages = with pkgs; [
+      # Cross-platform CLI tools — add new ones here
+      awscli2
+      azure-cli
+      bat
+      buf
+      unstable.buildkite-cli
+      calcure
+      cargo
+      cilium-cli
+      claude-code
+      cloudflared
+      concurrently
+      curl
+      delve
+      devenv
+      dig
+      dust
+      eza
+      fasd
+      fd
+      fly
+      gcc
+      gcloud
+      git-crypt
+      gnumake
+      gnupg
+      unstable.go
+      go-migrate
+      go-mockery
+      unstable.gofumpt
+      unstable.golangci-lint
+      (lib.lowPrio golines)
+      gomodifytags
+      gonzo
+      unstable.gopls
+      gotests
+      gotestsum
+      (lib.lowPrio unstable.gotools)
+      govulncheck
+      grpcurl
+      gum
+      helmfile
+      htop
+      hub
+      jq
+      jwt-cli
+      khal
+      kind
+      kubectl
+      kubectx
+      kubernetes
+      lazyjournal
+      lsof
+      lua
+      luarocks
+      mariadb.client
+      mise
+      mockgen
+      ngrok
+      nil
+      nix-index
+      nodejs
+      master.opencode
+      master.opencode-claude-auth
+      pgcli
+      postgresql
+      protobuf
+      protoc-gen-go
+      protoc-gen-go-grpc
+      pulumi
+      pulumiPackages.pulumi-go
+      redpanda-client
+      ripgrep
+      rustc
+      shellcheck
+      silver-searcher
+      socat
+      ssh-copy-id
+      teleport
+      terraform
+      tig
+      tldr
+      tmate
+      tmux
+      tree
+      tree-sitter
+      universal-ctags
+      unzip
+      watch
+      wget
+      xmlstarlet
+      yarn
+      yq
+      zellij
+      zoxide
 
-        # UI
-        (nixGLWrapIfReq unstable._1password-gui)
-        (nixGLWrapIfReq cameractrls-gtk4)
-        (nixGLWrapIfReq unstable.chromium)
-        (nixGLWrapIfReq google-chrome)
-        (nixGLWrapIfReq evince)
-        (nixGLWrapIfReq unstable.obsidian)
-        (nixGLWrapIfReq satty)
-        (nixGLWrapIfReq unstable.slack)
-        (nixGLWrapIfReq unstable.spotify)
-        (nixGLWrapIfReq unstable.typora)
-        yaru-theme
+      # Cross-platform GUI — add new ones here using nixGLWrapIfReq
+      (nixGLWrapIfReq unstable._1password-gui)
+      (nixGLWrapIfReq unstable.obsidian)
+      (nixGLWrapIfReq unstable.slack)
+      (nixGLWrapIfReq unstable.typora)
+      (nixGLWrapIfReq unstable.opencode-desktop)
 
-        # System libraries and frameworks
-        # gnome-keyring # Credential storage service
-
-        # Qt system libraries
-        kdePackages.qtwayland
-        libsForQt5.qtstyleplugin-kvantum
-
-        # System themes
-        # gnome-themes-extra
-
-        # Fonts
-        noto-fonts
-        noto-fonts-cjk-sans
-        noto-fonts-color-emoji
-        ia-writer-duospace
-        nerd-fonts.caskaydia-mono
-      ]
-      ++ lib.optional (!cfg.skipFirefox) (nixGLWrapIfReq firefox)
-      ++ lib.optionals (isNixOS) [
-        # xdg-desktop-portal
-        # xdg-desktop-portal-gtk
-        gnome-keyring
-      ];
-
-    # # Rust / cargo:
-    # * bluetui
+      # Fonts
+      noto-fonts
+      noto-fonts-cjk-sans
+      noto-fonts-color-emoji
+      ia-writer-duospace
+      nerd-fonts.caskaydia-mono
+    ];
   };
 }

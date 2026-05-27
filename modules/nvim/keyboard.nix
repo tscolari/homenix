@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   config,
   ...
 }:
@@ -33,18 +34,30 @@ in
         end
       '';
 
-      globals.clipboard = {
-        name = "wl-clipboard";
-        copy = {
-          "+" = "wl-copy";
-          "*" = "wl-copy";
+      globals.clipboard =
+        if pkgs.stdenv.isDarwin then {
+          name = "macOS-clipboard";
+          copy = {
+            "+" = "pbcopy";
+            "*" = "pbcopy";
+          };
+          paste = {
+            "+" = "pbpaste";
+            "*" = "pbpaste";
+          };
+          cache_enabled = 0;
+        } else {
+          name = "wl-clipboard";
+          copy = {
+            "+" = "wl-copy";
+            "*" = "wl-copy";
+          };
+          paste = {
+            "+" = "wl-paste --no-newline";
+            "*" = "wl-paste --no-newline";
+          };
+          cache_enabled = 0;
         };
-        paste = {
-          "+" = "wl-paste --no-newline";
-          "*" = "wl-paste --no-newline";
-        };
-        cache_enabled = 0;
-      };
 
       keymaps = [
         # File explorer

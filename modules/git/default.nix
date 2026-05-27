@@ -5,6 +5,7 @@
   ...
 }:
 
+
 with lib;
 
 let
@@ -151,15 +152,19 @@ in
           # Add "signingkey" to ~/.gitconfig.user
         };
 
-        credential.helper = "${
-          (pkgs.git.override {
-            withLibsecret = true;
-          }).overrideAttrs
-            (old: {
-              doCheck = false;
-              doInstallCheck = false;
-            })
-        }/bin/git-credential-libsecret";
+        credential.helper =
+          if pkgs.stdenv.isDarwin then
+            "osxkeychain"
+          else
+            "${
+              (pkgs.git.override {
+                withLibsecret = true;
+              }).overrideAttrs
+                (old: {
+                  doCheck = false;
+                  doInstallCheck = false;
+                })
+            }/bin/git-credential-libsecret";
         credential.cache = "--timeout 79200";
 
         advice = {
