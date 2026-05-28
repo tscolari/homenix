@@ -48,11 +48,16 @@ in
           # runs hyprlock if it is not already running (this is always run when "loginctl lock-session" is called)
           lock_cmd = "pidof hyprlock || hyprlock";
 
-          # lock the session before suspend (triggers lock_cmd to start hyprlock)
-          before_sleep_cmd = "loginctl lock-session";
+          # Run hyprlock directly rather than going through loginctl lock-session,
+          # which hands output management to the session-lock protocol and can
+          # confuse Hyprland's DPMS state on resume (Hyprland 0.54/0.55 regression).
+          before_sleep_cmd = "pidof hyprlock || hyprlock";
 
-          # after resume: wait for compositor to stabilize, turn on display, and lock the session
-          after_sleep_cmd = "hyprctl dispatch dpms on";
+          # After resume: give the compositor and i915 DRM a moment to stabilize,
+          # then toggle dpms off→on to force a real state transition — dpms on alone
+          # is a no-op when Hyprland's internal state is already "on" but the display
+          # pipe is actually dark (0.55 state-sync regression).
+          after_sleep_cmd = "sleep 1 && hyprctl dispatch dpms off && sleep 0.5 && hyprctl dispatch dpms on";
 
           # whether to ignore dbus-sent idle-inhibit requests (used by e.g. firefox or steam)
           ignore_dbus_inhibit = cfg.screenlock.ignoreInhibits;
