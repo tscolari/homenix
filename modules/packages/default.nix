@@ -142,7 +142,7 @@ in
         openssl
         master.opencode
         master.opencode-claude-auth
-        master.opencode-desktop
+        unstable.opencode-desktop
         p11-kit
         pamixer
         pciutils
@@ -189,16 +189,16 @@ in
         zoxide
 
         # UI
-        (nixGLWrapIfReq _1password-gui)
+        (nixGLWrapIfReq unstable._1password-gui)
         (nixGLWrapIfReq cameractrls-gtk4)
-        (nixGLWrapIfReq chromium)
+        (nixGLWrapIfReq unstable.chromium)
         (nixGLWrapIfReq google-chrome)
         (nixGLWrapIfReq evince)
-        (nixGLWrapIfReq master.obsidian)
+        (nixGLWrapIfReq unstable.obsidian)
         (nixGLWrapIfReq satty)
-        (nixGLWrapIfReq slack)
-        (nixGLWrapIfReq spotify)
-        (nixGLWrapIfReq typora)
+        (nixGLWrapIfReq unstable.slack)
+        (nixGLWrapIfReq unstable.spotify)
+        (nixGLWrapIfReq unstable.typora)
         yaru-theme
 
         # System libraries and frameworks
