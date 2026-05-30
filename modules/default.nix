@@ -16,8 +16,7 @@ with lib;
     ./terminals
     ./tmux
     ./zsh
-  ]
-  ++ lib.optionals isLinux [
+
     ./gnome
     ./gtk
     ./hyprland
