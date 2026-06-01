@@ -67,7 +67,6 @@ in
         (nixGLWrapIfReq google-chrome)
         (nixGLWrapIfReq evince)
         (nixGLWrapIfReq satty)
-        (nixGLWrapIfReq unstable.spotify)
         yaru-theme
       ]
       ++ lib.optional (!cfg.skipFirefox) (nixGLWrapIfReq pkgs.firefox)

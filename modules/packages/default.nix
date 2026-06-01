@@ -155,11 +155,12 @@ in
 
       # Cross-platform GUI — add new ones here using nixGLWrapIfReq
       (nixGLWrapIfReq unstable._1password-gui)
-      (nixGLWrapIfReq unstable.obsidian)
-      (nixGLWrapIfReq unstable.slack)
-      (nixGLWrapIfReq unstable.typora)
-      (nixGLWrapIfReq unstable.opencode-desktop)
       (nixGLWrapIfReq gimp)
+      (nixGLWrapIfReq unstable.obsidian)
+      (nixGLWrapIfReq unstable.opencode-desktop)
+      (nixGLWrapIfReq unstable.slack)
+      (nixGLWrapIfReq spotify)
+      (nixGLWrapIfReq unstable.typora)
 
       # Fonts
       noto-fonts
