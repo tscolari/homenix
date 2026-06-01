@@ -5,6 +5,7 @@
   ...
 }:
 
+
 with lib;
 
 let
@@ -27,8 +28,8 @@ in
     };
 
     email = mkOption {
-      default = "git@git";
-      type = types.str;
+      default = null;
+      type = types.nullOr types.str;
       description = "git email for commits";
     };
 
@@ -135,31 +136,32 @@ in
 
         user = {
           name = cfg.name;
-          email = cfg.email;
           # Add "signingkey" to ~/.gitconfig.user
-        };
+        } // optionalAttrs (cfg.email != null) { email = cfg.email; };
 
         author = {
           name = cfg.name;
-          email = cfg.email;
           # Add "signingkey" to ~/.gitconfig.user
-        };
+        } // optionalAttrs (cfg.email != null) { email = cfg.email; };
 
         committer = {
           name = cfg.name;
-          email = cfg.email;
           # Add "signingkey" to ~/.gitconfig.user
-        };
+        } // optionalAttrs (cfg.email != null) { email = cfg.email; };
 
-        credential.helper = "${
-          (pkgs.git.override {
-            withLibsecret = true;
-          }).overrideAttrs
-            (old: {
-              doCheck = false;
-              doInstallCheck = false;
-            })
-        }/bin/git-credential-libsecret";
+        credential.helper =
+          if pkgs.stdenv.isDarwin then
+            "osxkeychain"
+          else
+            "${
+              (pkgs.git.override {
+                withLibsecret = true;
+              }).overrideAttrs
+                (old: {
+                  doCheck = false;
+                  doInstallCheck = false;
+                })
+            }/bin/git-credential-libsecret";
         credential.cache = "--timeout 79200";
 
         advice = {

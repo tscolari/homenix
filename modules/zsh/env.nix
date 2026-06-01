@@ -26,9 +26,6 @@ in
 
         GREP_COLOR = "1;33";
 
-        ELECTRON_DISABLE_SANDBOX = "1";
-        ELECTRON_OZONE_PLATFORM_HINT = "wayland";
-
         PATH = "$HOME/go/bin:$PATH";
 
         GOPATH = "$HOME/go:$GOPATH";
@@ -37,6 +34,9 @@ in
         GOTMPDIR = "/tmp";
 
         NPM_CONFIG_PREFIX = "$HOME/.npm-global";
+      } // lib.optionalAttrs pkgs.stdenv.isLinux {
+        ELECTRON_DISABLE_SANDBOX = "1";
+        ELECTRON_OZONE_PLATFORM_HINT = "wayland";
       };
 
       activation.zshCreatePaths = (
@@ -50,18 +50,16 @@ in
       );
     };
 
-    programs.zsh = {
-      sessionVariables = {
-        XDG_DATA_DIRS = "$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share";
+    programs.zsh.sessionVariables = lib.mkIf pkgs.stdenv.isLinux {
+      XDG_DATA_DIRS = "$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:$HOME/.local/share/flatpak/exports/share";
 
-        # SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/gcr/ssh";
+      # SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/gcr/ssh";
 
-        NIX_LD_LIBRARY_PATH = lib.makeLibraryPath [
-          pkgs.stdenv.cc.cc
-        ];
+      NIX_LD_LIBRARY_PATH = lib.makeLibraryPath [
+        pkgs.stdenv.cc.cc
+      ];
 
-        NIX_LD = builtins.readFile "${pkgs.stdenv.cc}/nix-support/dynamic-linker";
-      };
+      NIX_LD = builtins.readFile "${pkgs.stdenv.cc}/nix-support/dynamic-linker";
     };
   };
 }

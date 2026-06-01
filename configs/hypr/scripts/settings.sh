@@ -12,7 +12,11 @@ scriptsDir="$HOME/.config/hypr/scripts"
 
 # Function to display the menu options without numbers
 menu() {
+    local suspend_label="Enable Suspend Inhibit"
+    [ -f /tmp/hypr_suspend_inhibit.pid ] && kill -0 "$(cat /tmp/hypr_suspend_inhibit.pid)" 2>/dev/null && suspend_label="Disable Suspend Inhibit"
+
     cat <<EOF
+$suspend_label
 Refresh Bar and Menus
 Configure Monitors (nwg-displays)
 Choose Monitor Profiles
@@ -36,6 +40,9 @@ main() {
 
     # Map choices to corresponding files
     case "$choice" in
+        "Enable Suspend Inhibit"|"Disable Suspend Inhibit")
+            $scriptsDir/toggle_suspend_inhibit.sh
+            ;;
         "Refresh Bar and Menus")
             $scriptsDir/refresh.sh
             ;;

@@ -1,4 +1,9 @@
-{ lib, config, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 
 with lib;
 
@@ -6,17 +11,19 @@ with lib;
   imports = [
     ./firefox_profiles
     ./git
-    ./gnome
-    ./gtk
-    ./hyprland
-    ./non-nixos-compat.nix
     ./nvim
-    ./packages
-    ./qt
     ./setup.nix
     ./terminals
     ./tmux
     ./zsh
+
+    ./aerospace
+    ./gnome
+    ./gtk
+    ./hyprland
+    ./non-nixos-compat.nix
+    ./packages
+    ./qt
   ];
 
   options.programs.homenix = {
@@ -25,7 +32,7 @@ with lib;
     isNixOS = mkOption {
       type = types.bool;
       default = true;
-      description = "Whether this is being installed in NixOS or generic Linux";
+      description = "Whether this is being installed in NixOS or generic Linux (ignored on Darwin)";
     };
 
     enableAllByDefault = mkOption {
@@ -38,9 +45,24 @@ with lib;
     };
   };
 
-  config = mkIf config.programs.homenix.enable {
-    # pamShim is only enabled on non-nixos environments.
-    # It's required to allow hyprlock to authenticate using the PAM.
-    pamShim.enable = (!config.programs.homenix.isNixOS);
-  };
+  config = mkIf config.programs.homenix.enable (mkMerge [
+    (mkIf pkgs.stdenv.isLinux {
+      # pamShim is only enabled on non-nixos Linux environments.
+      # It's required to allow hyprlock to authenticate using the PAM.
+      # pam_shim module is not imported on Darwin so this option doesn't exist there.
+      pamShim.enable = (!config.programs.homenix.isNixOS);
+
+      # MacOS-only modules default to false on Linux.
+      programs.homenix.aerospace.enable = false;
+    })
+
+    (mkIf pkgs.stdenv.isDarwin {
+      # Linux-only modules default to disabled on Darwin.
+      # gtk defaults to (hyprland.enable || gnome.enable) and qt defaults to hyprland.enable,
+      # so they will also be false by cascade.
+      programs.homenix.hyprland.enable = mkDefault false;
+      programs.homenix.gnome.enable = mkDefault false;
+      programs.homenix.qt.enable = mkDefault false;
+    })
+  ]);
 }

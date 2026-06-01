@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   config,
   ...
 }:
@@ -14,14 +15,15 @@ in
 {
   config = mkIf (config.programs.homenix.enable && cfg.enable) {
     programs.zsh = {
-      # Moved to the start of the zshrc so that they can
-      # be unaliased if necessary for macos.
-
-      initContent = lib.mkBefore ''
-        alias pbcopy="wl-copy";
-        alias pbpaste="wl-paste -n";
-        alias open="xdg-open";
-      '';
+      initContent = lib.mkBefore (
+        if pkgs.stdenv.isLinux then ''
+          alias pbcopy="wl-copy";
+          alias pbpaste="wl-paste -n";
+          alias open="xdg-open";
+        '' else ''
+          # pbcopy/pbpaste/open are native on macOS
+        ''
+      );
 
       shellAliases = {
         # Bundler

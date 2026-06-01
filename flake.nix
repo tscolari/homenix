@@ -38,7 +38,7 @@
     {
       # Modules ##############################################################
       homeModules.default =
-        { pkgs, lib, ... }:
+        { ... }:
         {
           imports = [
             nixvim.homeModules.nixvim
