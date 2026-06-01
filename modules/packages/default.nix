@@ -159,6 +159,7 @@ in
       (nixGLWrapIfReq unstable.slack)
       (nixGLWrapIfReq unstable.typora)
       (nixGLWrapIfReq unstable.opencode-desktop)
+      (nixGLWrapIfReq gimp)
 
       # Fonts
       noto-fonts
