@@ -17,6 +17,7 @@ with lib;
     ./tmux
     ./zsh
 
+    ./aerospace
     ./gnome
     ./gtk
     ./hyprland
@@ -50,6 +51,9 @@ with lib;
       # It's required to allow hyprlock to authenticate using the PAM.
       # pam_shim module is not imported on Darwin so this option doesn't exist there.
       pamShim.enable = (!config.programs.homenix.isNixOS);
+
+      # MacOS-only modules default to false on Linux.
+      programs.homenix.aerospace.enable = false;
     })
 
     (mkIf pkgs.stdenv.isDarwin {
@@ -58,6 +62,7 @@ with lib;
       # so they will also be false by cascade.
       programs.homenix.hyprland.enable = mkDefault false;
       programs.homenix.gnome.enable = mkDefault false;
+      programs.homenix.qt.enable = mkDefault false;
     })
   ]);
 }
