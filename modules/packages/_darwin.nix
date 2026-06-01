@@ -16,7 +16,7 @@ in
 {
   config = mkIf (cfg.enable && config.programs.homenix.enable && !pkgs.stdenv.isLinux) {
     home.packages = with pkgs; [
-      # Add macOS-only packages here
+      maccy  # clipboard manager — configure shortcut and history via app preferences
     ];
   };
 }
