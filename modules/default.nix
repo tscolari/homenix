@@ -16,6 +16,7 @@ with lib;
     ./terminals
     ./tmux
     ./zsh
+    ./themes
 
     ./aerospace
     ./gnome

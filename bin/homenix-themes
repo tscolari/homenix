@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+# Configuration - adjust these paths as needed
+THEMES_DIR="$HOME/.config/homenix/themes"
+CURRENT_THEME_PATH="$HOME/.config/homenix/current/theme"
+
+# Get the currently linked theme (if any)
+get_current_theme() {
+    if [[ -L "$CURRENT_THEME_PATH" ]]; then
+        readlink -f "$CURRENT_THEME_PATH" | xargs basename
+    else
+        echo ""
+    fi
+}
+
+# List all theme directories
+list_themes() {
+    local current_theme
+    current_theme=$(get_current_theme)
+
+    for dir in "$THEMES_DIR"/*/; do
+        [[ -d "$dir" ]] || continue
+        local theme_name
+        theme_name=$(basename "$dir")
+
+        if [[ "$theme_name" == "$current_theme" ]]; then
+            echo "● $theme_name"
+        else
+            echo "  $theme_name"
+        fi
+    done
+}
+
+# Apply the selected theme
+apply_theme() {
+    local theme_name="$1"
+    local theme_path="$THEMES_DIR/$theme_name"
+
+    if [[ ! -d "$theme_path" ]]; then
+        echo "homenix-themes: unknown theme '$theme_name'" >&2
+        echo "Run 'homenix-themes list' to see available themes." >&2
+        exit 1
+    fi
+
+    rm -f "$CURRENT_THEME_PATH"
+    ln -s "$theme_path" "$CURRENT_THEME_PATH"
+}
+
+usage() {
+    echo "Usage: homenix-themes <command> [args]"
+    echo ""
+    echo "Commands:"
+    echo "  list           List available themes"
+    echo "  set <theme>    Apply the given theme"
+}
+
+case "$1" in
+    list)
+        list_themes
+        ;;
+    set)
+        if [[ -z "$2" ]]; then
+            echo "homenix-themes: 'set' requires a theme name" >&2
+            usage >&2
+            exit 1
+        fi
+        apply_theme "$2"
+        ;;
+    "")
+        echo "homenix-themes: a command is required" >&2
+        usage >&2
+        exit 1
+        ;;
+    *)
+        echo "homenix-themes: unknown command '$1'" >&2
+        usage >&2
+        exit 1
+        ;;
+esac
