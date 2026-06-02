@@ -9,7 +9,7 @@ with lib;
 
   config = mkIf config.programs.homenix.enable {
     home = {
-      file = {
+      file = mkIf (cfg.enable && config.programs.homenix.enable && pkgs.stdenv.isLinux) {
         ".config/homenix/bin/launch-or-focus-tui".source = ../bin/launch-or-focus-tui;
         ".config/homenix/bin/launch-floating".source = ../bin/launch-floating;
         ".config/homenix/bin/omarchy-launch-webapp".source = ../bin/omarchy-launch-webapp;
@@ -17,7 +17,7 @@ with lib;
         ".config/homenix/bin/omarchy-webapp-install".source = ../bin/omarchy-webapp-install;
       };
 
-      activation.setupHomenixConfigFolder = lib.hm.dag.entryAfter [ "setupHomenixConfigFolder" ] ''
+      activation.setupHomenixConfigFolder = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
         mkdir -p ~/.config/homenix/current
       '';
     };

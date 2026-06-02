@@ -53,7 +53,7 @@ in
         ".config/homenix/bin/homenix-themes".source = ../../bin/homenix-themes;
       };
 
-      activation.setupThemes = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+      activation.setupThemes = lib.hm.dag.entryAfter [ "setupHomenixConfigFolder" ] ''
         if [ ! -e ~/.config/homenix/current/theme ]; then
           ln -sf ~/.config/homenix/themes/kanagawa ~/.config/homenix/current/theme
         fi
