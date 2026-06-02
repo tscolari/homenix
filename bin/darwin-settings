@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+HOMENIX_BIN="$HOME/.config/homenix/bin"
+
+menu() {
+    cat <<EOF
+Change Theme
+EOF
+}
+
+choice=$(menu | choose)
+
+case "$choice" in
+    "Change Theme")
+        "$HOMENIX_BIN/homenix-themes-choose"
+        ;;
+esac

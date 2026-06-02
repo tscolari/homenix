@@ -22,6 +22,11 @@ in
   };
 
   config = mkIf (config.programs.homenix.enable && cfg.enable) {
+    home.file.".config/homenix/bin/settings" = {
+      source = ../../bin/darwin-settings;
+      executable = true;
+    };
+
     programs.aerospace = {
       enable = true;
       launchd.enable = true;
@@ -110,6 +115,7 @@ in
           cmd-shift-s = "exec-and-forget screencapture -i ~/Desktop/screenshot-$(date +%Y%m%d-%H%M%S).png";
           cmd-shift-f = "exec-and-forget open ~";
           cmd-shift-t = "exec-and-forget ~/.config/homenix/bin/homenix-themes-choose";
+          cmd-ctrl-e  = "exec-and-forget ~/.config/homenix/bin/settings";
         };
       };
     };
