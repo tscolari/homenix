@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+chosen_theme=$(~/.config/homenix/bin/homenix-themes list | choose)
+
+if [[ -n "$chosen_theme" ]]; then
+    theme_name="${chosen_theme#● }"
+    theme_name="${theme_name#  }"
+    ~/.config/homenix/bin/homenix-themes set "$theme_name"
+    osascript -e "display notification \"Switched to: $theme_name\" with title \"Theme Switcher\""
+fi

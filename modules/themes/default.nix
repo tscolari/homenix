@@ -35,6 +35,7 @@ let
 in
 {
   imports = [
+    ./_linux.nix
     ./_darwin.nix
   ];
 
@@ -55,10 +56,6 @@ in
       activation.setupThemes = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
         if [ ! -e ~/.config/homenix/current/theme ]; then
           ln -sf ~/.config/homenix/themes/kanagawa ~/.config/homenix/current/theme
-        fi
-
-        if [ ! -e ~/.config/homenix/current/swaync ]; then
-          ln -sf ~/.config/homenix/swaync ~/.config/homenix/current/swaync
         fi
 
         if [ ! -e ~/.config/homenix/current/background ]; then
