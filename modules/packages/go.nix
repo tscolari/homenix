@@ -13,7 +13,7 @@ let
 
   cfg = config.programs.homenix.packages;
 
-  godevmcp = pkgs.buildGoModule rec {
+  godevmcp = pkgs.buildGoModule {
     pname = "godevmcp";
     version = "v0.1.6";
 
@@ -29,12 +29,31 @@ let
     subPackages = [ "godevmcp" ];
   };
 
+  worktool = pkgs.buildGo126Module {
+    pname = "worktool";
+    version = "v0.0.1";
+
+    src = pkgs.fetchgit {
+      url = "https://codeberg.org/tscolari/worktool.git";
+      rev = "v0.0.1";
+      hash = "sha256-9amsu741/4IWR+Eak4u7FP6JvD7w/G0wP6uMNVpEbG4=";
+    };
+
+    vendorHash = null;
+
+    subPackages = [
+      "cmd/work"
+      "cmd/workend"
+    ];
+  };
+
 in
 
 {
   config = mkIf (cfg.enable && config.programs.homenix.enable) {
     home.packages = [
       godevmcp
+      worktool
     ];
   };
 }
