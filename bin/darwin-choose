@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+source ~/.config/homenix/current/theme/choose.conf 2>/dev/null
+
+choose \
+  ${CHOOSE_BACKGROUND:+-b "$CHOOSE_BACKGROUND"} \
+  ${CHOOSE_HIGHLIGHT:+-c "$CHOOSE_HIGHLIGHT"} \
+  "$@"

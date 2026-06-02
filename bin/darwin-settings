@@ -8,7 +8,7 @@ Change Theme
 EOF
 }
 
-choice=$(menu | choose)
+choice=$(menu | ~/.config/homenix/bin/homenix-choose)
 
 case "$choice" in
     "Change Theme")

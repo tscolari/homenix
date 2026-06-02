@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-chosen_theme=$(~/.config/homenix/bin/homenix-themes list | choose)
+chosen_theme=$(~/.config/homenix/bin/homenix-themes list | ~/.config/homenix/bin/homenix-choose)
 
 if [[ -n "$chosen_theme" ]]; then
     theme_name="${chosen_theme#● }"
