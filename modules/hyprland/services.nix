@@ -106,6 +106,27 @@ in
         };
       };
 
+      # Synology Drive client - multi-forks; track via its PID file
+      synology-drive = {
+        Unit = {
+          Description = "Synology Drive Client";
+          After = [
+            "graphical-session.target"
+            "waybar.service"
+          ];
+          PartOf = [ "graphical-session.target" ];
+        };
+        Service = {
+          Type = "oneshot";
+          RemainAfterExit = true;
+          ExecStart = "${pkgs.unstable.synology-drive-client}/bin/synology-drive";
+          ExecStop = "${pkgs.unstable.synology-drive-client}/bin/synology-drive stop";
+        };
+        Install = {
+          WantedBy = [ "graphical-session.target" ];
+        };
+      };
+
       # Evolution alarm notifications (GNOME Calendar)
       # Note: This uses system path since it's likely from Ubuntu packages
       evolution-alarm-notify = {

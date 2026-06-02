@@ -154,12 +154,13 @@ in
       zoxide
 
       # Cross-platform GUI — add new ones here using nixGLWrapIfReq
-      (nixGLWrapIfReq unstable._1password-gui)
       (nixGLWrapIfReq gimp)
+      (nixGLWrapIfReq spotify)
+      (nixGLWrapIfReq unstable._1password-gui)
       (nixGLWrapIfReq unstable.obsidian)
       (nixGLWrapIfReq unstable.opencode-desktop)
       (nixGLWrapIfReq unstable.slack)
-      (nixGLWrapIfReq spotify)
+      (nixGLWrapIfReq unstable.synology-drive-client)
       (nixGLWrapIfReq unstable.typora)
 
       # Fonts

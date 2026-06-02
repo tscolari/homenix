@@ -1,4 +1,9 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -9,7 +14,7 @@ with lib;
 
   config = mkIf config.programs.homenix.enable {
     home = {
-      file = mkIf (cfg.enable && config.programs.homenix.enable && pkgs.stdenv.isLinux) {
+      file = mkIf (pkgs.stdenv.isLinux) {
         ".config/homenix/bin/launch-or-focus-tui".source = ../bin/launch-or-focus-tui;
         ".config/homenix/bin/launch-floating".source = ../bin/launch-floating;
         ".config/homenix/bin/omarchy-launch-webapp".source = ../bin/omarchy-launch-webapp;
