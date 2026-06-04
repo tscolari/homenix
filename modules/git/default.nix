@@ -5,7 +5,6 @@
   ...
 }:
 
-
 with lib;
 
 let
@@ -38,6 +37,10 @@ in
       description = "name for commits";
     };
   };
+
+  imports = [
+    ./ignore.nix
+  ];
 
   config = mkIf (config.programs.homenix.enable && cfg.enable) {
     home = {
@@ -137,17 +140,20 @@ in
         user = {
           name = cfg.name;
           # Add "signingkey" to ~/.gitconfig.user
-        } // optionalAttrs (cfg.email != null) { email = cfg.email; };
+        }
+        // optionalAttrs (cfg.email != null) { email = cfg.email; };
 
         author = {
           name = cfg.name;
           # Add "signingkey" to ~/.gitconfig.user
-        } // optionalAttrs (cfg.email != null) { email = cfg.email; };
+        }
+        // optionalAttrs (cfg.email != null) { email = cfg.email; };
 
         committer = {
           name = cfg.name;
           # Add "signingkey" to ~/.gitconfig.user
-        } // optionalAttrs (cfg.email != null) { email = cfg.email; };
+        }
+        // optionalAttrs (cfg.email != null) { email = cfg.email; };
 
         credential.helper =
           if pkgs.stdenv.isDarwin then
@@ -196,7 +202,7 @@ in
         core = {
           autocrlf = "false";
           editor = "nvim";
-          excludesfile = "~/.gitignore";
+          excludesFile = "~/.config/git/ignore";
         };
 
         diff = {
