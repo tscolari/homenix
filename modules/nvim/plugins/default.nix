@@ -134,11 +134,16 @@ in
         # customPlugins.join-vim
         customPlugins.lir-git-status-nvim
         customPlugins.goalt-nvim
+        customPlugins.nreviewer-nvim
         # nvim-neotest-neotest-vim-test
 
         pkgs.homenix.vimExtraPlugins.guihua-lua-ray-x
         pkgs.homenix.vimExtraPlugins.vgit-nvim-tanvirtin
       ];
+
+      extraConfigLua = ''
+        require("review-browser").setup()
+      '';
     };
   };
 }

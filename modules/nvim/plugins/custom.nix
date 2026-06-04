@@ -17,6 +17,20 @@ let
 
     };
 
+  buildCodebergPlugin =
+    args:
+    pkgs.vimUtils.buildVimPlugin {
+      pname = args.pname;
+      version = args.rev;
+      src = pkgs.fetchFromCodeberg {
+        owner = args.owner;
+        repo = args.repo;
+        rev = args.rev;
+        hash = args.hash;
+      };
+      dependencies = args.dependencies or [ ];
+    };
+
 in
 {
 
@@ -46,5 +60,13 @@ in
     repo = "goalt.nvim";
     rev = "v0.0.1";
     hash = "sha256-g4fvKswD2Sr3Zuy1Znku1NInDXF2sO6P7PXGecBDDdk=";
+  };
+
+  nreviewer-nvim = buildCodebergPlugin {
+    pname = "nreviewer";
+    owner = "tscolari";
+    repo = "nreviewer";
+    rev = "v0.0.1";
+    hash = "sha256-9yNdeMazlbd9keGwbYRwYnyQG754Ua07Y9CkvzhW0zU=";
   };
 }

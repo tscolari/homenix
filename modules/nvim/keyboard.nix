@@ -682,6 +682,17 @@ in
           __unkeyed-2 = "<cmd>TestLast<cr>";
           desc = "Run Last";
         }
+
+        # Code review group
+        {
+          __unkeyed-1 = "<leader>c";
+          group = "code-review";
+        }
+        {
+          __unkeyed-1 = "<leader>cr";
+          __unkeyed-2 = "<cmd>ReviewBrowse<cr>";
+          desc = "Browse reviews";
+        }
       ];
     };
   };
