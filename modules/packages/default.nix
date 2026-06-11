@@ -121,6 +121,7 @@ in
       nodejs
       master.opencode
       master.opencode-claude-auth
+      mermaid-cli
       pgcli
       postgresql
       protobuf
