@@ -16,13 +16,16 @@ in
   config = mkIf (config.programs.homenix.enable && cfg.enable) {
     programs.zsh = {
       initContent = lib.mkBefore (
-        if pkgs.stdenv.isLinux then ''
-          alias pbcopy="wl-copy";
-          alias pbpaste="wl-paste -n";
-          alias open="xdg-open";
-        '' else ''
-          # pbcopy/pbpaste/open are native on macOS
-        ''
+        if pkgs.stdenv.isLinux then
+          ''
+            alias pbcopy="wl-copy";
+            alias pbpaste="wl-paste -n";
+            alias open="xdg-open";
+          ''
+        else
+          ''
+            # pbcopy/pbpaste/open are native on macOS
+          ''
       );
 
       shellAliases = {
@@ -64,6 +67,10 @@ in
         kc = "kubectx";
         kg = "kubectl get";
         kd = "kubectl describe";
+
+        # Worktool
+        ws = "work start";
+        wa = "work attach";
       };
 
       shellGlobalAliases = {
