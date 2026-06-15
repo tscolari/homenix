@@ -53,11 +53,11 @@ in
           # confuse Hyprland's DPMS state on resume (Hyprland 0.54/0.55 regression).
           before_sleep_cmd = "pidof hyprlock || hyprlock";
 
-          # After resume: give the compositor and i915 DRM a moment to stabilize,
-          # then toggle dpms off→on to force a real state transition — dpms on alone
-          # is a no-op when Hyprland's internal state is already "on" but the display
-          # pipe is actually dark (0.55 state-sync regression).
-          after_sleep_cmd = "sleep 1 && hyprctl dispatch dpms off >/dev/null 2>&1; sleep 1; hyprctl dispatch dpms on >/dev/null 2>&1";
+          # After resume: ensure the display is powered on. Plain, idempotent
+          # dpms on — a real suspend/resume already restores the panel, this is
+          # just insurance. (Avoid output-reconfiguring tricks here: touching the
+          # monitor layout while session-locked crashes Hyprland/hyprlock.)
+          after_sleep_cmd = "sleep 1 && hyprctl dispatch dpms on >/dev/null 2>&1";
 
           # whether to ignore dbus-sent idle-inhibit requests (used by e.g. firefox or steam)
           ignore_dbus_inhibit = cfg.screenlock.ignoreInhibits;
@@ -76,13 +76,13 @@ in
             timeout = cfg.screenlock.lockTimeout;
             # command to run when timeout has passed
             on-timeout = "loginctl lock-session";
-            on-resume = "hyprctl dispatch dpms off >/dev/null 2>&1; sleep 1; hyprctl dispatch dpms on >/dev/null 2>&1";
+            on-resume = "hyprctl dispatch dpms on >/dev/null 2>&1";
           }
           {
             # Suspend
             timeout = cfg.screenlock.suspendTimeout;
             on-timeout = "systemctl suspend";
-            on-resume = "hyprctl dispatch dpms off >/dev/null 2>&1; sleep 1; hyprctl dispatch dpms on >/dev/null 2>&1";
+            on-resume = "hyprctl dispatch dpms on >/dev/null 2>&1";
           }
         ];
       };
