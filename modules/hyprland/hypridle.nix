@@ -57,7 +57,7 @@ in
           # then toggle dpms off→on to force a real state transition — dpms on alone
           # is a no-op when Hyprland's internal state is already "on" but the display
           # pipe is actually dark (0.55 state-sync regression).
-          after_sleep_cmd = "sleep 1 && hyprctl dispatch 'hl.dsp.dpms({ action = \" enable \" })' >/dev/null 2>&1 || hyprctl dispatch dpms on >/dev/null 2>&1";
+          after_sleep_cmd = "sleep 1 && hyprctl dispatch dpms off >/dev/null 2>&1; sleep 1; hyprctl dispatch dpms on >/dev/null 2>&1";
 
           # whether to ignore dbus-sent idle-inhibit requests (used by e.g. firefox or steam)
           ignore_dbus_inhibit = cfg.screenlock.ignoreInhibits;
@@ -76,13 +76,13 @@ in
             timeout = cfg.screenlock.lockTimeout;
             # command to run when timeout has passed
             on-timeout = "loginctl lock-session";
-            on-resume = "hyprctl dispatch 'hl.dsp.dpms({ action = \" enable \" })' >/dev/null 2>&1 || hyprctl dispatch dpms on >/dev/null 2>&1";
+            on-resume = "hyprctl dispatch dpms off >/dev/null 2>&1; sleep 1; hyprctl dispatch dpms on >/dev/null 2>&1";
           }
           {
             # Suspend
             timeout = cfg.screenlock.suspendTimeout;
             on-timeout = "systemctl suspend";
-            on-resume = "hyprctl dispatch 'hl.dsp.dpms({ action = \" enable \" })' >/dev/null 2>&1 || hyprctl dispatch dpms on >/dev/null 2>&1";
+            on-resume = "hyprctl dispatch dpms off >/dev/null 2>&1; sleep 1; hyprctl dispatch dpms on >/dev/null 2>&1";
           }
         ];
       };
