@@ -27,7 +27,7 @@ in
       # BUG: waybar systemd unit won't use the `package` set.
       systemd = {
         enable = isNixOS;
-        target = "graphical-session.target";
+        targets = [ "graphical-session.target" ];
       };
 
       settings = {
