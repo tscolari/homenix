@@ -37,7 +37,6 @@ let
     jsdoc
     json
     json5
-    jsonc
     latex
     llvm
     lua
