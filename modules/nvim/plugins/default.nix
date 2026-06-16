@@ -37,7 +37,7 @@ in
         avante.enable = true;
         cmp.enable = true;
         cmp-buffer.enable = true;
-        cmp-calc.enable = true;
+        cmp-calc.enable = false;
         cmp-nvim-lsp.enable = true;
         cmp-nvim-lua.enable = true;
         cmp-path.enable = true;
@@ -50,6 +50,7 @@ in
         dap-virtual-text.enable = true;
         dap.enable = true;
         dap-go.enable = true;
+        endwise.enable = true;
         diffview.enable = true;
         friendly-snippets.enable = true;
         fugitive.enable = true;
@@ -106,7 +107,6 @@ in
         neotest-go
         neotest-jest
         nvim-nio
-        nvim-treesitter-endwise
         plenary-nvim
         popup-nvim
         rose-pine

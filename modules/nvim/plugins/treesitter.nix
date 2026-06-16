@@ -11,7 +11,7 @@ let
 
   enabled = (config.programs.homenix.enable && config.programs.homenix.nvim.enable);
 
-  grammarPackages = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
+  grammarPackages = with pkgs.vimPlugins.nvim-treesitter-parsers; [
     c
     c_sharp
     cmake

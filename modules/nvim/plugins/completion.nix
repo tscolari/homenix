@@ -30,7 +30,6 @@ in
           { name = "nvim_lua"; }
           { name = "vsnip"; }
           { name = "buffer"; }
-          { name = "calc"; }
           { name = "path"; }
         ];
 
