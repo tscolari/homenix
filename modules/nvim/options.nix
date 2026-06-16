@@ -115,7 +115,7 @@ in
       # Folding
       foldlevel = 9999;
       foldmethod = "expr";
-      foldexpr = "nvim_treesitter#foldexpr()";
+      foldexpr = "v:lua.vim.treesitter.foldexpr()";
 
       # views can only be fully collapsed with the global statusline
       laststatus = 3;

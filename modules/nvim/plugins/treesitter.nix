@@ -11,7 +11,8 @@ let
 
   enabled = (config.programs.homenix.enable && config.programs.homenix.nvim.enable);
 
-  grammarPackages = with pkgs.vimPlugins.nvim-treesitter-parsers; [
+  grammarPackages = with config.programs.nixvim.plugins.treesitter.package.builtGrammars; [
+
     c
     c_sharp
     cmake
@@ -96,38 +97,6 @@ in
             };
           };
 
-          playground = {
-            enable = true;
-            disable = [ ];
-            updatetime = 25;
-            persist_queries = false;
-          };
-
-          autotag = {
-            enable = true;
-          };
-        };
-      };
-
-      treesitter-refactor.settings = {
-        highlightDefinitions = {
-          enable = true;
-        };
-        smartRename = {
-          enable = true;
-          keymaps = {
-            smart_rename = "grr";
-          };
-        };
-        navigation = {
-          enable = true;
-          keymaps = {
-            goto_definition = "gnd";
-            list_definitions = "gnD";
-            list_definitions_toc = "gO";
-            goto_next_usage = "<a-*>";
-            goto_previous_usage = "<a-#>";
-          };
         };
       };
 

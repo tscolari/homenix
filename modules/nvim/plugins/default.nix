@@ -79,9 +79,9 @@ in
         tmux-navigator.enable = true;
         treesitter.enable = true;
         treesitter-textobjects.enable = true;
-        treesitter-refactor.enable = true;
+        treesitter-refactor.enable = false;
         trouble.enable = true;
-        # ts-autotag.enable = true;
+        ts-autotag.enable = true;
         ts-context-commentstring.enable = true;
         undotree.enable = true;
         vim-bbye.enable = true;
