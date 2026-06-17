@@ -87,16 +87,14 @@ hl.bind(mainMod .. " + tab",         hl.dsp.focus({ workspace = "m+1" }), { desc
 hl.bind(mainMod .. " + SHIFT + tab", hl.dsp.focus({ workspace = "m-1" }), { description = "previous workspace" })
 
 -- Hyprspace plugin: workspace overview (SUPER + grave).
--- `overview:toggle` is a plugin string dispatcher: it has no hl.dsp.* object and
--- no lua handle, so hl.bind / `hyprctl dispatch` can't reach it under lua config
--- (the latter lua-evals its arg → `hl.dispatch(overview:toggle)` → error).
--- The working path is to register a NATIVE bind via hl.keyword (the hyprlang
--- keyword parser), inside config.reloaded: plugin dispatchers only exist after the
--- plugin's PLUGIN_INIT triggers a config reload (see KZDKM/Hyprspace main.cpp), and
--- config.reloaded fires after that re-parse with the dispatcher registered.
-hl.on("config.reloaded", function()
-    hl.keyword("bind", mainMod .. ", grave, overview:toggle")
-end)
+-- Upstream Hyprspace only registers the native `overview:toggle` dispatcher,
+-- which Hyprland's lua config cannot invoke. The homenix hyprspace package is
+-- patched to also register `hl.plugin.overview.toggle()` via addLuaFunction
+-- (see modules/hyprland/plugins.nix), so we bind a lua function that calls it.
+-- The closure defers the hl.plugin.overview lookup to keypress time — by then
+-- the plugin has loaded and registered the function (it does not exist at
+-- config-parse time, so a direct reference here would fail).
+hl.bind(mainMod .. " + grave", function() hl.plugin.overview.toggle() end, { description = "toggle workspace overview" })
 
 -- Switch / move / move-silent to workspaces 1-10 via key codes (layout-independent)
 for i = 1, 10 do
