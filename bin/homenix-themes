@@ -44,6 +44,13 @@ apply_theme() {
 
     rm -f "$CURRENT_THEME_PATH"
     ln -s "$theme_path" "$CURRENT_THEME_PATH"
+
+    # If running inside a live Hyprland session, reload so the theme's
+    # current_theme.lua (active border color, etc.) is re-read and applied.
+    # No-op on darwin or outside a Hyprland session.
+    if command -v hyprctl >/dev/null 2>&1 && hyprctl instances >/dev/null 2>&1; then
+        hyprctl reload >/dev/null 2>&1 || true
+    fi
 }
 
 usage() {

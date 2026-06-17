@@ -58,7 +58,7 @@ in
 
             config = mkOption {
               type = types.lines;
-              description = "Full monitors.conf content for this preset";
+              description = "Full monitors.lua content for this preset (Lua format: hl.monitor({...}), hl.config({...}))";
               example = ''
                 monitor=DP-1,2560x1440@144,0x0,1
                 monitor=HDMI-A-1,1920x1080@60,2560x0,1
@@ -102,6 +102,7 @@ in
   config = mkIf (config.programs.homenix.enable && cfg.enable) {
     wayland.windowManager.hyprland = {
       enable = true;
+      configType = "lua";
 
       package = if config.programs.homenix.isNixOS then null else (nixGLWrapIfReq pkgs.hyprland);
       portalPackage = if config.programs.homenix.isNixOS then null else pkgs.xdg-desktop-portal-hyprland;
@@ -109,37 +110,50 @@ in
       xwayland.enable = true;
       systemd.enable = !cfg.useUWSM;
 
-      settings = {
-        source = [
-          "bindings.conf"
-          "autostart.conf"
-          "envs.conf"
-          "laptop.conf"
-          "window_rules.conf"
-          "decorations.conf"
-          "current_animation*.conf"
-          "settings.conf"
-          "monitors.conf"
-          "workspaces.conf"
-        ];
-      };
+      extraConfig = ''
+        require("envs")
+        require("autostart")
+
+        -- Catppuccin Mocha fallback colors, overridden by wallust when available
+        background = "rgb(1e1e2e)"; foreground = "rgb(cdd6f4)"
+        color0  = "rgb(1e1e2e)"; color1  = "rgb(cba6f7)"
+        color2  = "rgb(a6e3a1)"; color3  = "rgb(f9e2af)"
+        color4  = "rgb(89b4fa)"; color5  = "rgb(f5c2e7)"
+        color6  = "rgb(94e2d5)"; color7  = "rgb(bac2de)"
+        color8  = "rgb(585b70)"; color9  = "rgb(cba6f7)"
+        color10 = "rgb(a6e3a1)"; color11 = "rgb(f9e2af)"
+        color12 = "rgb(89b4fa)"; color13 = "rgb(f5c2e7)"
+        color14 = "rgb(94e2d5)"; color15 = "rgb(cdd6f4)"
+        pcall(require, "wallust.wallust-hyprland")
+
+        require("decorations")
+        require("settings")
+        require("laptop")
+        require("bindings")
+        require("window_rules")
+        -- Theme override (active border color); loaded after decorations so it wins.
+        pcall(require, "current_theme")
+        pcall(require, "current_animation")
+        pcall(require, "monitors")
+        pcall(require, "workspaces")
+      '';
     };
 
     xdg.configFile = builtins.listToAttrs (
       (map (preset: {
-        name = "hypr/monitors/${preset.name}.conf";
+        name = "hypr/monitors/${preset.name}.lua";
         value = {
           text = ''
-            # Monitor configuration: ${preset.name}
+            -- Monitor configuration: ${preset.name}
             ${preset.config}
           '';
         };
       }) cfg.presetMonitors)
       ++ (map (preset: {
-        name = "hypr/monitors/workspaces/${preset.name}.conf";
+        name = "hypr/monitors/workspaces/${preset.name}.lua";
         value = {
           text = ''
-            # Workspaces: ${preset.name}
+            -- Workspaces: ${preset.name}
             ${preset.workspaces}
           '';
         };
