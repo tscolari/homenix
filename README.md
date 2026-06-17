@@ -15,10 +15,10 @@ and still be fully compatible with my original NixOS configuration/machine.
 ```nix
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     home-manager.url = "github:nix-community/home-manager";
     homenix = {
-      url = "github:tscolari/homenix";
+      url = "git+ssh://git@codeberg.org/tscolari/homenix?ref=26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
