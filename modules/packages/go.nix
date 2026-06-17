@@ -31,12 +31,12 @@ let
 
   worktool = pkgs.buildGo126Module {
     pname = "worktool";
-    version = "v0.0.3a";
+    version = "v0.0.4";
 
     src = pkgs.fetchgit {
       url = "https://codeberg.org/tscolari/worktool.git";
-      rev = "v0.0.3";
-      hash = "sha256-5rMPQNLyqo9e5EY9S8f1RIoXq7gcyzDAx9mNhqKqi4U=";
+      rev = "v0.0.4";
+      hash = "sha256-uo9302jiM5ebBaPDoTseau2eSGnhZJnjiJmCqbgc4m8=";
     };
 
     vendorHash = "sha256-7K17JaXFsjf163g5PXCb5ng2gYdotnZ2IDKk8KFjNj0=";
