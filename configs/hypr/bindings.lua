@@ -86,6 +86,18 @@ hl.bind(mainMod .. " + SHIFT + down",  hl.dsp.window.resize({ x = 0,   y = 50,  
 hl.bind(mainMod .. " + tab",         hl.dsp.focus({ workspace = "m+1" }), { description = "next workspace" })
 hl.bind(mainMod .. " + SHIFT + tab", hl.dsp.focus({ workspace = "m-1" }), { description = "previous workspace" })
 
+-- Hyprspace plugin: workspace overview (SUPER + grave).
+-- `overview:toggle` is a plugin string dispatcher: it has no hl.dsp.* object and
+-- no lua handle, so hl.bind / `hyprctl dispatch` can't reach it under lua config
+-- (the latter lua-evals its arg → `hl.dispatch(overview:toggle)` → error).
+-- The working path is to register a NATIVE bind via hl.keyword (the hyprlang
+-- keyword parser), inside config.reloaded: plugin dispatchers only exist after the
+-- plugin's PLUGIN_INIT triggers a config reload (see KZDKM/Hyprspace main.cpp), and
+-- config.reloaded fires after that re-parse with the dispatcher registered.
+hl.on("config.reloaded", function()
+    hl.keyword("bind", mainMod .. ", grave, overview:toggle")
+end)
+
 -- Switch / move / move-silent to workspaces 1-10 via key codes (layout-independent)
 for i = 1, 10 do
     local code = "code:" .. (i + 9)  -- code:10 = key 1 ... code:19 = key 0

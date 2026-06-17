@@ -88,6 +88,7 @@ in
     ./hypridle.nix
     ./hyprlock.nix
     ./packages.nix
+    ./plugins.nix
     ./rofi.nix
     ./services.nix
     ./settings
