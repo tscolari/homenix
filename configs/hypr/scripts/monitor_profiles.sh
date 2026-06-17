@@ -10,8 +10,8 @@ fi
 # Variables
 scripts_dir="$HOME/.config/hypr/scripts"
 monitor_dir="$HOME/.config/hypr/monitors"
-monitors_target="$HOME/.config/hypr/monitors.conf"
-workspaces_target="$HOME/.config/hypr/workspaces.conf"
+monitors_target="$HOME/.config/hypr/monitors.lua"
+workspaces_target="$HOME/.config/hypr/workspaces.lua"
 
 # Define the list of files to ignore
 ignore_files=(
@@ -19,7 +19,7 @@ ignore_files=(
 )
 
 # list of Monitor Profiles, sorted alphabetically with numbers first
-mon_profiles_list=$(find -L "$monitor_dir" -maxdepth 1 -type f | sed 's/.*\///' | sed 's/\.conf$//' | sort -V)
+mon_profiles_list=$(find -L "$monitor_dir" -maxdepth 1 -type f | sed 's/.*\///' | sed 's/\.lua$//' | sort -V)
 
 # Remove ignored files from the list
 for ignored_file in "${ignore_files[@]}"; do
@@ -30,8 +30,8 @@ done
 chosen_file=$(echo "$mon_profiles_list" | rofi -i -dmenu -window-title "Profile")
 
 if [[ -n "$chosen_file" ]]; then
-    monitors_path="$monitor_dir/$chosen_file.conf"
-    workspaces_path="$monitor_dir/workspaces/$chosen_file.conf"
+    monitors_path="$monitor_dir/$chosen_file.lua"
+    workspaces_path="$monitor_dir/workspaces/$chosen_file.lua"
     cp "$monitors_path" "$monitors_target"
     cp "$workspaces_path" "$workspaces_target"
 
