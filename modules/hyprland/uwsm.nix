@@ -70,7 +70,8 @@ in
       '';
 
       "uwsm/env-hyprland".text = ''
-        # Hyprland-specific vars
+        # Explicitly point Hyprland at the Lua config so it never falls back to .conf detection
+        export HYPRLAND_CONFIG="${config.xdg.configHome}/hypr/hyprland.lua"
       '';
     };
   };

@@ -1,77 +1,31 @@
 #!/usr/bin/env bash
-# /* ---- 💫 https://github.com/JaKooLit 💫 ---- */  ##
-# searchable enabled keybinds using rofi (supports bindd descriptions)
+# Searchable keybindings using hyprctl binds (Lua-config compatible)
 
-# kill yad to not interfere with this binds
 pkill yad || true
 
-# check if rofi is already running
 if pidof rofi > /dev/null; then
   pkill rofi
 fi
 
-# define the config files
-keybinds_conf="$HOME/.config/hypr/bindings.conf"
+display_keybinds=$(hyprctl binds -j 2>/dev/null | jq -r '
+  .[] |
+  select(.submap == "") |
+  [
+    (if .modmask == 0 then "" else
+      ([ if . and 1   > 0 then "SHIFT"   else empty end,
+         if . and 4   > 0 then "CTRL"    else empty end,
+         if . and 64  > 0 then "ALT"     else empty end,
+         if . and 128 > 0 then "SUPER"   else empty end
+       ] | join("+"))
+     end) as $mods |
+    (if $mods != "" then $mods + "+" else "" end) + .key,
+    (if .description != "" then .description else .dispatcher + (if .arg != "" then " " + .arg else "" end) end)
+  ] | join(" — ")
+' 2>/dev/null)
 
-# collect raw bind lines (strip end-of-line comments) from available files
-files=("$keybinds_conf")
-
-raw_keybinds=$(cat "${keybinds_conf}" 2>/dev/null \
-  | grep -E '^[[:space:]]*bind' \
-  | sed -E 's/[[:space:]]+#.*$//')
-
-# check for any keybinds to display
-if [[ -z "$raw_keybinds" ]]; then
-    echo "no keybinds found."
+if [[ -z "$display_keybinds" ]]; then
+    notify-send "Keybinds" "hyprctl not available or no binds found"
     exit 1
 fi
 
-# transform into a readable list: MODS+KEY — DESCRIPTION — DISPATCHER [PARAMS]
-display_keybinds=$(echo "$raw_keybinds" | awk -F'=' '
-  function trim(s){ gsub(/^[ \t]+|[ \t]+$/,"",s); return s }
-  /^[[:space:]]*bind/ {
-    binder=$1; gsub(/[ \t]/, "", binder);
-    hasdesc = (index(binder, "d")>0);
-
-    rhs=$2; rhs=trim(rhs);
-    n=split(rhs, a, /[ \t]*,[ \t]*/);
-
-    mods=trim(a[1]); key=(n>=2?trim(a[2]):"");
-    desc=""; dispatcher=""; params="";
-
-    if (hasdesc) {
-      desc=(n>=3?trim(a[3]):"");
-      dispatcher=(n>=4?trim(a[4]):"");
-      start=5;
-    } else {
-      dispatcher=(n>=3?trim(a[3]):"");
-      start=4;
-    }
-
-    for(i=start;i<=n;i++){ if(length(a[i])){ p=trim(a[i]); if(p!="") params = (params?params", ":"") p } }
-
-    gsub(/\$mainMod/,"SUPER",mods);
-    gsub(/[ \t]+/,"+",mods);
-
-    combo = (mods && key) ? mods "+" key : (key?key:mods);
-
-    if (desc != "") {
-      if (dispatcher != "" && params != "")
-        print combo, " — ", desc, " — ", dispatcher, " ", params;
-      else if (dispatcher != "")
-        print combo, " — ", desc, " — ", dispatcher;
-      else
-        print combo, " — ", desc;
-    } else {
-      if (dispatcher != "" && params != "")
-        print combo, " — ", dispatcher, " ", params;
-      else if (dispatcher != "")
-        print combo, " — ", dispatcher;
-      else
-        print combo;
-    }
-  }
-')
-
-# use rofi to display the keybinds
 printf '%s\n' "$display_keybinds" | rofi -dmenu -i -window-title "Keybindings"

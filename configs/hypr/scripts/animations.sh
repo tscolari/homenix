@@ -11,17 +11,17 @@ fi
 iDIR="$HOME/.config/swaync/images"
 scripts_dir="$HOME/.config/hypr/scripts"
 animations_dir="$HOME/.config/hypr/animations"
-current_animation_file=$HOME/.config/hypr/current_animation.conf
+current_animation_file=$HOME/.config/hypr/current_animation.lua
 
 # list of animation files, sorted alphabetically with numbers first
-animations_list=$(find -L "$animations_dir" -maxdepth 1 -type f | sed 's/.*\///' | sed 's/\.conf$//' | sort -V)
+animations_list=$(find -L "$animations_dir" -maxdepth 1 -type f | sed 's/.*\///' | sed 's/\.lua$//' | sort -V)
 
 # Rofi Menu
 chosen_file=$(echo "$animations_list" | rofi -i -dmenu -window-title Animation)
 
 # Check if a file was selected
 if [[ -n "$chosen_file" ]]; then
-    full_path="$animations_dir/$chosen_file.conf"
+    full_path="$animations_dir/$chosen_file.lua"
     ln -sf "$full_path" $current_animation_file
     notify-send -u low -i "$iDIR/ja.png" "$chosen_file" "Hyprland Animation Loaded"
 fi
