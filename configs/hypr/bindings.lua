@@ -86,15 +86,12 @@ hl.bind(mainMod .. " + SHIFT + down",  hl.dsp.window.resize({ x = 0,   y = 50,  
 hl.bind(mainMod .. " + tab",         hl.dsp.focus({ workspace = "m+1" }), { description = "next workspace" })
 hl.bind(mainMod .. " + SHIFT + tab", hl.dsp.focus({ workspace = "m-1" }), { description = "previous workspace" })
 
--- Hyprspace plugin: workspace overview (SUPER + grave).
--- Upstream Hyprspace only registers the native `overview:toggle` dispatcher,
--- which Hyprland's lua config cannot invoke. The homenix hyprspace package is
--- patched to also register `hl.plugin.overview.toggle()` via addLuaFunction
--- (see modules/hyprland/plugins.nix), so we bind a lua function that calls it.
--- The closure defers the hl.plugin.overview lookup to keypress time — by then
--- the plugin has loaded and registered the function (it does not exist at
--- config-parse time, so a direct reference here would fail).
-hl.bind(mainMod .. " + grave", function() hl.plugin.overview.toggle() end, { description = "toggle workspace overview" })
+-- hyprexpo plugin: workspace overview (SUPER + grave).
+-- hyprexpo registers a lua plugin function (hl.plugin.hyprexpo.expo) via
+-- addLuaFunction, so we bind a lua function that calls it. The closure defers the
+-- hl.plugin.hyprexpo lookup to keypress time — by then the plugin has loaded and
+-- registered the function (it does not exist at config-parse time).
+hl.bind(mainMod .. " + grave", function() hl.plugin.hyprexpo.expo("toggle") end, { description = "toggle workspace overview" })
 
 -- Switch / move / move-silent to workspaces 1-10 via key codes (layout-independent)
 for i = 1, 10 do
