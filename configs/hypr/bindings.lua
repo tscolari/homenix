@@ -93,6 +93,60 @@ hl.bind(mainMod .. " + SHIFT + tab", hl.dsp.focus({ workspace = "m-1" }), { desc
 -- registered the function (it does not exist at config-parse time).
 hl.bind(mainMod .. " + grave", function() hl.plugin.hyprexpo.expo("toggle") end, { description = "toggle workspace overview" })
 
+-- hyprexpo styling, matched to the wallust/catppuccin theme. The plugin's
+-- `plugin:hyprexpo:*` options only register once it has loaded, so apply them
+-- from config.reloaded (which fires after hyprexpo's PLUGIN_INIT triggers a
+-- reload). Guard on hl.plugin.hyprexpo so the pre-load config.reloaded pass is
+-- skipped instead of erroring on unknown keys. Colors use the wallust globals.
+hl.on("config.reloaded", function()
+    if not (hl.plugin and hl.plugin.hyprexpo) then return end
+    hl.config({
+        plugin = {
+            hyprexpo = {
+                columns                = 2,
+                max_workspace          = 4,   -- stable 1-4 window (matches the 2x2 grid)
+                keynav_enable          = 1,   -- enter the "hyprexpo" submap on open
+                gaps_in                = 15,  -- gap between workspace tiles
+                gaps_out               = 15,  -- gap around the grid edge
+                tile_rounding          = 3,   -- match decorations.lua rounding
+                border_width           = 3,   -- match decorations.lua border_size
+                bg_col                 = background,
+                border_color           = color8,  -- non-current tiles (subtle)
+                border_color_current   = color6,  -- current workspace (theme accent)
+                border_color_focus     = color4,  -- keyboard-nav focus
+                border_color_hover     = color5,  -- mouse hover
+                label_enable           = 1,
+                show_workspace_numbers = 1,
+                label_color            = foreground,
+                -- Concrete family: the nix-built plugin's pango can't resolve the
+                -- generic "sans" (renders tofu); use the installed UI font.
+                label_font_family      = "JetBrainsMono Nerd Font",
+            },
+        },
+    })
+end)
+
+-- hyprexpo keyboard navigation. With keynav_enable=1 the plugin auto-switches to
+-- the "hyprexpo" submap when the overview opens and resets it on close, so we
+-- only define the submap: hjkl + arrows move the focus, Return selects, Escape
+-- cancels. The closures defer hl.plugin.hyprexpo to keypress (after plugin load).
+hl.define_submap("hyprexpo", function()
+    hl.bind("h",     function() hl.plugin.hyprexpo.kb_focus("left") end)
+    hl.bind("j",     function() hl.plugin.hyprexpo.kb_focus("down") end)
+    hl.bind("k",     function() hl.plugin.hyprexpo.kb_focus("up") end)
+    hl.bind("l",     function() hl.plugin.hyprexpo.kb_focus("right") end)
+    hl.bind("left",  function() hl.plugin.hyprexpo.kb_focus("left") end)
+    hl.bind("down",  function() hl.plugin.hyprexpo.kb_focus("down") end)
+    hl.bind("up",    function() hl.plugin.hyprexpo.kb_focus("up") end)
+    hl.bind("right", function() hl.plugin.hyprexpo.kb_focus("right") end)
+    hl.bind("return", function() hl.plugin.hyprexpo.kb_confirm() end)
+    hl.bind("escape", function() hl.plugin.hyprexpo.expo("cancel") end)
+    -- Close with the same key that opened it: while the overview is open we're in
+    -- this submap, so SUPER+grave isn't the global open bind — bind it here to
+    -- close (cancel), restoring the open/close toggle feel alongside Escape.
+    hl.bind(mainMod .. " + grave", function() hl.plugin.hyprexpo.expo("cancel") end)
+end)
+
 -- Switch / move / move-silent to workspaces 1-10 via key codes (layout-independent)
 for i = 1, 10 do
     local code = "code:" .. (i + 9)  -- code:10 = key 1 ... code:19 = key 0
