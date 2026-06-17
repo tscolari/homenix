@@ -22,24 +22,29 @@ in
 
     package = mkOption {
       type = types.nullOr types.package;
-      default = null;
+      default = pkgs.homenix.hyprexpo or null;
+      defaultText = literalExpression "pkgs.homenix.hyprexpo";
       description = ''
         hyprexpo plugin package, built against the running Hyprland.
 
-        hyprexpo is not in nixpkgs (dropped upstream), so there is no default:
-        supply a build, e.g. via `hyprlandPlugins.mkHyprlandPlugin` from the
-        sandwichfarm/hyprexpo source. Hyprspace was dropped because its overview
-        renderer is broken on Hyprland 0.55 (KZDKM/Hyprspace #207/#220/#235).
+        Defaults to the homenix-provided build (`pkgs.homenix.hyprexpo`, added by
+        homenix.overlays.default and compiled from the sandwichfarm/hyprexpo
+        source against pkgs.hyprland). Override to supply your own build, e.g. if
+        you run a different Hyprland. hyprexpo is not in nixpkgs (dropped
+        upstream).
       '';
     };
   };
 
-  config = mkIf (
-    config.programs.homenix.enable
-    && cfg.enable
-    && cfg.plugins.hyprexpo.enable
-    && cfg.plugins.hyprexpo.package != null
-  ) {
-    wayland.windowManager.hyprland.plugins = [ cfg.plugins.hyprexpo.package ];
-  };
+  config =
+    mkIf
+      (
+        config.programs.homenix.enable
+        && cfg.enable
+        && cfg.plugins.hyprexpo.enable
+        && cfg.plugins.hyprexpo.package != null
+      )
+      {
+        wayland.windowManager.hyprland.plugins = [ cfg.plugins.hyprexpo.package ];
+      };
 }

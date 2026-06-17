@@ -81,6 +81,22 @@
         "type": "github"
       }
     },
+    "hyprexpo": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1781708582,
+        "narHash": "sha256-Q8b0reFiF2azh0SBIoRSPvnesmQKzFF8ZxsokjJNVw0=",
+        "owner": "sandwichfarm",
+        "repo": "hyprexpo",
+        "rev": "2fbadb9f839ca9bac96ac03b9cd4302c12fc562f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "sandwichfarm",
+        "repo": "hyprexpo",
+        "type": "github"
+      }
+    },
     "nix-github-actions": {
       "inputs": {
         "nixpkgs": [
@@ -213,6 +229,7 @@
     "root": {
       "inputs": {
         "ags": "ags",
+        "hyprexpo": "hyprexpo",
         "nixneovimplugins": "nixneovimplugins",
         "nixpkgs": "nixpkgs",
         "nixvim": "nixvim",
