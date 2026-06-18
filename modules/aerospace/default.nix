@@ -116,6 +116,9 @@ in
           cmd-shift-f = "exec-and-forget open ~";
           cmd-shift-t = "exec-and-forget ~/.config/homenix/bin/homenix-themes-choose";
           cmd-ctrl-e  = "exec-and-forget ~/.config/homenix/bin/settings";
+
+          # Workspace overview (mirrors Hyprland SUPER+grave → hyprexpo)
+          "cmd-grave" = "exec-and-forget open -a 'Mission Control'";
         };
       };
     };
