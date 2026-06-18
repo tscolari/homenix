@@ -11,7 +11,7 @@ chosen_theme=$(echo "$($HOME/.config/homenix/bin/homenix-themes list)" | rofi -i
 # Main logic
 if [[ -n "$chosen_theme" ]]; then
     # Theme selected - apply it
-    local theme_name="${chosen_theme#● }"
+    theme_name="${chosen_theme#● }"
     theme_name="${theme_name#  }"
     $HOME/.config/homenix/bin/homenix-themes set "$theme_name"
 

@@ -48,5 +48,7 @@ systemctl --user restart swaync.service
 sleep 0.1
 systemctl --user restart swaybg.service
 
+hyprctl reload
+
 exit 0
 
