@@ -237,7 +237,7 @@ in
             };
           };
           "custom/power" = {
-            "format" = "";
+            "format" = "󰐥";
             "tooltip" = false;
             "on-click" = "${config.home.homeDirectory}/.config/hypr/scripts/power_menu.sh";
           };

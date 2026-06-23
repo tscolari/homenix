@@ -60,7 +60,6 @@ in
         steam
         sysprof
         wl-clipboard
-        wowup-cf
 
         # Linux-only UI
         (nixGLWrapIfReq cameractrls-gtk4)
