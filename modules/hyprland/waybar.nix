@@ -58,6 +58,7 @@ in
             "pulseaudio"
             "cpu"
             "battery"
+            "custom/power"
             "custom/separator#blank_2"
             "custom/weather"
             "clock"
@@ -230,11 +231,15 @@ in
             # "tooltip-format-discharging" = "{power=>1.0f}W↓ {capacity}%";
             # "tooltip-format-charging" = "{power=>1.0f}W↑ {capacity}%";
             "interval" = 5;
-            "on-click" = "${config.home.homeDirectory}/.config/hypr/scripts/power_menu.sh";
             "states" = {
               "warning" = 20;
               "critical" = 10;
             };
+          };
+          "custom/power" = {
+            "format" = "";
+            "tooltip" = false;
+            "on-click" = "${config.home.homeDirectory}/.config/hypr/scripts/power_menu.sh";
           };
           "bluetooth" = {
             "format" = "";
