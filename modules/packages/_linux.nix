@@ -57,7 +57,6 @@ in
         procps
         pstree
         slurp
-        steam
         sysprof
         wl-clipboard
 
