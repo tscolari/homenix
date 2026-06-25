@@ -121,6 +121,12 @@ in
           RemainAfterExit = true;
           ExecStart = "${pkgs.unstable.synology-drive-client}/bin/synology-drive";
           ExecStop = "${pkgs.unstable.synology-drive-client}/bin/synology-drive stop";
+          # Bundled Qt5 has no wayland plugin and overflows font sizes from HiDPI scale hints via XWayland.
+          Environment = [
+            "QT_QPA_PLATFORM=xcb"
+            "QT_AUTO_SCREEN_SCALE_FACTOR=0"
+            "QT_FONT_DPI=96"
+          ];
         };
         Install = {
           WantedBy = [ "graphical-session.target" ];
