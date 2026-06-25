@@ -19,6 +19,7 @@ with lib;
     ./themes
 
     ./aerospace
+    ./flatpak.nix
     ./gnome
     ./gtk
     ./hyprland
