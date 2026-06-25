@@ -90,6 +90,24 @@ in
       #   };
       # });
 
+      # snixembed - Proxies legacy XEmbed systray icons (e.g. from Wine/Proton
+      # apps like Battle.net) as StatusNotifierItems so they dock into
+      # waybar's tray module instead of floating in their own window.
+      snixembed = {
+        Unit = {
+          Description = "Proxy XEmbed systray icons as StatusNotifierItems";
+          After = [ "graphical-session.target" ];
+          PartOf = [ "graphical-session.target" ];
+        };
+        Service = {
+          ExecStart = "${pkgs.snixembed}/bin/snixembed";
+          Restart = "on-failure";
+        };
+        Install = {
+          WantedBy = [ "graphical-session.target" ];
+        };
+      };
+
       # Swaybg - Wallpaper
       swaybg = {
         Unit = {
