@@ -87,8 +87,8 @@ in
       mkdir -p ${cfg.userManagedFolder}
       if [ ! -f ${cfg.userManagedFolder}/theme.lua ]; then
         cat > ${cfg.userManagedFolder}/theme.lua << 'EOF'
-        vim.g.lualine_theme = "kanawaga-paper-ink"
-        vim.g.config_colorscheme = "kanawaga-paper-ink"
+        vim.g.lualine_theme = "kanagawa-paper-ink"
+        vim.g.config_colorscheme = "kanagawa-paper-ink"
       EOF
       fi
     '';
