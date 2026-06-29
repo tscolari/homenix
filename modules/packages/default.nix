@@ -136,7 +136,7 @@ in
       silver-searcher
       socat
       ssh-copy-id
-      teleport
+      # teleport
       terraform
       tig
       tldr
