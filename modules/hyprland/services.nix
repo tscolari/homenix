@@ -71,7 +71,22 @@ in
     # =========================================================================
     # Custom systemd user services for apps that don't have HM modules
     # =========================================================================
+    # Suppress the networkmanagerapplet package's own XDG autostart entry so it
+    # doesn't launch a second, plain (XEmbed) nm-applet. nm-applet is
+    # single-instance, so a racing plain launcher can win the instance lock and
+    # break the SNI icon provided by the --indicator service below.
+    xdg.configFile."autostart/nm-applet.desktop".text = ''
+      [Desktop Entry]
+      Hidden=true
+    '';
+
     systemd.user.services = {
+
+      # nm-applet: emit a native StatusNotifierItem (--indicator) so it docks
+      # directly into waybar's tray. The HM module runs plain `nm-applet`, which
+      # relies on a legacy XEmbed->SNI bridge that we no longer run.
+      network-manager-applet.Service.ExecStart =
+        mkForce "${pkgs.networkmanagerapplet}/bin/nm-applet --indicator";
 
       # Waybar - Status bar.
       # This is only necessary for non-nixos systems.
@@ -89,24 +104,6 @@ in
       #     BusName = "org.fcitx.Fcitx5";
       #   };
       # });
-
-      # snixembed - Proxies legacy XEmbed systray icons (e.g. from Wine/Proton
-      # apps like Battle.net) as StatusNotifierItems so they dock into
-      # waybar's tray module instead of floating in their own window.
-      snixembed = {
-        Unit = {
-          Description = "Proxy XEmbed systray icons as StatusNotifierItems";
-          After = [ "graphical-session.target" ];
-          PartOf = [ "graphical-session.target" ];
-        };
-        Service = {
-          ExecStart = "${pkgs.snixembed}/bin/snixembed";
-          Restart = "on-failure";
-        };
-        Install = {
-          WantedBy = [ "graphical-session.target" ];
-        };
-      };
 
       # Swaybg - Wallpaper
       swaybg = {
