@@ -38,7 +38,7 @@ let
 
 in
 {
-  config = lib.mkIf (cfg.enable && config.programs.homenix.enable) {
+  config = lib.mkIf (cfg.enable && config.programs.homenix.enable && pkgs.stdenv.isLinux) {
     home.packages = [
       bluetui
     ];
