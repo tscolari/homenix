@@ -133,7 +133,6 @@ in
       ripgrep
       rustc
       shellcheck
-      silver-searcher
       socat
       ssh-copy-id
       # teleport
