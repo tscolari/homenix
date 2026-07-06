@@ -129,7 +129,6 @@ in
       protoc-gen-go-grpc
       pulumi
       pulumiPackages.pulumi-go
-      redpanda-client
       ripgrep
       rustc
       shellcheck
