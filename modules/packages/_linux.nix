@@ -62,6 +62,7 @@ in
 
         # Linux-only UI
         (nixGLWrapIfReq cameractrls-gtk4)
+	(nixGLWrapIfReq gimp)
         (nixGLWrapIfReq unstable.chromium)
         (nixGLWrapIfReq google-chrome)
         (nixGLWrapIfReq evince)

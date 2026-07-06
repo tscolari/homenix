@@ -154,7 +154,6 @@ in
       zoxide
 
       # Cross-platform GUI — add new ones here using nixGLWrapIfReq
-      (nixGLWrapIfReq gimp)
       (nixGLWrapIfReq spotify)
       (nixGLWrapIfReq unstable._1password-gui)
       (nixGLWrapIfReq unstable.obsidian)
