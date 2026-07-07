@@ -30,25 +30,25 @@ in
     programs.aerospace = {
       enable = true;
       launchd.enable = true;
-      userSettings = {
+      settings = {
         start-at-login = true;
         enable-normalization-flatten-containers = true;
         enable-normalization-opposite-orientation-for-nested-containers = true;
+        config-version = 2;
+        default-root-container-layout = "tiles";
+        default-root-container-orientation = "auto";
+        accordion-padding = 30;
+
+        on-focused-monitor-changed = [ "move-mouse monitor-lazy-center" ];
 
         gaps = {
           inner.horizontal = 8;
-          inner.vertical   = 8;
-          outer.left       = 8;
-          outer.right      = 8;
-          outer.top        = 8;
-          outer.bottom     = 8;
+          inner.vertical = 8;
+          outer.left = 8;
+          outer.right = 8;
+          outer.top = 8;
+          outer.bottom = 8;
         };
-
-        default-root-container-layout      = "tiles";
-        default-root-container-orientation = "auto";
-        accordion-padding                  = 30;
-
-        on-focused-monitor-changed = ["move-mouse monitor-lazy-center"];
 
         mode.main.binding = {
           # Focus (cmd-h conflicts with macOS Hide; cmd-l conflicts with browser address bar)
@@ -70,7 +70,7 @@ in
           cmd-shift-ctrl-l = "move right";
 
           # Fullscreen / float toggle
-          cmd-alt-f           = "fullscreen";
+          cmd-alt-f = "fullscreen";
           cmd-alt-shift-space = "layout floating tiling";
 
           # Layout: accordion (group equivalent) and back to tiles
@@ -100,25 +100,25 @@ in
           cmd-shift-9 = "move-node-to-workspace 9";
 
           # Next / prev workspace (mirrors Hyprland Super+Shift+[/])
-          "cmd-shift-]" = "workspace next";
-          "cmd-shift-[" = "workspace prev";
+          "cmd-shift-leftSquareBracket" = "workspace next";
+          "cmd-shift-rightSquareBracket" = "workspace prev";
 
           # Resize (mirrors Hyprland Super+Shift+arrows)
-          cmd-shift-left  = "resize width -50";
+          cmd-shift-left = "resize width -50";
           cmd-shift-right = "resize width +50";
-          cmd-shift-up    = "resize height -50";
-          cmd-shift-down  = "resize height +50";
+          cmd-shift-up = "resize height -50";
+          cmd-shift-down = "resize height +50";
 
           # App launches
-          cmd-enter   = "exec-and-forget ghostty";
+          cmd-enter = "exec-and-forget ghostty";
           cmd-shift-b = "exec-and-forget open -na 'Google Chrome'";
           cmd-shift-s = "exec-and-forget screencapture -i ~/Desktop/screenshot-$(date +%Y%m%d-%H%M%S).png";
           cmd-shift-f = "exec-and-forget open ~";
           cmd-shift-t = "exec-and-forget ~/.config/homenix/bin/homenix-themes-choose";
-          cmd-ctrl-e  = "exec-and-forget ~/.config/homenix/bin/settings";
+          cmd-ctrl-e = "exec-and-forget ~/.config/homenix/bin/settings";
 
           # Workspace overview (mirrors Hyprland SUPER+grave → hyprexpo)
-          "cmd-grave" = "exec-and-forget open -a 'Mission Control'";
+          "cmd-backtick" = "exec-and-forget open -a 'Mission Control'";
         };
       };
     };
