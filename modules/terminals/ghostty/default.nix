@@ -47,6 +47,7 @@ in
             "font-size" = 9;
 
             # Window
+            "window-decoration" = false;
             "window-theme" = "ghostty";
             "window-padding-x" = 14;
             "window-padding-y" = 14;
