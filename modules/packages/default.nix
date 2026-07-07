@@ -20,6 +20,18 @@ let
   nixGLWrapIfReq =
     pkg: if pkgs.stdenv.isLinux && config.lib ? nixGL then config.lib.nixGL.wrap pkg else pkg;
 
+  opencodeDesktop =
+    let
+      pkg = pkgs.unstable.opencode-desktop;
+    in
+    if pkgs.stdenv.isDarwin then
+      pkgs.runCommand "${pkg.name}-app-only" { } ''
+        mkdir -p "$out/Applications"
+        ln -s "${pkg}/Applications/OpenCode.app" "$out/Applications/OpenCode.app"
+      ''
+    else
+      nixGLWrapIfReq pkg;
+
 in
 
 {
@@ -120,7 +132,7 @@ in
       nil
       nix-index
       nodejs
-      master.opencode
+      (lib.hiPrio master.opencode)
       master.opencode-claude-auth
       mermaid-cli
       pgcli
@@ -157,7 +169,7 @@ in
       (nixGLWrapIfReq spotify)
       (nixGLWrapIfReq unstable._1password-gui)
       (nixGLWrapIfReq unstable.obsidian)
-      (nixGLWrapIfReq unstable.opencode-desktop)
+      opencodeDesktop
       (nixGLWrapIfReq unstable.slack)
       (nixGLWrapIfReq unstable.synology-drive-client)
       (nixGLWrapIfReq unstable.typora)
