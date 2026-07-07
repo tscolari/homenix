@@ -46,6 +46,23 @@ in
         default-root-container-orientation = "auto";
         accordion-padding = 30;
 
+        exec = {
+          inherit-env-vars = true;
+          env-vars.PATH = concatStringsSep ":" [
+            "${config.home.profileDirectory}/bin"
+            "${config.home.homeDirectory}/.nix-profile/bin"
+            "/nix/var/nix/profiles/default/bin"
+            "/opt/homebrew/bin"
+            "/opt/homebrew/sbin"
+            "/usr/local/bin"
+            "/usr/bin"
+            "/bin"
+            "/usr/sbin"
+            "/sbin"
+            "\${PATH}"
+          ];
+        };
+
         on-focused-monitor-changed = [ "move-mouse monitor-lazy-center" ];
 
         gaps = {
