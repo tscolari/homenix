@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   config,
   ...
 }:
@@ -21,10 +20,18 @@ in
     };
   };
 
+  imports = [
+    ./sketchybar.nix
+  ];
+
   config = mkIf (config.programs.homenix.enable && cfg.enable) {
     home.file.".config/homenix/bin/settings" = {
       source = ../../bin/darwin-settings;
       executable = true;
+    };
+
+    services.jankyborders = {
+      enable = true;
     };
 
     programs.aerospace = {
