@@ -67,6 +67,7 @@ in
       cargo
       cilium-cli
       claude-code
+      master.codex
       cloudflared
       concurrently
       curl
