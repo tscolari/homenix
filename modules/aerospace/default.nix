@@ -134,7 +134,7 @@ in
           cmd-shift-down = "resize height +50";
 
           # App launches
-          cmd-enter = "exec-and-forget ghostty";
+          cmd-enter = "exec-and-forget open -na /Applications/ghostty.app";
           cmd-shift-b = "exec-and-forget open -na 'Google Chrome'";
           cmd-shift-s = "exec-and-forget screencapture -i ~/Desktop/screenshot-$(date +%Y%m%d-%H%M%S).png";
           cmd-shift-f = "exec-and-forget open ~";
