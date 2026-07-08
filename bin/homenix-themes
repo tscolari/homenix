@@ -44,6 +44,14 @@ apply_theme() {
 
     rm -f "$CURRENT_THEME_PATH"
     ln -s "$theme_path" "$CURRENT_THEME_PATH"
+
+    if [[ "$(uname)" == "Darwin" ]] && command -v launchctl >/dev/null 2>&1; then
+        local label="org.nix-community.home.jankyborders"
+
+        if launchctl print "gui/$UID/$label" >/dev/null 2>&1; then
+            launchctl kickstart -k "gui/$UID/$label" >/dev/null 2>&1 || true
+        fi
+    fi
 }
 
 usage() {
