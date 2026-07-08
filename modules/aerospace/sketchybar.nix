@@ -16,7 +16,7 @@ in
 
   config = mkIf (config.programs.homenix.enable && cfg.enable) {
     programs.sketchybar = {
-      enable = true;
+      enable = false;
     };
 
     home.packages = with pkgs; [
