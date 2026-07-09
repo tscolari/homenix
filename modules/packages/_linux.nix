@@ -62,14 +62,13 @@ in
 
         # Linux-only UI
         (nixGLWrapIfReq cameractrls-gtk4)
-	(nixGLWrapIfReq gimp)
+        (nixGLWrapIfReq gimp)
         (nixGLWrapIfReq unstable.chromium)
         (nixGLWrapIfReq google-chrome)
         (nixGLWrapIfReq evince)
         (nixGLWrapIfReq satty)
         yaru-theme
       ]
-      ++ lib.optional (!cfg.skipFirefox) (nixGLWrapIfReq pkgs.firefox)
       ++ lib.optionals isNixOS [
         gnome-keyring
       ];

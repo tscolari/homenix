@@ -68,120 +68,123 @@ in
       k9s.enable = true;
     };
 
-    home.packages = with pkgs; [
-      # Cross-platform CLI tools — add new ones here
-      awscli2
-      azure-cli
-      bat
-      buf
-      unstable.buildkite-cli
-      calcure
-      cargo
-      cilium-cli
-      claude-code
-      unstable.codex
-      cloudflared
-      concurrently
-      curl
-      delve
-      devenv
-      dig
-      dust
-      eza
-      fasd
-      fd
-      fly
-      gcc
-      gcloud
-      git-crypt
-      gnumake
-      gnupg
-      unstable.go
-      go-migrate
-      go-mockery
-      unstable.gofumpt
-      unstable.golangci-lint
-      (lib.lowPrio golines)
-      gomodifytags
-      gonzo
-      unstable.gopls
-      gotests
-      gotestsum
-      (lib.lowPrio unstable.gotools)
-      govulncheck
-      grpcurl
-      gum
-      helmfile
-      htop
-      hub
-      jq
-      jwt-cli
-      khal
-      kind
-      kubectl
-      kubectx
-      kubernetes
-      lazyjournal
-      lsof
-      lua
-      luarocks
-      mariadb.client
-      mise
-      mockgen
-      ngrok
-      nil
-      nixd
-      nix-index
-      nodejs
-      (lib.hiPrio master.opencode)
-      master.opencode-claude-auth
-      mermaid-cli
-      pgcli
-      postgresql
-      protobuf
-      protoc-gen-go
-      protoc-gen-go-grpc
-      pulumi
-      pulumiPackages.pulumi-go
-      ripgrep
-      rust-analyzer
-      rustc
-      shellcheck
-      socat
-      ssh-copy-id
-      # teleport
-      terraform
-      tig
-      tldr
-      tmate
-      tmux
-      tree
-      tree-sitter
-      universal-ctags
-      unzip
-      watch
-      wget
-      xmlstarlet
-      yarn
-      yq
-      zellij
-      zoxide
+    home.packages =
+      with pkgs;
+      [
+        # Cross-platform CLI tools — add new ones here
+        awscli2
+        azure-cli
+        bat
+        buf
+        unstable.buildkite-cli
+        calcure
+        cargo
+        cilium-cli
+        claude-code
+        unstable.codex
+        cloudflared
+        concurrently
+        curl
+        delve
+        devenv
+        dig
+        dust
+        eza
+        fasd
+        fd
+        fly
+        gcc
+        gcloud
+        git-crypt
+        gnumake
+        gnupg
+        unstable.go
+        go-migrate
+        go-mockery
+        unstable.gofumpt
+        unstable.golangci-lint
+        (lib.lowPrio golines)
+        gomodifytags
+        gonzo
+        unstable.gopls
+        gotests
+        gotestsum
+        (lib.lowPrio unstable.gotools)
+        govulncheck
+        grpcurl
+        gum
+        helmfile
+        htop
+        hub
+        jq
+        jwt-cli
+        khal
+        kind
+        kubectl
+        kubectx
+        kubernetes
+        lazyjournal
+        lsof
+        lua
+        luarocks
+        mariadb.client
+        mise
+        mockgen
+        ngrok
+        nil
+        nixd
+        nix-index
+        nodejs
+        (lib.hiPrio master.opencode)
+        master.opencode-claude-auth
+        mermaid-cli
+        pgcli
+        postgresql
+        protobuf
+        protoc-gen-go
+        protoc-gen-go-grpc
+        pulumi
+        pulumiPackages.pulumi-go
+        ripgrep
+        rust-analyzer
+        rustc
+        shellcheck
+        socat
+        ssh-copy-id
+        # teleport
+        terraform
+        tig
+        tldr
+        tmate
+        tmux
+        tree
+        tree-sitter
+        universal-ctags
+        unzip
+        watch
+        wget
+        xmlstarlet
+        yarn
+        yq
+        zellij
+        zoxide
 
-      # Cross-platform GUI — add new ones here using nixGLWrapIfReq
-      (nixGLWrapIfReq spotify)
-      (nixGLWrapIfReq unstable._1password-gui)
-      (nixGLWrapIfReq unstable.obsidian)
-      opencodeDesktop
-      (nixGLWrapIfReq unstable.slack)
-      (nixGLWrapIfReq unstable.synology-drive-client)
-      (nixGLWrapIfReq unstable.typora)
+        # Cross-platform GUI — add new ones here using nixGLWrapIfReq
+        (nixGLWrapIfReq spotify)
+        (nixGLWrapIfReq unstable._1password-gui)
+        (nixGLWrapIfReq unstable.obsidian)
+        opencodeDesktop
+        (nixGLWrapIfReq unstable.slack)
+        (nixGLWrapIfReq unstable.synology-drive-client)
+        (nixGLWrapIfReq unstable.typora)
 
-      # Fonts
-      noto-fonts
-      noto-fonts-cjk-sans
-      noto-fonts-color-emoji
-      ia-writer-duospace
-      nerd-fonts.caskaydia-mono
-    ];
+        # Fonts
+        noto-fonts
+        noto-fonts-cjk-sans
+        noto-fonts-color-emoji
+        ia-writer-duospace
+        nerd-fonts.caskaydia-mono
+      ]
+      ++ lib.optional (!cfg.skipFirefox) (nixGLWrapIfReq pkgs.firefox);
   };
 }
