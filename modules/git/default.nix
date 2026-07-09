@@ -238,13 +238,6 @@ in
           tool = "mvimdiff";
         };
 
-        url = {
-          "git@github.com:" = {
-            pushInsteadOf = "https://github.com/";
-            insteadOf = "https://github.com/";
-          };
-        };
-
         # 'git push' will push the current branch to its tracking branch
         push = {
           # the usual default is to push all branches
