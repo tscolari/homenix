@@ -75,10 +75,11 @@ in
         awscli2
         azure-cli
         bat
+        bats
         buf
         unstable.buildkite-cli
         calcure
-        cargo
+        (lib.hiPrio cargo)
         cilium-cli
         claude-code
         unstable.codex
@@ -123,7 +124,11 @@ in
         kubectl
         kubectx
         kubernetes
+        kubernetes-helm
+        kubernetes-helmPlugins.helm-unittest
         lazyjournal
+        libfido2
+        llvm
         lsof
         lua
         luarocks
@@ -139,15 +144,18 @@ in
         master.opencode-claude-auth
         mermaid-cli
         pgcli
+        pkg-config
         postgresql
+        pnpm
         protobuf
         protoc-gen-go
         protoc-gen-go-grpc
         pulumi
         pulumiPackages.pulumi-go
         ripgrep
-        rust-analyzer
+        (lib.hiPrio rust-analyzer)
         rustc
+        rustup
         shellcheck
         socat
         ssh-copy-id
