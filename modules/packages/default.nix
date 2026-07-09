@@ -134,6 +134,7 @@ in
         luarocks
         mariadb.client
         mise
+        mkcert
         mockgen
         ngrok
         nil
