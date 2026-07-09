@@ -51,11 +51,26 @@ let
     '';
   };
 
+  compiledaemon = pkgs.buildGo126Module {
+    pname = "compiledaemon";
+    version = "v0.0.4";
+
+    src = pkgs.fetchFromGitHub {
+      owner = "githubnemo";
+      repo = "CompileDaemon";
+      rev = "v1.4.0";
+      hash = "sha256-gpyXy7FO7ZVXJrkzcKHFez4S/dGiijXfZ9eSJtNlm58=";
+    };
+
+    vendorHash = "sha256-UDPOeg8jQbDB+Fr4x6ehK7UyQa8ySZy6yNxS1xotkgA=";
+  };
+
 in
 
 {
   config = mkIf (cfg.enable && config.programs.homenix.enable) {
     home.packages = [
+      compiledaemon
       godevmcp
       worktool
     ];
