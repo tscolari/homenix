@@ -67,7 +67,7 @@ in
           inner.vertical = 8;
           outer.left = 8;
           outer.right = 8;
-          outer.top = 8;
+          outer.top = 4;
           outer.bottom = 8;
         };
 

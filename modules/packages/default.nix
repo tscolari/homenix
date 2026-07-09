@@ -130,6 +130,7 @@ in
       mockgen
       ngrok
       nil
+      nixd
       nix-index
       nodejs
       (lib.hiPrio master.opencode)
@@ -143,6 +144,7 @@ in
       pulumi
       pulumiPackages.pulumi-go
       ripgrep
+      rust-analyzer
       rustc
       shellcheck
       socat
