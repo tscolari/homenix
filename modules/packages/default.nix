@@ -79,7 +79,7 @@ in
         buf
         unstable.buildkite-cli
         calcure
-        (lib.hiPrio cargo)
+        cargo
         cilium-cli
         claude-code
         unstable.codex
@@ -153,9 +153,9 @@ in
         pulumi
         pulumiPackages.pulumi-go
         ripgrep
-        (lib.hiPrio rust-analyzer)
+        rust-analyzer
         rustc
-        rustup
+        (lib.hiPrio rustup)
         shellcheck
         socat
         ssh-copy-id
