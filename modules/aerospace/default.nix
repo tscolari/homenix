@@ -61,6 +61,7 @@ in
         };
 
         on-focused-monitor-changed = [ "move-mouse monitor-lazy-center" ];
+        focus-follows-mouse.enabled = true;
 
         gaps = {
           inner.horizontal = 8;
