@@ -21,6 +21,7 @@ in
 
         .claude
         .reviews
+        .devenv
 
         .direnv
         .envrc
