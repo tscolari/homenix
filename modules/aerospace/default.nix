@@ -1,5 +1,6 @@
 {
   lib,
+  pkgs,
   config,
   ...
 }:
@@ -9,6 +10,7 @@ with lib;
 let
 
   cfg = config.programs.homenix.aerospace;
+  supportsFocusFollowsMouse = versionAtLeast (cfg.package.version or "0") "0.21.0-Beta";
 
 in
 {
@@ -17,6 +19,13 @@ in
       type = types.bool;
       default = config.programs.homenix.enableAllByDefault;
       description = "Enable Aerospace configuration (macOS)";
+    };
+
+    package = mkOption {
+      type = types.package;
+      default = pkgs.aerospace;
+      defaultText = literalExpression "pkgs.aerospace";
+      description = "AeroSpace package to use.";
     };
   };
 
@@ -34,6 +43,7 @@ in
     programs.aerospace = {
       enable = true;
       launchd.enable = true;
+      package = cfg.package;
       settings = {
         start-at-login = true;
         enable-normalization-flatten-containers = true;
@@ -61,7 +71,6 @@ in
         };
 
         on-focused-monitor-changed = [ "move-mouse monitor-lazy-center" ];
-        focus-follows-mouse.enabled = true;
 
         gaps = {
           inner.horizontal = 8;
@@ -142,6 +151,8 @@ in
           # Workspace overview (mirrors Hyprland SUPER+grave → hyprexpo)
           "cmd-backtick" = "exec-and-forget open -a 'Mission Control'";
         };
+      } // optionalAttrs supportsFocusFollowsMouse {
+        focus-follows-mouse.enabled = true;
       };
     };
   };
