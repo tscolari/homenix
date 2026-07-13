@@ -145,13 +145,13 @@ in
           cmd-shift-b = "exec-and-forget open -na 'Google Chrome'";
           cmd-shift-s = "exec-and-forget screencapture -i ~/Desktop/screenshot-$(date +%Y%m%d-%H%M%S).png";
           cmd-shift-f = "exec-and-forget open ~";
-          cmd-shift-t = "exec-and-forget ~/.config/homenix/bin/homenix-themes-choose";
           cmd-ctrl-e = "exec-and-forget ~/.config/homenix/bin/settings";
 
           # Workspace overview (mirrors Hyprland SUPER+grave → hyprexpo)
           "cmd-backtick" = "exec-and-forget open -a 'Mission Control'";
         };
-      } // optionalAttrs supportsFocusFollowsMouse {
+      }
+      // optionalAttrs supportsFocusFollowsMouse {
         focus-follows-mouse.enabled = true;
       };
     };
