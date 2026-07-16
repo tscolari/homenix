@@ -161,7 +161,7 @@ in
         shellcheck
         socat
         ssh-copy-id
-        # teleport
+        teleport
         terraform
         tig
         tldr
