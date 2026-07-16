@@ -66,7 +66,7 @@ in
     pname = "nreviewer";
     owner = "tscolari";
     repo = "nreviewer";
-    rev = "v0.0.1";
-    hash = "sha256-9yNdeMazlbd9keGwbYRwYnyQG754Ua07Y9CkvzhW0zU=";
+    rev = "v0.0.2";
+    hash = "sha256-AsEpWAyPy0Paq6kgmH64rYllL6gmH2OdgeL7P6d2UwU=";
   };
 }
