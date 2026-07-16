@@ -152,6 +152,7 @@ in
         protobuf
         protoc-gen-go
         protoc-gen-go-grpc
+        proton-vpn
         pulumi
         pulumiPackages.pulumi-go
         ripgrep
