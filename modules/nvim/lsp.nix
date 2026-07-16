@@ -32,18 +32,60 @@ in
       };
 
       plugins.conform-nvim.settings = {
-        formatters_by_ft = {
-          go = [
-            # "gofmt"
-            "goimports"
-          ];
-        };
-        format_on_save = {
-          async = false;
-          timeout_ms = 3000;
-          lsp_format = "fallback";
-        };
+        # formatters_by_ft = {
+        #   go = [
+        #     # "gofmt"
+        #     "goimports"
+        #   ];
+        # };
+        # format_on_save = {
+        #   async = false;
+        #   timeout_ms = 3000;
+        #   lsp_format = "fallback";
+        # };
       };
+
+      extraConfigLua = ''
+        require("conform").setup({
+          formatters_by_ft = {
+            go = { "goimports" },
+          },
+          format_on_save = {
+            async = false,
+            timeout_ms = 3000,
+            lsp_format = "fallback",
+          },
+          formatters = {
+            goimports = {
+              command = "goimports",
+              args = function(self, ctx)
+                local function get_go_module_prefix(startpath)
+                  local go_mod = vim.fs.find("go.mod", { path = startpath, upward = true })[1]
+                  if not go_mod then return nil end
+                  for line in io.lines(go_mod) do
+                    local mod = line:match("^module%s+(%S+)")
+                    if mod then return mod end
+                  end
+                  return nil
+                end
+
+                local dir = vim.fs.dirname(ctx.filename)
+                local prefix = get_go_module_prefix(dir)
+
+                local f = io.open("/tmp/conform_debug.log", "a")
+                f:write(string.format("filename=%s dir=%s prefix=%s\n", tostring(ctx.filename), tostring(dir), tostring(prefix)))
+                f:close()
+
+                local args = {}
+                if prefix then
+                  args = { "-local", prefix }
+                end
+                return args
+              end,
+            },
+          },
+        })
+      '';
 
       plugins.lsp = {
         preConfig = ''
