@@ -148,6 +148,7 @@ in
         pkg-config
         postgresql
         pnpm
+        pre-commit
         protobuf
         protoc-gen-go
         protoc-gen-go-grpc
