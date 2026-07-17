@@ -68,7 +68,6 @@ in
         nvim-autopairs.enable = true;
         nvim-bqf.enable = true;
         rainbow-delimiters.enable = true;
-        render-markdown.enable = true;
         markdown-preview.enable = true;
         repeat.enable = true;
         sleuth.enable = true;
