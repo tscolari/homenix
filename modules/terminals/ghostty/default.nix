@@ -52,6 +52,7 @@ in
             "window-padding-x" = 14;
             "window-padding-y" = 14;
             "confirm-close-surface" = false;
+            "quit-after-last-window-closed" = true;
             "resize-overlay" = "never";
             "gtk-toolbar-style" = "flat";
 
