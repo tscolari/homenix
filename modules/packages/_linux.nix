@@ -53,7 +53,6 @@ in
         pinta
         playerctl
         pmutils
-        podman
         procps
         pstree
         slurp

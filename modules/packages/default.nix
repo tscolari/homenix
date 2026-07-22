@@ -52,6 +52,7 @@ in
     ./go.nix
     ./lazydocker.nix
     ./lazygit.nix
+    ./podman.nix
     ./lazysql.nix
     ./rust.nix
   ];
@@ -112,6 +113,7 @@ in
         gotestsum
         (lib.lowPrio unstable.gotools)
         govulncheck
+        patch
         grpcurl
         gum
         helmfile
@@ -146,8 +148,8 @@ in
         mermaid-cli
         pgcli
         pkg-config
-        postgresql
         pnpm
+        postgresql
         pre-commit
         protobuf
         protoc-gen-go
