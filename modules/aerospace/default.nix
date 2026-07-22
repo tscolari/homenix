@@ -87,7 +87,8 @@ in
           inner.vertical = 8;
           outer.left = 8;
           outer.right = 8;
-          outer.top = 4;
+          # Reserve the 26-point SketchyBar plus a 4-point visual gap.
+          outer.top = 30;
           outer.bottom = 8;
         };
 
