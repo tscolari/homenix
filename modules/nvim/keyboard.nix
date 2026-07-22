@@ -247,62 +247,6 @@ in
           key = "[t";
           action = "<Plug>(ultest-prev-fail)";
         }
-
-        # Search
-        {
-          mode = "";
-          key = "/";
-          action = "<Plug>(incsearch-forward)";
-          options.noremap = false;
-        }
-        {
-          mode = "";
-          key = "?";
-          action = "<Plug>(incsearch-backward)";
-          options.noremap = false;
-        }
-        {
-          mode = "";
-          key = "g/";
-          action = "<Plug>(incsearch-stay)";
-          options.noremap = false;
-        }
-        {
-          mode = "";
-          key = "n";
-          action = "<Plug>(incsearch-nohl-n)";
-          options.noremap = false;
-        }
-        {
-          mode = "";
-          key = "N";
-          action = "<Plug>(incsearch-nohl-N)";
-          options.noremap = false;
-        }
-        {
-          mode = "";
-          key = "*";
-          action = "<Plug>(incsearch-nohl-*)";
-          options.noremap = false;
-        }
-        {
-          mode = "";
-          key = "#";
-          action = "<Plug>(incsearch-nohl-#)";
-          options.noremap = false;
-        }
-        {
-          mode = "";
-          key = "g*";
-          action = "<Plug>(incsearch-nohl-g*)";
-          options.noremap = false;
-        }
-        {
-          mode = "";
-          key = "g#";
-          action = "<Plug>(incsearch-nohl-g#)";
-          options.noremap = false;
-        }
       ];
 
       plugins.which-key.settings.spec = [

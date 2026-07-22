@@ -15,8 +15,6 @@ in
   config = mkIf enabled {
     programs.nixvim = {
       globals = {
-        "incsearch#auto_nohlsearch" = 0;
-
         vsnip_snippet_dirs = [
           "${config.xdg.configHome}/snippets"
           "${config.xdg.configHome}/lua/user/snippets"

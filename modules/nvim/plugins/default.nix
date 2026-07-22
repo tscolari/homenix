@@ -96,7 +96,6 @@ in
         asyncrun-vim
         dracula-nvim
         fzf-vim
-        incsearch-vim
         kanagawa-nvim
         kanagawa-paper-nvim
         lsp-colors-nvim
