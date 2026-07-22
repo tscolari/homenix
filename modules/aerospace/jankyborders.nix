@@ -19,27 +19,27 @@ let
 in
 {
 
-  config = mkIf (config.programs.homenix.enable && cfg.enable) {
+  config = mkIf (config.programs.homenix.enable) {
     services.jankyborders = {
       enable = true;
-      settings = baseSettings;
+      # settings = baseSettings;
     };
 
-    xdg.configFile."borders/bordersrc".source = mkForce (
-      pkgs.writeShellScript "bordersrc" ''
-        options=(
-        ${lib.generators.toKeyValue { indent = "  "; } baseSettings})
-
-        theme_options=()
-        theme_file="$HOME/.config/homenix/current/theme/jankyborders.sh"
-
-        if [[ -r "$theme_file" ]]; then
-          source "$theme_file"
-          options+=( "''${theme_options[@]}" )
-        fi
-
-        exec ${lib.getExe config.services.jankyborders.package} "''${options[@]}"
-      ''
-    );
+    # xdg.configFile."borders/bordersrc".source = mkForce (
+    #   pkgs.writeShellScript "bordersrc" ''
+    #     options=(
+    #     ${lib.generators.toKeyValue { indent = "  "; } baseSettings})
+    #
+    #     theme_options=()
+    #     theme_file="$HOME/.config/homenix/current/theme/jankyborders.sh"
+    #
+    #     if [[ -r "$theme_file" ]]; then
+    #       source "$theme_file"
+    #       options+=( "''${theme_options[@]}" )
+    #     fi
+    #
+    #     exec ${lib.getExe config.services.jankyborders.package} "''${options[@]}"
+    #   ''
+    # );
   };
 }

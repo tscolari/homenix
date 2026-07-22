@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+#
+# sketchybar main config — ported from the homenix waybar (Hyprland) setup to
+# macOS / AeroSpace. Layout mirrors the waybar bar as closely as macOS allows:
+#
+#   left:   [apple menu?]  workspaces (1..9, empty ones hidden)
+#   center: focused app
+#   right:  bluetooth  wifi  volume  cpu  battery  weather  clock
+#
+# See PORT-NOTES.md for the module-by-module mapping and the intentional drops
+# (tray, swaync, power button, multi-timezone tooltip, window title).
+
+export CONFIG_DIR="$HOME/.config/sketchybar"
+export PLUGIN_DIR="$CONFIG_DIR/plugins"
+
+source "$CONFIG_DIR/colors.sh"
+source "$CONFIG_DIR/icons.sh"
+
+# Custom event fired by AeroSpace (exec-on-workspace-change in aerospace).
+sketchybar --add event aerospace_workspace_change
+
+# ── Bar ──────────────────────────────────────────────────────────────────
+# Transparent bar; each item carries its own rounded "chip" background, the
+# same look as the waybar item styling.
+sketchybar --bar \
+  height=26 \
+  position=top \
+  padding_left=6 \
+  padding_right=6 \
+  color="$BAR_COLOR" \
+  y_offset=0 \
+  margin=0 \
+  blur_radius=0 \
+  topmost=off
+
+# ── Global item defaults ─────────────────────────────────────────────────
+sketchybar --default \
+  updates=when_shown \
+  icon.font="JetBrainsMono Nerd Font:Bold:13.0" \
+  icon.color="$FG" \
+  label.font="JetBrainsMono Nerd Font:Bold:12.0" \
+  label.color="$FG" \
+  background.color="$ITEM_BG" \
+  background.corner_radius=6 \
+  background.height=20 \
+  padding_left=3 \
+  padding_right=3 \
+  icon.padding_left=8 \
+  icon.padding_right=4 \
+  label.padding_left=4 \
+  label.padding_right=8
+
+source "$CONFIG_DIR/items.sh"
+
+sketchybar --update
+
+# ── Initial paint for event-driven items ─────────────────────────────────
+# Space items only run on aerospace_workspace_change, so fire it once at start.
+sketchybar --trigger aerospace_workspace_change \
+  FOCUSED_WORKSPACE="$(aerospace list-workspaces --focused 2>/dev/null)"

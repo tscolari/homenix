@@ -10,7 +10,6 @@ with lib;
 let
 
   cfg = config.programs.homenix.aerospace;
-  supportsFocusFollowsMouse = versionAtLeast (cfg.package.version or "0") "0.21.0-Beta";
 
 in
 {
@@ -71,6 +70,17 @@ in
         };
 
         on-focused-monitor-changed = [ "move-mouse monitor-lazy-center" ];
+        focus-follows-mouse.enabled = true;
+
+        # Notify sketchybar whenever the focused workspace changes so the space
+        # items can re-highlight. $AEROSPACE_FOCUSED_WORKSPACE is set by aerospace
+        # in the callback environment.
+        on-focus-changed = [ "exec-and-forget sketchybar --trigger front_app_switched" ];
+        exec-on-workspace-change = [
+          "/bin/bash"
+          "-c"
+          "sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE"
+        ];
 
         gaps = {
           inner.horizontal = 8;
@@ -150,9 +160,6 @@ in
           # Workspace overview (mirrors Hyprland SUPER+grave → hyprexpo)
           "cmd-backtick" = "exec-and-forget open -a 'Mission Control'";
         };
-      }
-      // optionalAttrs supportsFocusFollowsMouse {
-        focus-follows-mouse.enabled = true;
       };
     };
   };
