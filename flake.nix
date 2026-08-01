@@ -31,16 +31,25 @@
       url = "github:sandwichfarm/hyprexpo";
       flake = false;
     };
+
+    # opencode upstream ships its own flake (on `dev`, its default branch), and
+    # releases far faster than nixpkgs tracks it. Consumed by the overlay below
+    # so `pkgs.opencode` is pinned here and bumped with `nix flake update
+    # opencode`, rather than riding whatever a nixpkgs channel happens to have.
+    opencode = {
+      url = "github:anomalyco/opencode";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
     {
-      nixpkgs,
       nixneovimplugins,
       nixvim,
       pam_shim,
       ags,
       hyprexpo,
+      opencode,
       ...
     }:
 
@@ -60,34 +69,39 @@
       # Overlays ##############################################################
       overlays = {
         default = final: prev: {
-          homenix =
-            {
-              # Required for the nvim module.
-              vimExtraPlugins = nixneovimplugins.packages.${final.stdenv.hostPlatform.system};
-            }
-            // final.lib.optionalAttrs final.stdenv.hostPlatform.isLinux {
-              # hyprexpo workspace-overview plugin, built from source against
-              # pkgs.hyprland so its ABI matches the running compositor. Consumed
-              # by modules/hyprland/plugins.nix (overridable there).
-              hyprexpo = final.hyprlandPlugins.mkHyprlandPlugin {
-                pluginName = "hyprexpo";
-                version = "unstable-${hyprexpo.shortRev or "dirty"}";
-                src = hyprexpo;
-                dontUseCmakeConfigure = true;
-                buildInputs = [
-                  final.pango
-                  final.cairo
-                  final.lua5_4
-                ];
-                installPhase = ''
-                  runHook preInstall
-                  mkdir -p $out/lib
-                  mv hyprexpo.so $out/lib/libhyprexpo.so
-                  runHook postInstall
-                '';
-                meta.description = "Workspace overview plugin for Hyprland (sandwichfarm hyprexpo fork)";
-              };
+          # opencode straight from upstream's own flake. Only the `opencode`
+          # package is taken, not their overlay wholesale — that one also
+          # replaces `opencode-desktop`, which the packages module deliberately
+          # pulls from nixpkgs-unstable for its darwin .app layout.
+          opencode = opencode.packages.${final.stdenv.hostPlatform.system}.opencode;
+
+          homenix = {
+            # Required for the nvim module.
+            vimExtraPlugins = nixneovimplugins.packages.${final.stdenv.hostPlatform.system};
+          }
+          // final.lib.optionalAttrs final.stdenv.hostPlatform.isLinux {
+            # hyprexpo workspace-overview plugin, built from source against
+            # pkgs.hyprland so its ABI matches the running compositor. Consumed
+            # by modules/hyprland/plugins.nix (overridable there).
+            hyprexpo = final.hyprlandPlugins.mkHyprlandPlugin {
+              pluginName = "hyprexpo";
+              version = "unstable-${hyprexpo.shortRev or "dirty"}";
+              src = hyprexpo;
+              dontUseCmakeConfigure = true;
+              buildInputs = [
+                final.pango
+                final.cairo
+                final.lua5_4
+              ];
+              installPhase = ''
+                runHook preInstall
+                mkdir -p $out/lib
+                mv hyprexpo.so $out/lib/libhyprexpo.so
+                runHook postInstall
+              '';
+              meta.description = "Workspace overview plugin for Hyprland (sandwichfarm hyprexpo fork)";
             };
+          };
         };
       };
 

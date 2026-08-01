@@ -84,11 +84,11 @@
     "hyprexpo": {
       "flake": false,
       "locked": {
-        "lastModified": 1784713713,
-        "narHash": "sha256-DVAU2SPebRtbi4qyC492MZt1RZtFCT9IN6du1Pck79A=",
+        "lastModified": 1785342172,
+        "narHash": "sha256-wW0tp1x1lxQTgRbjDHip4IkbEPqYmnAHq3wTYTdts4E=",
         "owner": "sandwichfarm",
         "repo": "hyprexpo",
-        "rev": "6caa38e4a19c44faf0312356c110f6c21d8ca627",
+        "rev": "141f3816ddfa0a52ed1a419c4eade8def62e6d2d",
         "type": "github"
       },
       "original": {
@@ -128,11 +128,11 @@
         "poetry2nix": "poetry2nix"
       },
       "locked": {
-        "lastModified": 1784473839,
-        "narHash": "sha256-YiNUAxNBQ5IDHzEe+4W7Ere0/ltgIsLQ3OGvfwPaB/s=",
+        "lastModified": 1785427122,
+        "narHash": "sha256-CmxRMsPcU+LN4qX4dSU3DSbETH+PrzOaZu8XV2DZlu0=",
         "owner": "NixNeovim",
         "repo": "NixNeovimPlugins",
-        "rev": "a1a112b130f40ef2519d72826b9c623443943330",
+        "rev": "1a112261bf361a850428aa5966ef05feace56e5f",
         "type": "github"
       },
       "original": {
@@ -143,11 +143,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1784432872,
-        "narHash": "sha256-n3gKTBIV4ZA5VQpUakffBe3KGu4+mhPoA34rrqS0GkA=",
+        "lastModified": 1785491804,
+        "narHash": "sha256-p00vplVOyfKGlhju0+eGGPAxyYYKaY0lpyuoHLFIx2Y=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "fd1462031fdee08f65fd0b4c6b64e22239a77870",
+        "rev": "5b4f72e1705a63aace42900610c4db82cb4af0ec",
         "type": "github"
       },
       "original": {
@@ -177,6 +177,26 @@
         "owner": "nix-community",
         "ref": "nixos-26.05",
         "repo": "nixvim",
+        "type": "github"
+      }
+    },
+    "opencode": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1785577606,
+        "narHash": "sha256-NGcVpJq+pOAJG142wpzljqD3Yxg8MFD4zzTkVTX3m4Q=",
+        "owner": "anomalyco",
+        "repo": "opencode",
+        "rev": "f67e80c2756ac0d9d05a31da59483b0a7a6cd0c3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "anomalyco",
+        "repo": "opencode",
         "type": "github"
       }
     },
@@ -233,6 +253,7 @@
         "nixneovimplugins": "nixneovimplugins",
         "nixpkgs": "nixpkgs",
         "nixvim": "nixvim",
+        "opencode": "opencode",
         "pam_shim": "pam_shim"
       }
     },
