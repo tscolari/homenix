@@ -83,7 +83,7 @@ sketchybar --add item cpu right \
     icon="$ICON_CPU" \
     icon.color="$TEAL" \
     label.drawing=off \
-    click_script="open -na /Applications/ghostty.app --args -e btop"
+    click_script="open -na /Applications/ghostty.app --args -e zsh -c 'btop'"
 # --set cpu update_freq=5 script="$PLUGIN_DIR/cpu.sh" label.drawing=on
 
 # Volume — click opens Sound settings, right-click mutes, scroll adjusts.

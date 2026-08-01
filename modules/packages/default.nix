@@ -52,7 +52,6 @@ in
     ./go.nix
     ./lazydocker.nix
     ./lazygit.nix
-    ./podman.nix
     ./lazysql.nix
     ./rust.nix
   ];
@@ -90,6 +89,7 @@ in
         delve
         devenv
         dig
+        docker
         dust
         eza
         fasd
@@ -150,6 +150,7 @@ in
         pgcli
         pkg-config
         pnpm
+        podman
         postgresql
         pre-commit
         protobuf
