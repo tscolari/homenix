@@ -13,13 +13,18 @@ let
 
   # Replicates NixOS's virtualisation.podman.dockerCompat —
   # a real symlink on PATH, not a shell alias.
-  dockerCompat = pkgs.runCommand "podman-docker-compat-${pkgs.podman.version}" {
-    meta = pkgs.podman.meta // { outputsToInstall = [ "out" ]; };
-    preferLocalBuild = true;
-  } ''
-    mkdir -p $out/bin
-    ln -s ${pkgs.podman}/bin/podman $out/bin/docker
-  '';
+  dockerCompat =
+    pkgs.runCommand "podman-docker-compat-${pkgs.podman.version}"
+      {
+        meta = pkgs.podman.meta // {
+          outputsToInstall = [ "out" ];
+        };
+        preferLocalBuild = true;
+      }
+      ''
+        mkdir -p $out/bin
+        ln -s ${pkgs.podman}/bin/podman $out/bin/docker
+      '';
 
 in
 
@@ -27,7 +32,6 @@ in
   config = mkIf (cfg.enable && config.programs.homenix.enable) {
     home.packages = [
       pkgs.podman
-      dockerCompat
     ];
 
     # On macOS, podman machine exposes its socket under $TMPDIR.
