@@ -53,6 +53,7 @@ in
     ./lazydocker.nix
     ./lazygit.nix
     ./lazysql.nix
+    ./podman.nix
     ./rust.nix
   ];
 
