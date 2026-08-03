@@ -39,6 +39,10 @@ in
         editor.keymap = "emacs";
         tmux.autoStartLocal = true;
       };
+
+      initContent = lib.mkAfter ''
+        setopt clobber
+      '';
     };
   };
 }
