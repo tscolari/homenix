@@ -120,6 +120,7 @@ in
         helmfile
         htop
         hub
+        hugo
         jq
         jwt-cli
         khal
