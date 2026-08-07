@@ -48,7 +48,7 @@ in
       extraConfigLua = ''
         require("conform").setup({
           formatters_by_ft = {
-            go = { "goimports" },
+            go = { "goimports", "gci" },
           },
           format_on_save = {
             async = false,
@@ -58,6 +58,9 @@ in
           formatters = {
             goimports = {
               command = "goimports",
+            },
+            gci = {
+              command = "gci",
               args = function(self, ctx)
                 local function get_go_module_prefix(startpath)
                   local go_mod = vim.fs.find("go.mod", { path = startpath, upward = true })[1]
@@ -72,16 +75,15 @@ in
                 local dir = vim.fs.dirname(ctx.filename)
                 local prefix = get_go_module_prefix(dir)
 
-                local f = io.open("/tmp/conform_debug.log", "a")
-                f:write(string.format("filename=%s dir=%s prefix=%s\n", tostring(ctx.filename), tostring(dir), tostring(prefix)))
-                f:close()
-
-                local args = {}
+                local args = { "write", "--skip-generated", "-s", "standard", "-s", "default" }
                 if prefix then
-                  args = { "-local", prefix }
+                  table.insert(args, "-s")
+                  table.insert(args, "prefix(" .. prefix .. ")")
                 end
+                table.insert(args, "$FILENAME")
                 return args
               end,
+              stdin = false,
             },
           },
         })

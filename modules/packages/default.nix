@@ -104,6 +104,7 @@ in
         unstable.go
         go-migrate
         go-mockery
+        gci
         unstable.gofumpt
         unstable.golangci-lint
         (lib.lowPrio golines)
