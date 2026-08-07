@@ -190,7 +190,7 @@ in
         # Cross-platform GUI — add new ones here using nixGLWrapIfReq
         (nixGLWrapIfReq spotify)
         (nixGLWrapIfReq unstable._1password-gui)
-        (nixGLWrapIfReq unstable.obsidian)
+        (nixGLWrapIfReq obsidian)
         opencodeDesktop
         (nixGLWrapIfReq unstable.slack)
         (nixGLWrapIfReq unstable.synology-drive-client)
