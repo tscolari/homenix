@@ -29,28 +29,6 @@ let
     subPackages = [ "godevmcp" ];
   };
 
-  worktool = pkgs.buildGo126Module {
-    pname = "worktool";
-    version = "v0.0.4";
-
-    src = pkgs.fetchgit {
-      url = "https://codeberg.org/tscolari/worktool.git";
-      rev = "v0.0.4";
-      hash = "sha256-uo9302jiM5ebBaPDoTseau2eSGnhZJnjiJmCqbgc4m8=";
-    };
-
-    vendorHash = "sha256-7K17JaXFsjf163g5PXCb5ng2gYdotnZ2IDKk8KFjNj0=";
-
-    subPackages = [
-      "cmd/work"
-    ];
-
-    postInstall = ''
-      mkdir -p $out/share/zsh/site-functions
-      $out/bin/work completion zsh > $out/share/zsh/site-functions/_work
-    '';
-  };
-
   compiledaemon = pkgs.buildGo126Module {
     pname = "compiledaemon";
     version = "v0.0.4";
@@ -72,7 +50,8 @@ in
     home.packages = [
       compiledaemon
       godevmcp
-      worktool
+      # `work` — from worktool's own flake via homenix.overlays.default.
+      pkgs.work
     ];
   };
 }

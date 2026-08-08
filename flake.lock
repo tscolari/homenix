@@ -254,7 +254,8 @@
         "nixpkgs": "nixpkgs",
         "nixvim": "nixvim",
         "opencode": "opencode",
-        "pam_shim": "pam_shim"
+        "pam_shim": "pam_shim",
+        "worktool": "worktool"
       }
     },
     "systems": {
@@ -284,6 +285,26 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
+        "type": "github"
+      }
+    },
+    "worktool": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1786217442,
+        "narHash": "sha256-M+XZacCvhCal7Lpq+/aRcKLjvbbDH7+3ztdBqf2R/o0=",
+        "owner": "tscolari",
+        "repo": "worktool",
+        "rev": "c7d6d4687170a9fbe806ff92ff4162b71937a5b0",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tscolari",
+        "repo": "worktool",
         "type": "github"
       }
     }

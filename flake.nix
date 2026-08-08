@@ -40,6 +40,15 @@
       url = "github:anomalyco/opencode";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # `work` — git worktree + tmux workspace manager. Ships its own flake, so
+    # the package definition (git/tmux PATH wrapper, shell completions,
+    # vendorHash) lives upstream instead of being duplicated here. Tracks main;
+    # bump with `nix flake update worktool`.
+    worktool = {
+      url = "github:tscolari/worktool";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -50,6 +59,7 @@
       ags,
       hyprexpo,
       opencode,
+      worktool,
       ...
     }:
 
@@ -74,6 +84,9 @@
           # replaces `opencode-desktop`, which the packages module deliberately
           # pulls from nixpkgs-unstable for its darwin .app layout.
           opencode = opencode.packages.${final.stdenv.hostPlatform.system}.opencode;
+
+          # From worktool's own flake. Consumed by modules/packages/go.nix.
+          work = worktool.packages.${final.stdenv.hostPlatform.system}.default;
 
           homenix = {
             # Required for the nvim module.
