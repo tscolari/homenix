@@ -18,7 +18,7 @@ and still be fully compatible with my original NixOS configuration/machine.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     home-manager.url = "github:nix-community/home-manager";
     homenix = {
-      url = "git+ssh://git@codeberg.org/tscolari/homenix?ref=26.05";
+      url = "github:tscolari/homenix/26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
