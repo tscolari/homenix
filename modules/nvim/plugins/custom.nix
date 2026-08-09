@@ -61,12 +61,4 @@ in
     rev = "v0.0.1";
     hash = "sha256-g4fvKswD2Sr3Zuy1Znku1NInDXF2sO6P7PXGecBDDdk=";
   };
-
-  nreviewer-nvim = buildPlugin {
-    pname = "nreviewer";
-    owner = "tscolari";
-    repo = "nreviewer";
-    rev = "v0.0.3";
-    hash = "sha256-BAqI+rkA3LBz2vpcAKvwSivXJ54i0sXcEVlg17oMGOc=";
-  };
 }

@@ -41,6 +41,15 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # nreviewer — Neovim branch-review browser. Ships its own flake, so the
+    # plugin derivation lives upstream instead of being pinned by rev/hash in
+    # modules/nvim/plugins/custom.nix. Tracks main; bump with `nix flake update
+    # nreviewer`.
+    nreviewer = {
+      url = "github:tscolari/nreviewer";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # `work` — git worktree + tmux workspace manager. Ships its own flake, so
     # the package definition (git/tmux PATH wrapper, shell completions,
     # vendorHash) lives upstream instead of being duplicated here. Tracks main;
@@ -59,6 +68,7 @@
       ags,
       hyprexpo,
       opencode,
+      nreviewer,
       worktool,
       ...
     }:
@@ -73,6 +83,7 @@
             ./modules
             ags.homeManagerModules.default
             pam_shim.homeModules.default
+            nreviewer.homeManagerModules.default
           ];
         };
 
@@ -87,6 +98,10 @@
 
           # From worktool's own flake. Consumed by modules/packages/go.nix.
           work = worktool.packages.${final.stdenv.hostPlatform.system}.default;
+
+          # From nreviewer's own flake. A plain vim plugin derivation, consumed
+          # by modules/nvim/plugins/default.nix.
+          nreviewer = nreviewer.packages.${final.stdenv.hostPlatform.system}.default;
 
           homenix = {
             # Required for the nvim module.
