@@ -3,12 +3,12 @@
 # sketchybar main config — ported from the homenix waybar (Hyprland) setup to
 # macOS / AeroSpace. Layout mirrors the waybar bar as closely as macOS allows:
 #
-#   left:   [apple menu?]  workspaces (1..9, empty ones hidden)
+#   left:   [apple menu?]  workspaces (1..4 always, 5..9 while occupied)
 #   center: focused app
-#   right:  bluetooth  wifi  volume  cpu  battery  weather  clock
+#   right:  tray  bluetooth  wifi  volume  cpu  battery  weather  clock
 #
 # See PORT-NOTES.md for the module-by-module mapping and the intentional drops
-# (tray, swaync, power button, multi-timezone tooltip, window title).
+# (swaync, power button, multi-timezone tooltip, window title).
 
 export CONFIG_DIR="$HOME/.config/sketchybar"
 export PLUGIN_DIR="$CONFIG_DIR/plugins"
