@@ -48,7 +48,7 @@ in
       extraConfigLua = ''
         require("conform").setup({
           formatters_by_ft = {
-            go = { "goimports", "gci" },
+            go = { "goimports", "gofumpt", "gci" },
           },
           format_on_save = {
             async = false,
@@ -56,6 +56,10 @@ in
             lsp_format = "fallback",
           },
           formatters = {
+            gofumpt = {
+              -- Avoid rewriting legacy octal literals while retaining gofumpt's other rules.
+              prepend_args = { "-lang=go1.12" },
+            },
             goimports = {
               command = "goimports",
             },
@@ -211,7 +215,7 @@ in
           enable = true;
           config.settings = {
             gopls = {
-              gofumpt = true;
+              gofumpt = false;
               semanticTokens = true;
               experimentalPostfixCompletions = true;
               analyses = {
