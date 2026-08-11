@@ -48,7 +48,7 @@ in
       extraConfigLua = ''
         require("conform").setup({
           formatters_by_ft = {
-            go = { "goimports", "gofumpt", "gci" },
+            go = { "goimports", "gci" },
           },
           format_on_save = {
             async = false,
