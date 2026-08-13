@@ -28,8 +28,6 @@ in
       ];
     };
 
-    programs.distrobox.enable = true;
-
     home.packages =
       with pkgs;
       [
@@ -37,7 +35,6 @@ in
         (lib.hiPrio ruby)
         btop
         calibre
-        distrobox
         gtop
         inxi
         inkscape-with-extensions

@@ -49,11 +49,11 @@ in
     ./_linux.nix
     ./_darwin.nix
     ./btop.nix
+    ./docker.nix
     ./go.nix
     ./lazydocker.nix
     ./lazygit.nix
     ./lazysql.nix
-    ./podman.nix
     ./rust.nix
   ];
 
@@ -153,7 +153,6 @@ in
         pgcli
         pkg-config
         pnpm
-        podman
         postgresql
         pre-commit
         protobuf
