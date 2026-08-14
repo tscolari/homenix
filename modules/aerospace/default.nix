@@ -39,6 +39,15 @@ in
       executable = true;
     };
 
+    home.file."Library/KeyBindings/DefaultKeyBindings.dict".text = ''
+      {
+        "\UF729"  = moveToBeginningOfLine:; // home
+        "\UF72B"  = moveToEndOfLine:; // end
+        "$\UF729" = moveToBeginningOfLineAndModifySelection:; // shift-home
+        "$\UF72B" = moveToEndOfLineAndModifySelection:; // shift-end
+      }
+    '';
+
     programs.aerospace = {
       enable = true;
       launchd.enable = true;
