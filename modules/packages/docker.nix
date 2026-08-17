@@ -34,8 +34,8 @@ in
         # from the host for as long as the VM is up.
         settings = {
           cpu = 8;
-          memory = 12;
-          disk = 100;
+          memory = 18;
+          disk = 500;
           vmType = "vz";
           runtime = "docker";
         };
