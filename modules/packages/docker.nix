@@ -38,6 +38,9 @@ in
           disk = 500;
           vmType = "vz";
           runtime = "docker";
+          # Colima 0.10 treats an omitted mounts key as disabling mounts.
+          # An empty list explicitly enables its default writable home mount.
+          mounts = [ ];
         };
       };
     };
