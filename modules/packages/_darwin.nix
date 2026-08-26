@@ -19,8 +19,9 @@ in
       maccy # clipboard manager — configure shortcut and history via app preferences
       choose-gui # "rofi" equivalent
       (lib.hiPrio llvmPackages.clang)
-      swift
       fish
+      pinentry_mac
+      swift
     ];
   };
 }
