@@ -24,6 +24,7 @@ with lib;
     ./gtk
     ./hyprland
     ./non-nixos-compat.nix
+    ./omniwm
     ./packages
     ./qt
   ];
@@ -56,6 +57,7 @@ with lib;
 
       # MacOS-only modules default to false on Linux.
       programs.homenix.aerospace.enable = false;
+      programs.homenix.omniwm.enable = false;
     })
 
     (mkIf pkgs.stdenv.isDarwin {
@@ -65,6 +67,10 @@ with lib;
       programs.homenix.hyprland.enable = mkDefault false;
       programs.homenix.gnome.enable = mkDefault false;
       programs.homenix.qt.enable = mkDefault false;
+
+      # OmniWM is the default macOS window manager; aerospace remains available
+      # but must be opted into (and the two assert against being enabled at once).
+      programs.homenix.aerospace.enable = mkDefault false;
     })
   ]);
 }

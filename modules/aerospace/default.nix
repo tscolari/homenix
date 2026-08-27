@@ -16,7 +16,7 @@ in
   options.programs.homenix.aerospace = {
     enable = mkOption {
       type = types.bool;
-      default = config.programs.homenix.enableAllByDefault;
+      default = false;
       description = "Enable Aerospace configuration (macOS)";
     };
 

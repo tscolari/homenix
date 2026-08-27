@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+#
+# sketchybar main config — OmniWM variant.
+#
+# Differs from ../sketchybar/sketchybarrc (the AeroSpace one) in exactly two
+# ways, both because OmniWM draws its own workspace bar:
+#
+#   1. No workspace items, and no `aerospace_workspace_change` event or initial
+#      trigger. OmniWM's built-in workspace bar handles workspaces, and it does
+#      it better than the sketchybar items ever did.
+#   2. Nothing shells out to `aerospace`.
+#
+# Everything else — colours, icons, the Apple menu, and every right-hand status
+# item — is shared verbatim with the AeroSpace config; modules/omniwm/sketchybar.nix
+# links those files in from ../sketchybar rather than duplicating them.
+#
+#   left:   [apple menu]  focused window title
+#   center: (OmniWM's own workspace bar, centre-anchored)
+#   right:  tray  bluetooth  wifi  volume  cpu  battery  weather  clock
+#
+# Both bars share the menu bar row rather than stacking. OmniWM's workspace bar
+# is drawn centred, so this config keeps the middle clear: the focused-window
+# title moves to `left` next to the Apple menu, and the status cluster stays
+# right. modules/omniwm/settings.nix reserves one bar height as gaps.outer.top.
+
+export CONFIG_DIR="$HOME/.config/sketchybar"
+export PLUGIN_DIR="$CONFIG_DIR/plugins"
+
+source "$CONFIG_DIR/colors.sh"
+source "$CONFIG_DIR/icons.sh"
+
+# ── Bar ──────────────────────────────────────────────────────────────────
+# Transparent bar; each item carries its own rounded "chip" background, the
+# same look as the waybar item styling.
+#
+# NOTE: height is mirrored in modules/omniwm/settings.nix (sketchybarHeight) to
+# compute the top gap. Change it in both places, or windows will overlap the bar.
+sketchybar --bar \
+  height=26 \
+  position=top \
+  padding_left=6 \
+  padding_right=6 \
+  color="$BAR_COLOR" \
+  y_offset=0 \
+  margin=0 \
+  blur_radius=0 \
+  topmost=off
+
+# ── Global item defaults ─────────────────────────────────────────────────
+sketchybar --default \
+  updates=when_shown \
+  icon.font="JetBrainsMono Nerd Font:Bold:13.0" \
+  icon.color="$FG" \
+  label.font="JetBrainsMono Nerd Font:Bold:12.0" \
+  label.color="$FG" \
+  background.color="$ITEM_BG" \
+  background.corner_radius=6 \
+  background.height=20 \
+  padding_left=3 \
+  padding_right=3 \
+  icon.padding_left=8 \
+  icon.padding_right=4 \
+  label.padding_left=4 \
+  label.padding_right=8
+
+source "$CONFIG_DIR/items.sh"
+
+sketchybar --update
