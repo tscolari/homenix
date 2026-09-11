@@ -69,6 +69,9 @@ in
       k9s.enable = true;
     };
 
+    home.file.".pi/agent/extensions/provider-base-urls.ts".source =
+      ../../configs/pi/extensions/provider-base-urls.ts;
+
     home.packages =
       with pkgs;
       [
