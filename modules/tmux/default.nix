@@ -49,6 +49,7 @@ in
 
       extraConfig = ''
         setw -g mouse on
+        set -g extended-keys on
 
         set-option -g status-bg colour235 #base02
         set-option -g status-fg colour136 #yellow
