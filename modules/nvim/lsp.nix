@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  pkgs,
   ...
 }:
 
@@ -213,6 +214,12 @@ in
 
         gopls = {
           enable = true;
+          config.cmd = [
+            "${pkgs.coreutils}/bin/env"
+            "GOMEMLIMIT=6GiB"
+            "gopls"
+            "-remote=auto"
+          ];
           config.settings = {
             gopls = {
               gofumpt = false;
