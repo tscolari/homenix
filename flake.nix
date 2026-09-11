@@ -1,8 +1,22 @@
 {
   description = "Home Manager modules for using on NixOS and stand-alone";
 
+  # Zed publishes pre-built packages through its Cachix cache. Flake-level Nix
+  # settings are only honoured for the root flake, so consumers of this module
+  # need to repeat these settings (or configure them system-wide) to use it.
+  nixConfig = {
+    extra-substituters = [ "https://zed.cachix.org" ];
+    extra-trusted-public-keys = [
+      "zed.cachix.org-1:/pHQ6dpMsAZk2DiP4WCL0p9YDNKWj2Q5FL20bNmw1cU="
+    ];
+  };
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+
+    # Zed's upstream flake tracks main. Keep its nixpkgs input independent so
+    # the package stays on the dependency set tested and cached upstream.
+    zed.url = "github:zed-industries/zed";
 
     nixneovimplugins = {
       url = "github:NixNeovim/NixNeovimPlugins";
@@ -70,6 +84,7 @@
       opencode,
       nreviewer,
       worktool,
+      zed,
       ...
     }:
 
@@ -106,6 +121,10 @@
           homenix = {
             # Required for the nvim module.
             vimExtraPlugins = nixneovimplugins.packages.${final.stdenv.hostPlatform.system};
+          }
+          // final.lib.optionalAttrs (builtins.hasAttr final.stdenv.hostPlatform.system zed.packages) {
+            # Use Zed's upstream package rather than the nixpkgs release.
+            zed-editor = zed.packages.${final.stdenv.hostPlatform.system}.default;
           }
           // final.lib.optionalAttrs final.stdenv.hostPlatform.isLinux {
             # hyprexpo workspace-overview plugin, built from source against

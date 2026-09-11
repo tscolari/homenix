@@ -12,6 +12,21 @@ and still be fully compatible with my original NixOS configuration/machine.
 
 # Usage Example
 
+The Zed module uses the package from Zed's upstream flake. Nix does not inherit
+`nixConfig` from dependency flakes, so consumers that enable Zed should add its
+binary cache to their root flake (or configure it system-wide):
+
+```nix
+nixConfig = {
+  extra-substituters = [ "https://zed.cachix.org" ];
+  extra-trusted-public-keys = [
+    "zed.cachix.org-1:/pHQ6dpMsAZk2DiP4WCL0p9YDNKWj2Q5FL20bNmw1cU="
+  ];
+};
+```
+
+Without these settings, Nix may build Zed's large Rust dependency graph locally.
+
 ```nix
 {
   inputs = {
@@ -28,7 +43,7 @@ and still be fully compatible with my original NixOS configuration/machine.
 
       pkgs = import nixpkgs {
         system = "x86_64-linux";
-        overlays = [ homenix.overlays.default ]; # Required for nvim module
+        overlays = [ homenix.overlays.default ]; # Required for nvim and Zed modules
       };
 
 
@@ -64,6 +79,7 @@ and still be fully compatible with my original NixOS configuration/machine.
 
               # hyprland.enable = true;
               # nvim.enable = true;
+              # zed.enable = true;
             };
         }
 
