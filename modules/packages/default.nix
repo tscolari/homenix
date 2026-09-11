@@ -151,6 +151,7 @@ in
         master.opencode-claude-auth
         mermaid-cli
         pgcli
+        master.pi-coding-agent
         pkg-config
         pnpm
         postgresql
