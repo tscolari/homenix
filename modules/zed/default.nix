@@ -16,28 +16,52 @@ let
     package:
     if pkgs.stdenv.isLinux && config.lib ? nixGL then config.lib.nixGL.wrap package else package;
 
-  zedGciFormat = pkgs.writeShellApplication {
-    name = "zed-gci-format";
+  # Zed external formatter mirroring nvim's conform pipeline for Go: goimports,
+  # then gci grouping the current module's imports last. Reads the buffer on
+  # stdin and prints the result on stdout. `go` itself is intentionally not a
+  # runtime input so goimports resolves packages with the user's toolchain.
+  zedGoFormat = pkgs.writeShellApplication {
+    name = "zed-go-format";
     runtimeInputs = [
       pkgs.gci
-      pkgs.go
+      pkgs.unstable.gotools
     ];
     text = ''
       if [[ $# -ne 1 || -z "$1" ]]; then
-        echo "usage: zed-gci-format <go-file>" >&2
+        echo "usage: zed-go-format <go-file> < source.go" >&2
         exit 2
       fi
 
       file="$1"
       directory="$(dirname -- "$file")"
-      module_prefix="$(cd "$directory" && go list -m -f '{{.Path}}' 2>/dev/null || true)"
 
-      args=(write --skip-generated -s standard -s default)
+      module_prefix=""
+      search="$directory"
+      while true; do
+        if [[ -f "$search/go.mod" ]]; then
+          while IFS= read -r line; do
+            if [[ "$line" =~ ^module[[:space:]]+([^[:space:]]+) ]]; then
+              module_prefix="''${BASH_REMATCH[1]}"
+              break
+            fi
+          done < "$search/go.mod"
+          break
+        fi
+        if [[ "$search" == "/" || "$search" == "." ]]; then
+          break
+        fi
+        search="$(dirname -- "$search")"
+      done
+
+      args=(print --skip-generated -s standard -s default)
       if [[ -n "$module_prefix" ]]; then
         args+=(-s "prefix($module_prefix)")
       fi
 
-      exec gci "''${args[@]}" "$file"
+      # Run the steps separately so a syntax error reports goimports' message
+      # instead of gci's usage text for its empty input.
+      formatted="$(goimports -srcdir "$directory")"
+      printf '%s\n' "$formatted" | gci "''${args[@]}"
     '';
   };
 
@@ -45,9 +69,9 @@ let
     delve
     docker-language-server
     gci
-    golangci-lint
+    unstable.golangci-lint
     golangci-lint-langserver
-    gopls
+    unstable.gopls
     lua-language-server
     nil
     nixd
@@ -56,7 +80,7 @@ let
     typescript-language-server
     vscode-langservers-extracted
     yaml-language-server
-    zedGciFormat
+    zedGoFormat
   ];
 
   normalMode = "Editor && vim_mode == normal && !menu";
@@ -91,7 +115,10 @@ in
       # Home Manager merges these baselines into the user's existing JSON/JSON5
       # files on activation instead of replacing user-created configuration.
       mutableUserSettings = true;
-      mutableUserKeymaps = true;
+      # Zed resolves conflicting bindings by block order, but the mutable merge
+      # sorts blocks by context and never drops removed bindings. Link the
+      # keymap as generated so block order below is what Zed sees.
+      mutableUserKeymaps = false;
       mutableUserTasks = true;
       mutableUserDebug = true;
 
@@ -143,6 +170,10 @@ in
           enable_keep_preview_on_code_navigation = true;
         };
 
+        # Behave like vim buffers: files stay open in the background without a
+        # tab bar, and are reached through the buffer bindings (space b/f o).
+        tab_bar.show = false;
+
         gutter = {
           line_numbers = true;
           folds = true;
@@ -168,11 +199,21 @@ in
 
         languages = {
           Go = {
-            hard_tabs = false;
+            # gofmt always indents with tabs; match it while typing.
+            hard_tabs = true;
             tab_size = 4;
             format_on_save = "on";
-            formatter = "language_server";
-            code_actions_on_format."source.organizeImports" = true;
+            formatter = [
+              {
+                external = {
+                  command = lib.getExe zedGoFormat;
+                  arguments = [ "{buffer_path}" ];
+                };
+              }
+            ];
+            # Zed enables gopls' organizeImports for Go by default; goimports
+            # already covers it, so keep formatting identical to nvim.
+            code_actions_on_format."source.organizeImports" = false;
             language_servers = [
               "gopls"
               "golangci-lint"
@@ -235,7 +276,7 @@ in
         lsp = {
           gopls = {
             binary = {
-              path = lib.getExe pkgs.gopls;
+              path = lib.getExe pkgs.unstable.gopls;
               arguments = [ "-remote=auto" ];
               env.GOMEMLIMIT = "6GiB";
             };
@@ -266,7 +307,7 @@ in
             # nixpkgs carries golangci-lint v2, whose JSON output flags differ
             # from the v1 defaults used by older versions of the extension.
             initialization_options.command = [
-              (lib.getExe pkgs.golangci-lint)
+              (lib.getExe pkgs.unstable.golangci-lint)
               "run"
               "--output.json.path"
               "stdout"
@@ -274,7 +315,11 @@ in
               "--output.text.path="
             ];
           };
-          nil.binary.path = lib.getExe pkgs.nil;
+          nil = {
+            binary.path = lib.getExe pkgs.nil;
+            # Fetch missing flake inputs without prompting on every open.
+            settings.nil.nix.flake.autoArchive = true;
+          };
           nixd.binary.path = lib.getExe pkgs.nixd;
           "lua-language-server".binary.path = lib.getExe pkgs.lua-language-server;
           "terraform-ls".binary.path = lib.getExe pkgs.terraform-ls;
@@ -309,7 +354,7 @@ in
         {
           context = normalMode;
           bindings = {
-            "-" = "project_panel::ToggleFocus";
+            "-" = "project_panel::Toggle";
             "v v" = "pane::SplitRight";
             "s s" = "pane::SplitDown";
             "alt-q" = "pane::CloseActiveItem";
@@ -428,6 +473,46 @@ in
           };
         }
         {
+          # Same context as Zed's vim `ctrl-w` window commands: vim normal and
+          # visual modes plus non-editor panels, leaving insert mode and the
+          # terminal (where ctrl-l/ctrl-h matter) untouched.
+          context = "VimControl && !menu || !Editor && !Terminal";
+          bindings = {
+            "ctrl-h" = "workspace::ActivatePaneLeft";
+            "ctrl-j" = "workspace::ActivatePaneDown";
+            "ctrl-k" = "workspace::ActivatePaneUp";
+            "ctrl-l" = "workspace::ActivatePaneRight";
+          };
+        }
+        {
+          # Multibuffers (project search, references, diagnostics, diffs): jump
+          # between result boxes and expand their context. Listed after the
+          # blocks above so these win over ctrl-j/ctrl-k and shift-enter there.
+          context = "Editor && multibuffer && VimControl && !menu";
+          bindings = {
+            "ctrl-j" = "editor::MoveToStartOfNextExcerpt";
+            # Start of the current box, or of the previous one when already there.
+            "ctrl-k" = "editor::MoveToStartOfExcerpt";
+            "shift-enter" = "editor::ExpandExcerpts";
+          };
+        }
+        {
+          # Close result views with escape, returning to the previous file.
+          # Normal mode only, so escape still leaves visual mode there.
+          context = "Editor && multibuffer && vim_mode == normal && !menu";
+          bindings = {
+            "escape" = "pane::CloseActiveItem";
+          };
+        }
+        {
+          # Make `-` a toggle: close the project panel from inside it and return
+          # to the editor. Overrides Zed's netrw-style `-` (select parent).
+          context = "ProjectPanel && not_editing";
+          bindings = {
+            "-" = "project_panel::Toggle";
+          };
+        }
+        {
           context = "Dock";
           bindings = {
             "ctrl-w h" = "workspace::ActivatePaneLeft";
@@ -476,16 +561,6 @@ in
           cwd = "$ZED_WORKTREE_ROOT";
           save = "current";
           reveal = "always";
-          use_new_terminal = false;
-          allow_concurrent_runs = false;
-        }
-        {
-          label = "Go: organize imports with gci";
-          command = lib.getExe zedGciFormat;
-          args = [ "$ZED_FILE" ];
-          cwd = "$ZED_DIRNAME";
-          save = "current";
-          reveal = "no_focus";
           use_new_terminal = false;
           allow_concurrent_runs = false;
         }
