@@ -272,7 +272,11 @@ in
           };
         };
 
-        nil_ls.enable = true;
+        nil_ls = {
+          enable = true;
+          # Fetch missing flake inputs without prompting on every open.
+          config.settings.nil.nix.flake.autoArchive = true;
+        };
         postgres_language_server.enable = true;
         buf_ls.enable = false;
         protols.enable = false;
