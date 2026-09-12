@@ -20,7 +20,7 @@ in
   options.programs.homenix.omniwm = {
     enable = mkOption {
       type = types.bool;
-      default = config.programs.homenix.enableAllByDefault;
+      default = false;
       description = "Enable OmniWM window manager configuration (macOS)";
     };
 

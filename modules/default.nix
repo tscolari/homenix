@@ -57,8 +57,8 @@ with lib;
       pamShim.enable = (!config.programs.homenix.isNixOS);
 
       # MacOS-only modules default to false on Linux.
-      programs.homenix.aerospace.enable = false;
-      programs.homenix.omniwm.enable = false;
+      programs.homenix.aerospace.enable = mkDefault false;
+      programs.homenix.omniwm.enable = mkDefault false;
     })
 
     (mkIf pkgs.stdenv.isDarwin {
