@@ -62,6 +62,13 @@ in
         bindkey '^a' beginning-of-line
         bindkey '^e' end-of-line
 
+        # Home/End — standard xterm sequences so these keys
+        # go to beginning/end of line (not scroll) in all modes.
+        bindkey '\e[H'  beginning-of-line      # Home  (xterm)
+        bindkey '\e[F'  end-of-line             # End   (xterm)
+        bindkey '\e[1~' beginning-of-line      # Home  (vt100/linux console)
+        bindkey '\e[4~' end-of-line             # End   (vt100/linux console)
+
         set -o vi
 
         eval "$(fasd --init auto)"

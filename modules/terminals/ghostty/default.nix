@@ -72,6 +72,13 @@ in
               "super+control+shift+alt+arrow_up=resize_split:up,100"
               "super+control+shift+alt+arrow_left=resize_split:left,100"
               "super+control+shift+alt+arrow_right=resize_split:right,100"
+
+              # Home/End: send standard xterm sequences to the running program
+              # instead of Ghostty's default macOS behaviour (scroll/select).
+              "home=text:\\x1b[H"
+              "end=text:\\x1b[F"
+              "shift+home=text:\\x1b[1;2H"
+              "shift+end=text:\\x1b[1;2F"
             ];
 
             # Slowdown mouse scrolling

@@ -21,6 +21,7 @@ with lib;
     ./themes
 
     ./aerospace
+    ./karabiner
     ./flatpak.nix
     ./gnome
     ./gtk
