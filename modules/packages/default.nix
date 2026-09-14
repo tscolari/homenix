@@ -199,12 +199,6 @@ in
         (nixGLWrapIfReq unstable.synology-drive-client)
         (nixGLWrapIfReq unstable.typora)
 
-        # Fonts
-        noto-fonts
-        noto-fonts-cjk-sans
-        noto-fonts-color-emoji
-        ia-writer-duospace
-        nerd-fonts.caskaydia-mono
       ]
       ++ lib.optional (!cfg.skipFirefox) (nixGLWrapIfReq pkgs.firefox);
   };

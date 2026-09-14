@@ -16,8 +16,6 @@ in
   config = mkIf enabled {
     programs.nixvim.extraPackages = with pkgs; [
       tmux
-      nerd-fonts.fira-code
-      nerd-fonts.fira-mono
       texliveFull
       zathura
     ];

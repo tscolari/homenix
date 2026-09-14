@@ -10,6 +10,7 @@ with lib;
 {
   imports = [
     ./firefox_profiles
+    ./fonts
     ./git
     ./nvim
     ./setup.nix
