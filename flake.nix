@@ -106,9 +106,10 @@
       overlays = {
         default = final: prev: {
           # opencode straight from upstream's own flake. Only the `opencode`
-          # package is taken, not their overlay wholesale — that one also
-          # replaces `opencode-desktop`, which the packages module deliberately
-          # pulls from nixpkgs-unstable for its darwin .app layout.
+          # package is taken, not their overlay wholesale: that one also replaces
+          # `opencode-desktop`, which isn't installed here. The desktop app pins
+          # electron 41, marked insecure by nixpkgs 26.05, so the CLI is all we
+          # take.
           opencode = opencode.packages.${final.stdenv.hostPlatform.system}.opencode;
 
           # From worktool's own flake. Consumed by modules/packages/go.nix.
