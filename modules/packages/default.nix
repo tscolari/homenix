@@ -159,6 +159,7 @@ in
         (lib.hiPrio rustup)
         shellcheck
         socat
+        softhsm
         ssh-copy-id
         teleport
         terraform
