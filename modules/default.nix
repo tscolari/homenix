@@ -29,6 +29,7 @@ with lib;
     ./non-nixos-compat.nix
     ./omniwm
     ./packages
+    ./programs/pi-coding-agent.nix
     ./qt
   ];
 
