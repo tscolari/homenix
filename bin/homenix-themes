@@ -45,6 +45,15 @@ apply_theme() {
     rm -f "$CURRENT_THEME_PATH"
     ln -s "$theme_path" "$CURRENT_THEME_PATH"
 
+    # pi watches ~/.pi/agent/themes for an event named <activeTheme>.json and
+    # re-reads that path. The link target never changes, so recreating the link
+    # is what triggers the reload in an already-running pi session.
+    local pi_themes_dir="$HOME/.pi/agent/themes"
+    if [[ -d "$HOME/.pi/agent" ]]; then
+        mkdir -p "$pi_themes_dir"
+        ln -sfn "$CURRENT_THEME_PATH/pi.json" "$pi_themes_dir/homenix.json"
+    fi
+
     if [[ "$(uname)" == "Darwin" ]] && command -v launchctl >/dev/null 2>&1; then
         local label="org.nix-community.home.jankyborders"
 
