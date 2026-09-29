@@ -59,7 +59,6 @@ in
           "npm:pi-mcp-adapter"
           "npm:pi-subagents"
           "npm:pi-web-access"
-          "npm:pi-background-tasks"
           "npm:pi-goal-x"
           "npm:pi-claude-bridge"
           "npm:context-mode"
