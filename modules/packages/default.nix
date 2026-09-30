@@ -42,6 +42,7 @@ in
     ./lazydocker.nix
     ./lazygit.nix
     ./lazysql.nix
+    ./oh-my-pi.nix
     ./pi-coding-agent.nix
     ./rust.nix
   ];

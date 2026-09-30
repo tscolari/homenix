@@ -1,13 +1,18 @@
 {
   description = "Home Manager modules for using on NixOS and stand-alone";
 
-  # Zed publishes pre-built packages through its Cachix cache. Flake-level Nix
-  # settings are only honoured for the root flake, so consumers of this module
-  # need to repeat these settings (or configure them system-wide) to use it.
+  # Zed and oh-my-pi publish pre-built packages through Cachix caches.
+  # Flake-level Nix settings are only honoured for the root flake, so consumers
+  # of this module need to repeat these settings (or configure them
+  # system-wide) to use them. Without them oh-my-pi builds rust and bun locally.
   nixConfig = {
-    extra-substituters = [ "https://zed.cachix.org" ];
+    extra-substituters = [
+      "https://zed.cachix.org"
+      "https://nix-community.cachix.org"
+    ];
     extra-trusted-public-keys = [
       "zed.cachix.org-1:/pHQ6dpMsAZk2DiP4WCL0p9YDNKWj2Q5FL20bNmw1cU="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
   };
 
@@ -72,6 +77,13 @@
       url = "github:tscolari/worktool";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # oh-my-pi (`omp`) - standalone coding agent, sibling of pi-coding-agent.
+    # Ships its own flake with a home-manager module, imported below. nixpkgs is
+    # deliberately NOT followed: upstream pins bun, a rust-toolchain.toml and
+    # bun2nix, and keeping their dependency set is what makes their Cachix cache
+    # usable. Bump with `nix flake update oh-my-pi`.
+    oh-my-pi.url = "github:can1357/oh-my-pi";
   };
 
   outputs =
@@ -85,6 +97,7 @@
       nreviewer,
       worktool,
       zed,
+      oh-my-pi,
       ...
     }:
 
@@ -99,6 +112,7 @@
             ags.homeManagerModules.default
             pam_shim.homeModules.default
             nreviewer.homeManagerModules.default
+            oh-my-pi.homeManagerModules.default
           ];
         };
 

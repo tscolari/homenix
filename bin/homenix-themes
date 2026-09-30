@@ -54,6 +54,14 @@ apply_theme() {
         ln -sfn "$CURRENT_THEME_PATH/pi.json" "$pi_themes_dir/homenix.json"
     fi
 
+    # omp (oh-my-pi) reads the same pi.json and watches its own themes dir the
+    # same way.
+    local omp_themes_dir="$HOME/.omp/agent/themes"
+    if [[ -d "$HOME/.omp/agent" ]]; then
+        mkdir -p "$omp_themes_dir"
+        ln -sfn "$CURRENT_THEME_PATH/pi.json" "$omp_themes_dir/homenix.json"
+    fi
+
     if [[ "$(uname)" == "Darwin" ]] && command -v launchctl >/dev/null 2>&1; then
         local label="org.nix-community.home.jankyborders"
 
