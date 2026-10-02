@@ -124,7 +124,23 @@
           # `opencode-desktop`, which isn't installed here. The desktop app pins
           # electron 41, marked insecure by nixpkgs 26.05, so the CLI is all we
           # take.
-          opencode = opencode.packages.${final.stdenv.hostPlatform.system}.opencode;
+          #
+          # Since rev 1ddb087 opencode's build script ad-hoc re-signs the compiled
+          # binary (`codesign --force --sign -`): embedding the JS bundle
+          # invalidates the linker's signature, and macOS 27+ SIGKILLs binaries
+          # with invalid pages. Upstream's flake puts no codesign in the sandbox,
+          # so the darwin build dies with "bun: command not found: codesign".
+          # sigtool's codesign is arg-compatible and shells out to cctools'
+          # codesign_allocate. Linux never reaches that branch of build.ts. Drop
+          # this once upstream adds the inputs.
+          opencode = opencode.packages.${final.stdenv.hostPlatform.system}.opencode.overrideAttrs (old: {
+            nativeBuildInputs =
+              (old.nativeBuildInputs or [ ])
+              ++ final.lib.optionals final.stdenv.hostPlatform.isDarwin [
+                final.darwin.sigtool
+                final.cctools
+              ];
+          });
 
           # From worktool's own flake. Consumed by modules/packages/go.nix.
           work = worktool.packages.${final.stdenv.hostPlatform.system}.default;
