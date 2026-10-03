@@ -1,27 +1,17 @@
 {
   description = "Home Manager modules for using on NixOS and stand-alone";
 
-  # Zed and oh-my-pi publish pre-built packages through Cachix caches.
-  # Flake-level Nix settings are only honoured for the root flake, so consumers
-  # of this module need to repeat these settings (or configure them
-  # system-wide) to use them. Without them oh-my-pi builds rust and bun locally.
   nixConfig = {
     extra-substituters = [
-      "https://zed.cachix.org"
       "https://nix-community.cachix.org"
     ];
     extra-trusted-public-keys = [
-      "zed.cachix.org-1:/pHQ6dpMsAZk2DiP4WCL0p9YDNKWj2Q5FL20bNmw1cU="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
   };
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
-
-    # Zed's upstream flake tracks main. Keep its nixpkgs input independent so
-    # the package stays on the dependency set tested and cached upstream.
-    zed.url = "github:zed-industries/zed";
 
     nixneovimplugins = {
       url = "github:NixNeovim/NixNeovimPlugins";
@@ -49,15 +39,6 @@
     hyprexpo = {
       url = "github:sandwichfarm/hyprexpo";
       flake = false;
-    };
-
-    # opencode upstream ships its own flake (on `dev`, its default branch), and
-    # releases far faster than nixpkgs tracks it. Consumed by the overlay below
-    # so `pkgs.opencode` is pinned here and bumped with `nix flake update
-    # opencode`, rather than riding whatever a nixpkgs channel happens to have.
-    opencode = {
-      url = "github:anomalyco/opencode";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     # nreviewer — Neovim branch-review browser. Ships its own flake, so the
@@ -93,10 +74,8 @@
       pam_shim,
       ags,
       hyprexpo,
-      opencode,
       nreviewer,
       worktool,
-      zed,
       oh-my-pi,
       ...
     }:
@@ -119,29 +98,6 @@
       # Overlays ##############################################################
       overlays = {
         default = final: prev: {
-          # opencode straight from upstream's own flake. Only the `opencode`
-          # package is taken, not their overlay wholesale: that one also replaces
-          # `opencode-desktop`, which isn't installed here. The desktop app pins
-          # electron 41, marked insecure by nixpkgs 26.05, so the CLI is all we
-          # take.
-          #
-          # Since rev 1ddb087 opencode's build script ad-hoc re-signs the compiled
-          # binary (`codesign --force --sign -`): embedding the JS bundle
-          # invalidates the linker's signature, and macOS 27+ SIGKILLs binaries
-          # with invalid pages. Upstream's flake puts no codesign in the sandbox,
-          # so the darwin build dies with "bun: command not found: codesign".
-          # sigtool's codesign is arg-compatible and shells out to cctools'
-          # codesign_allocate. Linux never reaches that branch of build.ts. Drop
-          # this once upstream adds the inputs.
-          opencode = opencode.packages.${final.stdenv.hostPlatform.system}.opencode.overrideAttrs (old: {
-            nativeBuildInputs =
-              (old.nativeBuildInputs or [ ])
-              ++ final.lib.optionals final.stdenv.hostPlatform.isDarwin [
-                final.darwin.sigtool
-                final.cctools
-              ];
-          });
-
           # From worktool's own flake. Consumed by modules/packages/go.nix.
           work = worktool.packages.${final.stdenv.hostPlatform.system}.default;
 
@@ -152,10 +108,6 @@
           homenix = {
             # Required for the nvim module.
             vimExtraPlugins = nixneovimplugins.packages.${final.stdenv.hostPlatform.system};
-          }
-          // final.lib.optionalAttrs (builtins.hasAttr final.stdenv.hostPlatform.system zed.packages) {
-            # Use Zed's upstream package rather than the nixpkgs release.
-            zed-editor = zed.packages.${final.stdenv.hostPlatform.system}.default;
           }
           // final.lib.optionalAttrs final.stdenv.hostPlatform.isLinux {
             # hyprexpo workspace-overview plugin, built from source against

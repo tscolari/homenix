@@ -137,8 +137,8 @@ in
         nix-index
         nodejs
         # From upstream's flake via homenix.overlays.default, not nixpkgs.
-        (lib.hiPrio opencode)
-        master.opencode-claude-auth
+        (lib.hiPrio unstable.opencode)
+        unstable.opencode-claude-auth
         mermaid-cli
         pgcli
         pkg-config

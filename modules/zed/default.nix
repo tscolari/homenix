@@ -8,7 +8,7 @@
 let
   cfg = config.programs.homenix.zed;
   enabled = config.programs.homenix.enable && cfg.enable;
-  supported = pkgs.homenix ? zed-editor;
+  supported = pkgs.unstable ? zed-editor;
 
   # GUI applications need a nixGL wrapper on non-NixOS Linux hosts. Home
   # Manager's wrapper is absent on NixOS and is never needed on Darwin.
@@ -109,7 +109,7 @@ in
 
     programs.zed-editor = {
       enable = true;
-      package = if supported then nixGLWrapIfNeeded pkgs.homenix.zed-editor else null;
+      package = if supported then nixGLWrapIfNeeded pkgs.zed-editor else null;
       defaultEditor = false;
 
       # Home Manager merges these baselines into the user's existing JSON/JSON5
