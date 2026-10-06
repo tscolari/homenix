@@ -40,11 +40,17 @@ in
     programs.omp = {
       enable = true;
 
-      # settings stays at its default (null) on purpose. Upstream's module only
-      # generates home.activation.ompConfig when settings != null, and that entry
-      # runs `install -m 600` unconditionally on every switch. That would revert
-      # anything changed through /settings at runtime. The seed below takes that
-      # job instead.
+      settings = {
+        theme = {
+          light = "homenix";
+          dark = "homenix";
+        };
+
+        symbolPreset = "nerd";
+        composer = {
+          shape = "pi";
+        };
+      };
     };
 
     # Seed only if absent. omp rewrites config.yml itself under an advisory lock,
