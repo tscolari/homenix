@@ -11,6 +11,36 @@ let
 
   enabled = (config.programs.homenix.enable && config.programs.homenix.packages.oh-my-pi.enable);
 
+  pluginsCfg = config.programs.homenix.packages.oh-my-pi.plugins;
+
+  # Activation runs before the new home-manager profile is linked into
+  # PATH, so `omp` isn't resolvable by bare name yet: call it by store path.
+  ompBin = "${config.programs.omp.package}/bin/omp";
+
+  # "owner/repo" -> `omp plugin marketplace add owner/repo`.
+  marketplaceAddScript = concatMapStringsSep "\n" (
+    repo: "${ompBin} plugin marketplace add ${repo} 2> /dev/null || true"
+  ) (attrNames pluginsCfg);
+
+  # Installs (or upgrades, if already present) every plugin listed under
+  # each marketplace. `<marketplace>` in `<plugin>@<marketplace>` is the
+  # repo's last path segment, matching what `omp plugin marketplace add`
+  # registers it as.
+  pluginInstallScript = concatStringsSep "\n" (
+    concatLists (
+      mapAttrsToList (
+        repo: plugins:
+        let
+          marketplace = last (splitString "/" repo);
+        in
+        map (
+          plugin:
+          "${ompBin} plugin install --scope user ${plugin}@${marketplace} 2> /dev/null || ${ompBin} plugin upgrade --scope user ${plugin}@${marketplace}"
+        ) plugins
+      ) pluginsCfg
+    )
+  );
+
   yamlFormat = pkgs.formats.yaml { };
 
   # Seeded once, then omp owns the file. Only the theme slots are declared:
@@ -32,6 +62,32 @@ in
         type = types.bool;
         default = config.programs.homenix.enableAllByDefault;
         description = "Enable oh-my-pi (omp) configuration";
+      };
+
+      plugins = mkOption {
+        type = types.attrsOf (types.listOf types.str);
+        default = {
+          "anthropics/claude-plugins-official" = [
+            "superpowers"
+            "claude-security"
+            "code-review"
+            "code-simplifier"
+            "coderabbit"
+          ];
+          "blader/humanizer" = [
+            "humanizer"
+          ];
+        };
+        description = ''
+          Marketplaces to add, and the plugins to install from each one.
+
+          Keys are "owner/repo" marketplace identifiers, passed to
+          `omp plugin marketplace add`. Values are the plugin names to
+          install (or upgrade, if already present) from that marketplace,
+          via `omp plugin install --scope user <plugin>@<marketplace>`,
+          where `<marketplace>` is the repo's last path segment (e.g.
+          "claude-plugins-official" for "anthropics/claude-plugins-official").
+        '';
       };
     };
   };
@@ -75,6 +131,18 @@ in
     home.activation.ompCurrentThemeLink = lib.hm.dag.entryAfter [ "setupHomenixConfigFolder" ] ''
       mkdir -p ~/.omp/agent/themes
       ln -sfn ~/.config/homenix/current/theme/pi.json ~/.omp/agent/themes/homenix.json
+    '';
+
+    # omp's marketplace commands shell out to `git` by bare name; activation
+    # runs before the new profile is on PATH, so it must be added here too.
+    home.activation.ompMarketplaceSetup = lib.hm.dag.entryAfter [ "setupHomenixConfigFolder" ] ''
+      export PATH="${config.programs.git.package}/bin:$PATH"
+
+      ${marketplaceAddScript}
+
+      ${ompBin} plugin marketplace update
+
+      ${pluginInstallScript}
     '';
   };
 }
