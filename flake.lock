@@ -241,11 +241,11 @@
         "poetry2nix": "poetry2nix"
       },
       "locked": {
-        "lastModified": 1791137336,
-        "narHash": "sha256-rkaGMCWCEl7gbY6BzrBa4fLVQhmuxEXvogikU1G2ZWc=",
+        "lastModified": 1791489162,
+        "narHash": "sha256-CGgkh5lA7wlNhc1rQyu2Zr2xxbkvy68vNM0nTTM8+hc=",
         "owner": "NixNeovim",
         "repo": "NixNeovimPlugins",
-        "rev": "a63327335df6743b4fadb00e5c377986396910ec",
+        "rev": "f0eb7014fbbf5ed7fa98fbae0272261638310e52",
         "type": "github"
       },
       "original": {
@@ -355,11 +355,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1791485545,
-        "narHash": "sha256-vit8EXyZ58TNHDGp3ltQG87El0SeS8aYPARfFBp2mWE=",
+        "lastModified": 1791532102,
+        "narHash": "sha256-K+IL61WEwpmpD/kN64BuMrM2YhdaMW/myl5qCs6OH7w=",
         "owner": "can1357",
         "repo": "oh-my-pi",
-        "rev": "f068751e2f1dbdbc195977776d47a26db8697495",
+        "rev": "6c99a355d64fe43e027b047ce97859a566afd760",
         "type": "github"
       },
       "original": {
