@@ -109,7 +109,7 @@ in
 
     programs.zed-editor = {
       enable = true;
-      package = if supported then nixGLWrapIfNeeded pkgs.zed-editor else null;
+      package = if supported then nixGLWrapIfNeeded pkgs.unstable.zed-editor else null;
       defaultEditor = false;
 
       # Home Manager merges these baselines into the user's existing JSON/JSON5
