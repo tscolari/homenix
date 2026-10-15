@@ -163,7 +163,6 @@ in
         terraform
         tig
         tldr
-        tmate
         tmux
         tree
         tree-sitter
