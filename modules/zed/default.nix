@@ -126,7 +126,6 @@ in
         "codebook"
         "dockerfile"
         "golangci-lint"
-        "kanagawa-themes"
         "lua"
         "nix"
         "postgres-language-server"
@@ -139,7 +138,7 @@ in
         autosave = "off";
         base_keymap = "Zed";
         vim_mode = true;
-        theme = "Kanagawa Wave";
+        theme = "homenix";
 
         soft_wrap = "none";
         hard_tabs = false;
@@ -656,5 +655,32 @@ in
         }
       ];
     };
+
+    # The homenix theme is always named "homenix": each theme folder ships a
+    # zed.json with its single variant renamed to "homenix" (see themes/*/zed.json),
+    # settings.json above hardcodes theme = "homenix", and this link exposes the
+    # active variant to Zed.
+    #
+    # Theme-change hook: Zed only reloads a theme when a file inside
+    # ~/.config/zed/themes/ changes (watch_themes in crates/zed/src/main.rs).
+    # The link target never changes, so recreating the link after a switch is
+    # what makes a running Zed pick the new variant up. homenix-themes executes
+    # every executable file in ~/.config/homenix/hooks/themes/ after switching
+    # ~/.config/homenix/current/theme; zedCurrentThemeLink runs this same hook
+    # once at install so the theme resolves before the first switch.
+    home.file.".config/homenix/hooks/themes/zed" = {
+      executable = true;
+      text = ''
+        #!/usr/bin/env bash
+        mkdir -p ~/.config/zed/themes
+        ln -sfn ~/.config/homenix/current/theme/zed.json ~/.config/zed/themes/homenix.json
+      '';
+    };
+
+    home.activation.zedCurrentThemeLink = lib.hm.dag.entryAfter [ "setupHomenixConfigFolder" ] ''
+      if [[ -x ~/.config/homenix/hooks/themes/zed ]]; then
+        ~/.config/homenix/hooks/themes/zed
+      fi
+    '';
   };
 }

@@ -118,19 +118,31 @@ in
       fi
     '';
 
-    # Same reasoning as piCurrentThemeLink: an activation link and not home.file,
-    # because homenix-themes recreates it on every theme switch. Recreating it is
-    # also what makes omp hot-reload - omp watches the themes directory for an
-    # event named homenix.json.
-    #
-    # PI_CODING_AGENT_DIR relocates this whole directory for omp too, config.yml
-    # and agent.db included. homenix's vendored pi module only exports that
-    # variable when configDir differs from ~/.pi/agent, which it doesn't today,
-    # so there's no collision. Setting programs.pi-coding-agent.configDir would
-    # create one.
+    # Theme-change hook: same contract as the pi hook above -- homenix-themes
+    # runs it on every switch, ompCurrentThemeLink runs it once at install.
+    # PI_CODING_AGENT_DIR relocates ~/.omp/agent for omp too, config.yml and
+    # agent.db included; homenix's vendored pi module only exports that
+    # variable when configDir differs from ~/.pi/agent, which it doesn't
+    # today, so hardcoding ~/.omp/agent here creates no collision. Setting
+    # programs.pi-coding-agent.configDir would.
+    home.file.".config/homenix/hooks/themes/omp" = {
+      executable = true;
+      text = ''
+        #!/usr/bin/env bash
+        # omp watches ~/.omp/agent/themes for an event named homenix.json and
+        # re-reads that path. The link target never changes, so recreating the
+        # link is what triggers the reload in an already-running omp session.
+        if [[ -d "$HOME/.omp/agent" ]]; then
+          mkdir -p ~/.omp/agent/themes
+          ln -sfn ~/.config/homenix/current/theme/pi.json ~/.omp/agent/themes/homenix.json
+        fi
+      '';
+    };
+
     home.activation.ompCurrentThemeLink = lib.hm.dag.entryAfter [ "setupHomenixConfigFolder" ] ''
-      mkdir -p ~/.omp/agent/themes
-      ln -sfn ~/.config/homenix/current/theme/pi.json ~/.omp/agent/themes/homenix.json
+      if [[ -x ~/.config/homenix/hooks/themes/omp ]]; then
+        ~/.config/homenix/hooks/themes/omp
+      fi
     '';
 
     # omp's marketplace commands shell out to `git` by bare name; activation

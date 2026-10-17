@@ -41,6 +41,7 @@ with lib;
 
       activation.setupHomenixConfigFolder = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
         mkdir -p ~/.config/homenix/current
+        mkdir -p ~/.config/homenix/hooks/themes
       '';
     };
   };

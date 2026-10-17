@@ -33,13 +33,27 @@ in
     home.file."${config.programs.pi-coding-agent.configDir}/extensions/provider-base-urls.ts".source =
       ../../configs/pi/extensions/provider-base-urls.ts;
 
-    # Deliberately an activation link rather than home.file: homenix-themes
-    # recreates it on every theme switch, which would otherwise conflict with
-    # home-manager ownership. Recreating it is also what makes pi hot-reload --
-    # pi watches the themes directory for an event named <activeTheme>.json.
+    # Theme-change hook: homenix-themes executes every executable file in
+    # ~/.config/homenix/hooks/themes/ after switching ~/.config/homenix/current/theme,
+    # and pi's activation below runs this same script once at install time.
+    home.file.".config/homenix/hooks/themes/pi" = {
+      executable = true;
+      text = ''
+        #!/usr/bin/env bash
+        # pi watches ~/.pi/agent/themes for an event named <activeTheme>.json and
+        # re-reads that path. The link target never changes, so recreating the
+        # link is what triggers the reload in an already-running pi session.
+        if [[ -d "${config.programs.pi-coding-agent.configDir}" ]]; then
+          mkdir -p "${config.programs.pi-coding-agent.configDir}/themes"
+          ln -sfn ~/.config/homenix/current/theme/pi.json "${config.programs.pi-coding-agent.configDir}/themes/homenix.json"
+        fi
+      '';
+    };
+
     home.activation.piCurrentThemeLink = lib.hm.dag.entryAfter [ "setupHomenixConfigFolder" ] ''
-      mkdir -p "${config.programs.pi-coding-agent.configDir}/themes"
-      ln -sfn ~/.config/homenix/current/theme/pi.json "${config.programs.pi-coding-agent.configDir}/themes/homenix.json"
+      if [[ -x ~/.config/homenix/hooks/themes/pi ]]; then
+        ~/.config/homenix/hooks/themes/pi
+      fi
     '';
 
     programs.pi-coding-agent = {

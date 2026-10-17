@@ -3,6 +3,7 @@
 # Configuration - adjust these paths as needed
 THEMES_DIR="$HOME/.config/homenix/themes"
 CURRENT_THEME_PATH="$HOME/.config/homenix/current/theme"
+THEME_HOOKS_DIR="$HOME/.config/homenix/hooks/themes"
 
 # Get the currently linked theme (if any)
 get_current_theme() {
@@ -45,29 +46,16 @@ apply_theme() {
     rm -f "$CURRENT_THEME_PATH"
     ln -s "$theme_path" "$CURRENT_THEME_PATH"
 
-    # pi watches ~/.pi/agent/themes for an event named <activeTheme>.json and
-    # re-reads that path. The link target never changes, so recreating the link
-    # is what triggers the reload in an already-running pi session.
-    local pi_themes_dir="$HOME/.pi/agent/themes"
-    if [[ -d "$HOME/.pi/agent" ]]; then
-        mkdir -p "$pi_themes_dir"
-        ln -sfn "$CURRENT_THEME_PATH/pi.json" "$pi_themes_dir/homenix.json"
-    fi
-
-    # omp (oh-my-pi) reads the same pi.json and watches its own themes dir the
-    # same way.
-    local omp_themes_dir="$HOME/.omp/agent/themes"
-    if [[ -d "$HOME/.omp/agent" ]]; then
-        mkdir -p "$omp_themes_dir"
-        ln -sfn "$CURRENT_THEME_PATH/pi.json" "$omp_themes_dir/homenix.json"
-    fi
-
-    if [[ "$(uname)" == "Darwin" ]] && command -v launchctl >/dev/null 2>&1; then
-        local label="org.nix-community.home.jankyborders"
-
-        if launchctl print "gui/$UID/$label" >/dev/null 2>&1; then
-            launchctl kickstart -k "gui/$UID/$label" >/dev/null 2>&1 || true
-        fi
+    # Theme-change side effects live in executable files placed in the hooks
+    # dir by each program's own home-manager module (pi, omp, zed, ...).
+    # homenix-themes knows nothing about the programs it notifies; it just
+    # runs every hook, in name order, and keeps going past a failing one.
+    if [[ -d "$THEME_HOOKS_DIR" ]]; then
+        local hook
+        for hook in "$THEME_HOOKS_DIR"/*; do
+            [[ -f "$hook" && -x "$hook" ]] || continue
+            "$hook" || echo "homenix-themes: hook '$(basename "$hook")' failed" >&2
+        done
     fi
 }
 
