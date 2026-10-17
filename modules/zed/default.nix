@@ -386,7 +386,9 @@ in
         {
           context = normalMode;
           bindings = {
-            "-" = "project_panel::Toggle";
+            # Reveal on every open: auto_reveal only fires when the active file
+            # changes, so a reopened panel would keep its last navigation.
+            "-" = "pane::RevealInProjectPanel";
             "v v" = "pane::SplitRight";
             "s s" = "pane::SplitDown";
             "alt-q" = "pane::CloseActiveItem";
@@ -551,11 +553,21 @@ in
           };
         }
         {
-          # Make `-` a toggle: close the project panel from inside it and return
-          # to the editor. Overrides Zed's netrw-style `-` (select parent).
+          # Escape in the project search inputs closes the search too. Zed's
+          # default moves focus to the results, a no-op when nothing matched.
+          context = "ProjectSearchBar";
+          bindings = {
+            "escape" = "pane::CloseActiveItem";
+          };
+        }
+        {
+          # lir-style browsing: the editor's `-` reveals the current file, `-`
+          # here collapses up one directory at a time, and
+          # escape closes the panel instead of only returning focus.
           context = "ProjectPanel && not_editing";
           bindings = {
-            "-" = "project_panel::Toggle";
+            "-" = "project_panel::CollapseSelectedEntry";
+            "escape" = "project_panel::Toggle";
           };
         }
         {
