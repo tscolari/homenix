@@ -141,6 +141,12 @@ in
         theme = "homenix";
 
         soft_wrap = "none";
+        languages = {
+          Markdown = { soft_wrap = "editor_width"; };
+          JSON = { soft_wrap = "editor_width"; };
+          JSONC = { soft_wrap = "editor_width"; };
+          YAML = { soft_wrap = "editor_width"; };
+        };
         hard_tabs = false;
         tab_size = 4;
         vertical_scroll_margin = 5;
