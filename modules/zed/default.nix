@@ -412,6 +412,9 @@ in
             "shift-k" = "editor::Hover";
             "[ t" = "editor::GoToPreviousDiagnostic";
             "] t" = "editor::GoToDiagnostic";
+            # nvim: <leader>. opens the alternate file (e.g. GoAlt, hello.go
+            # <-> hello_test.go).
+            "space ." = "pane::AlternateFile";
             "\\" = "buffer_search::Dismiss";
 
             # nvim LSP on_attach mappings.
@@ -580,6 +583,18 @@ in
           bindings = {
             "-" = "project_panel::CollapseSelectedEntry";
             "escape" = "project_panel::Toggle";
+            # Opening a file (vim.json's default binding) leaves the panel
+            # open with focus moved to the editor; close it too. ToggleLeftDock
+            # is a plain visibility flip (unlike project_panel::Toggle, which
+            # only closes the dock when the panel still has focus), so it
+            # closes the dock regardless of where OpenPermanent sent focus.
+            "enter" = [
+              "action::Sequence"
+              [
+                "project_panel::OpenPermanent"
+                "workspace::ToggleLeftDock"
+              ]
+            ];
           };
         }
         {
