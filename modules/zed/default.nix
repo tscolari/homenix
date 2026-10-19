@@ -127,6 +127,7 @@ in
         "dockerfile"
         "golangci-lint"
         "lua"
+        "make"
         "nix"
         "postgres-language-server"
         "sql"
@@ -234,6 +235,12 @@ in
               "..."
             ];
             debuggers = [ "Delve" ];
+          };
+          # Make requires a literal tab for recipe lines; tab_size only
+          # affects how wide it renders, not how make parses it.
+          Make = {
+            hard_tabs = true;
+            tab_size = 4;
           };
           # Zed has no vim-sleuth equivalent; use 2 spaces where that's the norm.
           Nix = {
