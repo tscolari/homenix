@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/src/modes/interactive/theme/theme-schema.json",
+  "$schema": "https://raw.githubusercontent.com/badlogic/pi-mono/main/packages/coding-agent/schemas/theme.schema.json",
   "name": "homenix",
   "vars": {
     "accent": "#205ea6",
@@ -82,22 +82,7 @@
     "thinkingHigh": "purple",
     "thinkingXhigh": "accentBright",
     "thinkingMax": "warmMix",
-    "bashMode": "green",
-    "pythonMode": "blue",
-    "statusLineBg": "bgCard",
-    "statusLineSep": "dim",
-    "statusLineModel": "purple",
-    "statusLinePath": "blue",
-    "statusLineGitClean": "green",
-    "statusLineGitDirty": "yellow",
-    "statusLineContext": "cyan",
-    "statusLineSpend": "accent",
-    "statusLineStaged": "green",
-    "statusLineDirty": "yellow",
-    "statusLineUntracked": "red",
-    "statusLineOutput": "text",
-    "statusLineCost": "orange",
-    "statusLineSubagents": "accentBright"
+    "bashMode": "green"
   },
   "export": {
     "pageBg": "bg",

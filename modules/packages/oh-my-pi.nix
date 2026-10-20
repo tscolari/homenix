@@ -134,7 +134,7 @@ in
         # link is what triggers the reload in an already-running omp session.
         if [[ -d "$HOME/.omp/agent" ]]; then
           mkdir -p ~/.omp/agent/themes
-          ln -sfn ~/.config/homenix/current/theme/pi.json ~/.omp/agent/themes/homenix.json
+          ln -sfn ~/.config/homenix/current/theme/oh-my-pi.json ~/.omp/agent/themes/homenix.json
         fi
       '';
     };
