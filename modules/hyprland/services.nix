@@ -121,8 +121,11 @@ in
         };
       };
 
-      # Synology Drive client - multi-forks; track via its PID file
-      synology-drive = {
+      # Synology Drive client - multi-forks; track via its PID file.
+      # Not shipped for aarch64-linux (vendor binary, x86_64-linux/darwin
+      # only) - skip the whole service there instead of forcing evaluation
+      # of an unavailable package.
+      synology-drive = mkIf (lib.meta.availableOn pkgs.stdenv.hostPlatform pkgs.unstable.synology-drive-client) {
         Unit = {
           Description = "Synology Drive Client";
           After = [
