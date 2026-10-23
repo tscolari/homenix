@@ -242,6 +242,17 @@ in
         push = {
           # the usual default is to push all branches
           default = "tracking";
+
+          # a brand new local branch (e.g. one `work start` just created via
+          # `git worktree add -b`) has no upstream yet, so a plain `git push`
+          # on it fails with "has no upstream branch" and a plain `git pull
+          # --rebase` (gpr/grp) fails with "no tracking information" right
+          # after. This makes the *first* push on such a branch create the
+          # remote branch and wire up the tracking ref automatically, same
+          # as `push -u` would, so gpr works unmodified afterwards -
+          # including from inside a worktree, since the tracking config
+          # lives in the shared .git/config, not per-worktree.
+          autoSetupRemote = "true";
         };
 
         rerere = {

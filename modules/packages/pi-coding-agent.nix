@@ -76,7 +76,6 @@ in
           "npm:pi-goal-x"
           "npm:pi-claude-bridge"
           "npm:context-mode"
-          "npm:@gotgenes/pi-permission-system"
           "npm:@narumitw/pi-btw"
           "npm:@narumitw/pi-plan-mode"
         ];
