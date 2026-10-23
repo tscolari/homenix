@@ -189,6 +189,16 @@ in
         # tab bar, and are reached through the buffer bindings (space b/f o).
         tab_bar.show = false;
 
+        # Pin explicitly: Zed's upstream default flipped project_panel to
+        # "right" and agent to "left" (new Agentic layout). The keymap below
+        # (ProjectPanel "enter", the Dock ctrl-w bindings) assumes the classic
+        # layout where the project panel owns the left dock and
+        # `workspace::ToggleLeftDock` only ever closes it. Left unpinned, that
+        # same binding now toggles the agent panel's dock open after every
+        # file selection instead.
+        project_panel.dock = "left";
+        agent.dock = "right";
+
         gutter = {
           line_numbers = true;
           folds = true;
