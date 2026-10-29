@@ -79,6 +79,7 @@ in
           calcure
           cargo
           cilium-cli
+          unstable.claude-agent-acp
           claude-code
           unstable.codex
           cloudflared
@@ -101,6 +102,7 @@ in
           unstable.go
           go-migrate
           go-mockery
+          unstable.goose-cli
           gci
           unstable.gofumpt
           unstable.golangci-lint
