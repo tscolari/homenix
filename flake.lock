@@ -256,11 +256,11 @@
         "poetry2nix": "poetry2nix"
       },
       "locked": {
-        "lastModified": 1792949820,
-        "narHash": "sha256-sA03Z9p/ni/aky/5AKzVL9twL3kXrXVUBoIazTP9ETE=",
+        "lastModified": 1793302431,
+        "narHash": "sha256-HI4jPM3A/9V3YW/Zz662jtx2ZXSyLKRSFowjzCj2/zY=",
         "owner": "NixNeovim",
         "repo": "NixNeovimPlugins",
-        "rev": "78824f42e72b5b5b1edebcf64b37a4dbb381ff6f",
+        "rev": "280a1f156ef28560153871b861e1d3929c75a7c5",
         "type": "github"
       },
       "original": {
@@ -271,11 +271,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1793015021,
-        "narHash": "sha256-Ee5BWo8sh3pGt70QUdRajnaginqFmWvrtdBc4gJzhks=",
+        "lastModified": 1793294725,
+        "narHash": "sha256-loLMnbbS4KhmG2ln9EY6f0YMNCA273Yx02oWYQ9IMeE=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "718f670e845328e9c2cecdd832835712b2cbd065",
+        "rev": "6f06d204d8f2d8761d9da78778745974a3216381",
         "type": "github"
       },
       "original": {
@@ -371,11 +371,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1793175607,
-        "narHash": "sha256-Ae3JK1i45EPWn95qIvbZTkGXaAwIXkrwMjMe3pACY84=",
+        "lastModified": 1793369111,
+        "narHash": "sha256-vS9PH90++28r/H963L4LiQOK330BiJuDfXFWngxfn+M=",
         "owner": "can1357",
         "repo": "oh-my-pi",
-        "rev": "c3b645cb275e03ac8a176fbfb0a877cfb3a2c2ef",
+        "rev": "6a86df8539fccf3ad7818081266e554022fc21bc",
         "type": "github"
       },
       "original": {
