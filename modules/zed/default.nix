@@ -418,6 +418,33 @@ in
             "alt-n" = "editor::GoToDiagnostic";
             "enter" = "workspace::Save";
             "shift-enter" = "workspace::SaveWithoutFormat";
+            # Fast typing sometimes delivers `enter` before `w`/`q` even land
+            # (not just before the palette's filter catches up): `:` then
+            # `enter` alone, nothing in between. That bare sequence has no
+            # chord below to catch it, so without this it falls through to
+            # `:`'s default command_palette::Toggle and confirms whatever the
+            # palette's unfiltered top entry happens to be. `null` makes Zed
+            # drop the binding entirely, so `:<enter>` is a no-op instead.
+            ": enter" = null;
+            # `:` opens Zed's command palette (vim's `:w` is really a fuzzy
+            # match for "write" in there); typed fast, Enter can land on
+            # whatever entry the palette defaulted to before the "w" filtered
+            # the list, not on write. Binding the exact chord short-circuits
+            # that race: it resolves as a keybinding before the palette ever
+            # opens, so `:w<enter>` always saves regardless of typing speed.
+            ": w enter" = "workspace::Save";
+            # Zed's `:q`/`:wq` close only the active item (`pane::CloseActiveItem`),
+            # so a pane holding several visited buffers just pops back to the
+            # previous one instead of closing the split, unlike vim's `:q`
+            # which always closes the window. `pane::CloseAllItems` clears
+            # every item the split has accumulated in one shot; once it's
+            # empty, Zed removes the split itself the same way it already
+            # does for a single-item pane.
+            ": q enter" = "pane::CloseAllItems";
+            ": w q enter" = [
+              "pane::CloseAllItems"
+              { save_intent = "save_all"; }
+            ];
             "ctrl-p" = "file_finder::Toggle";
             "shift-k" = "editor::Hover";
             "[ t" = "editor::GoToPreviousDiagnostic";
