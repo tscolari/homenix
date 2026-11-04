@@ -13,6 +13,13 @@ let
 
   nixGLWrapIfReq = pkg: if config.lib ? nixGL then config.lib.nixGL.wrap pkg else pkg;
 
+  # nixpkgs' ghostty only builds on Linux; macOS uses the upstream .app bundle.
+  package =
+    if pkgs.stdenv.isDarwin then
+      pkgs.unstable.ghostty-bin
+    else
+      nixGLWrapIfReq pkgs.unstable.ghostty;
+
 in
 
 {
@@ -35,7 +42,7 @@ in
       {
         programs.ghostty = {
           enable = true;
-          package = (nixGLWrapIfReq pkgs.ghostty);
+          inherit package;
 
           settings = {
             # Dynamic theme colors
