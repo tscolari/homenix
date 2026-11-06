@@ -10,14 +10,6 @@ with lib;
 let
 
   enabled = (config.programs.homenix.enable && config.programs.homenix.nvim.enable);
-
-  # Home-manager's activation scripts run with a minimal, curated PATH (coreutils,
-  # findutils, grep, sed, jq, ...) that does NOT include `pkill`. On Darwin it ships
-  # as a system binary at a fixed path; on Linux/NixOS, nixpkgs' `procps` provides the
-  # real procps-ng suite including `pkill` (its Darwin build is a POSIX `ps`/`top`
-  # shim that lacks `pkill`/`pgrep` entirely, so it can't be used there).
-  pkill = if pkgs.stdenv.isDarwin then "/usr/bin/pkill" else "${pkgs.procps}/bin/pkill";
-
 in
 {
   config = mkIf enabled {
@@ -157,14 +149,11 @@ in
 
         -- Highlight references to the symbol under the cursor, when the server supports
         -- it. Scoped to this buffer and cleared on every (re)attach, so it never leaks
-        -- into other buffers or piles up duplicate autocommands (the previous version
-        -- checked the non-existent `document_highlight` field instead of
-        -- `documentHighlightProvider`, so this never actually ran; its "else" branch
-        -- globally dropped `updatetime` to 5 and opened an unscoped diagnostic float on
-        -- every `CursorHold` for every buffer attached to a server without document
-        -- highlighting, e.g. golangci_lint_ls on every Go buffer. That fallback is
-        -- dropped rather than fixed: diagnostics remain visible via underline/signs and
-        -- `<space>e`, without a popup firing near the cursor constantly.
+        -- into other buffers or piles up duplicate autocommands. Also torn down on
+        -- LspDetach once no remaining client supports documentHighlight: otherwise a
+        -- gopls exit (daemon killed/restarted) leaves the CursorHold autocmd behind
+        -- while golangci_lint_ls stays attached, and every CursorHold then errors with
+        -- "method textDocument/documentHighlight is not supported by any server".
         if client.server_capabilities.documentHighlightProvider then
           local group = vim.api.nvim_create_augroup('lsp_document_highlight', { clear = false })
           vim.api.nvim_clear_autocmds({ group = group, buffer = bufnr })
@@ -177,6 +166,19 @@ in
             group = group,
             buffer = bufnr,
             callback = vim.lsp.buf.clear_references,
+          })
+          vim.api.nvim_create_autocmd('LspDetach', {
+            group = group,
+            buffer = bufnr,
+            callback = function(args)
+              for _, c in ipairs(vim.lsp.get_clients({ bufnr = args.buf, method = 'textDocument/documentHighlight' })) do
+                if c.id ~= args.data.client_id then
+                  return
+                end
+              end
+              vim.lsp.util.buf_clear_references(args.buf)
+              vim.api.nvim_clear_autocmds({ group = group, buffer = args.buf })
+            end,
           })
         end
       '';
@@ -211,11 +213,13 @@ in
 
         gopls = {
           enable = true;
+          # One gopls per Neovim session (no `-remote=auto` shared daemon): memory is
+          # bounded per process by GOMEMLIMIT, released when the session closes, and
+          # one gopls dying doesn't take down LSP in every other session.
           config.cmd = [
             "${pkgs.coreutils}/bin/env"
             "GOMEMLIMIT=6GiB"
             "gopls"
-            "-remote=auto"
           ];
           config.settings = {
             gopls = {
@@ -326,31 +330,5 @@ in
         };
       };
     };
-
-    # `gopls -remote=auto` (configured on the `gopls` server above) shares one
-    # persistent daemon across every Neovim session. That daemon has no
-    # built-in staleness protection: it reuses the same socket address
-    # regardless of which gopls binary started it, and per upstream docs it
-    # only shuts down after a full minute with zero connected clients -- which
-    # rarely happens while any Neovim window with a Go buffer stays open. Left
-    # alone across a generation bump (new gopls version) or just many days
-    # across many worktrees, the daemon ends up serving a stale/mismatched
-    # gopls binary while accumulating cache for every workspace it has ever
-    # seen, degrading or breaking completions silently (see the "garbage
-    # autocomplete" investigation -- an 8-day-old daemon reached 16GB RSS and
-    # a single completion request took 30s and returned nothing).
-    #
-    # Unconditionally kill the daemon and any forwarder processes on every
-    # activation, so the next `-remote=auto` invocation always starts fresh
-    # with the gopls binary from the generation being activated. This costs a
-    # one-time re-indexing delay (a few seconds per workspace) the next time
-    # each open Go buffer is touched after a rebuild, which is a better trade
-    # than silently running a degraded daemon for days. A live Neovim session
-    # whose gopls client dies here needs a manual `:LspRestart` (or to reopen
-    # the buffer) to reconnect.
-    home.activation.restartStaleGopls = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      run ${pkill} -f 'gopls .*-remote=auto' || true
-      run ${pkill} -f 'gopls serve -listen' || true
-    '';
   };
 }

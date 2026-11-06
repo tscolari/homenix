@@ -331,7 +331,6 @@ in
           gopls = {
             binary = {
               path = lib.getExe pkgs.unstable.gopls;
-              arguments = [ "-remote=auto" ];
               env.GOMEMLIMIT = "6GiB";
             };
             initialization_options = {
