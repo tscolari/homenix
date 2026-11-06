@@ -146,7 +146,7 @@ in
           nix-index
           nodejs
           # From upstream's flake via homenix.overlays.default, not nixpkgs.
-          (lib.hiPrio unstable.opencode)
+          (lib.hiPrio opencode)
           unstable.opencode-claude-auth
           mermaid-cli
           pgcli
