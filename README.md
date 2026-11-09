@@ -32,7 +32,7 @@ package set as `unstable`.
 
       pkgs = import nixpkgs {
         system = "x86_64-linux";
-        overlays = [ homenix.overlays.default ]; # Required for the nvim module
+        overlays = [ homenix.overlays.default ]; # Required for the nvim and themes modules
       };
 
 

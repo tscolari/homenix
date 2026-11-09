@@ -7,8 +7,10 @@ THEME_HOOKS_DIR="$HOME/.config/homenix/hooks/themes"
 
 # Get the currently linked theme (if any)
 get_current_theme() {
+    # One level only: current/theme -> ~/.config/homenix/themes/<name>. Resolving
+    # further lands in the nix store, whose basename isn't the theme name.
     if [[ -L "$CURRENT_THEME_PATH" ]]; then
-        readlink -f "$CURRENT_THEME_PATH" | xargs basename
+        basename "$(readlink "$CURRENT_THEME_PATH")"
     else
         echo ""
     fi

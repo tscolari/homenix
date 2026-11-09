@@ -96,7 +96,6 @@ in
         asyncrun-vim
         dracula-nvim
         fzf-vim
-        kanagawa-nvim
         kanagawa-paper-nvim
         lsp-colors-nvim
         mason-lspconfig-nvim
@@ -107,7 +106,6 @@ in
         nvim-nio
         plenary-nvim
         popup-nvim
-        rose-pine
         splitjoin-vim
         telescope-dap-nvim
         telescope-github-nvim

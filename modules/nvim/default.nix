@@ -1,5 +1,6 @@
 {
 
+  pkgs,
   lib,
   config,
   ...
@@ -74,23 +75,85 @@ in
           end
         end
 
-        if vim.g.config_colorscheme then
-          local ok, err = pcall(vim.cmd.colorscheme, vim.g.config_colorscheme)
-          if not ok then
-            vim.notify('Failed to apply colorscheme ' .. vim.g.config_colorscheme .. ': ' .. err, vim.log.levels.WARN)
+        -- homenix theme: ~/.config/homenix/current/theme carries neovim.lua
+        -- (colorscheme + optional setup), nvim/* (the colorscheme plugins) and
+        -- light.mode on light themes. The nvim theme hook calls this again in
+        -- every running instance after `homenix-themes set`.
+        local homenix_theme_dir = vim.fn.expand('~/.config/homenix/current/theme')
+        local homenix_theme_rtp = {}
+
+        local function homenix_theme_warn(msg)
+          vim.notify('homenix theme: ' .. msg, vim.log.levels.WARN)
+        end
+
+        function _G.HomenixApplyTheme()
+          -- A colorscheme set in the user folder overrides the homenix theme.
+          if vim.g.config_colorscheme then
+            local ok, err = pcall(vim.cmd.colorscheme, vim.g.config_colorscheme)
+            if not ok then
+              homenix_theme_warn('failed to apply ' .. vim.g.config_colorscheme .. ': ' .. err)
+            end
+            return
+          end
+
+          -- Store paths, not the current/theme symlink, so the previous theme's
+          -- plugins can still be removed after the symlink has moved.
+          for _, path in ipairs(homenix_theme_rtp) do
+            vim.opt.rtp:remove(path)
+          end
+          homenix_theme_rtp = vim.tbl_map(vim.fn.resolve, vim.fn.glob(homenix_theme_dir .. '/nvim/*', false, true))
+          for _, path in ipairs(homenix_theme_rtp) do
+            vim.opt.rtp:prepend(path)
+          end
+
+          local ok, theme = pcall(dofile, homenix_theme_dir .. '/neovim.lua')
+          if not ok or type(theme) ~= 'table' or type(theme.colorscheme) ~= 'string' then
+            homenix_theme_warn('no usable neovim.lua in ' .. vim.fn.resolve(homenix_theme_dir))
+            return
+          end
+
+          vim.o.background = vim.fn.filereadable(homenix_theme_dir .. '/light.mode') == 1 and 'light' or 'dark'
+
+          if theme.setup then
+            local setup_ok, err = pcall(theme.setup)
+            if not setup_ok then
+              homenix_theme_warn('setup failed: ' .. err)
+            end
+          end
+
+          local cs_ok, err = pcall(vim.cmd.colorscheme, theme.colorscheme)
+          if not cs_ok then
+            homenix_theme_warn('failed to apply ' .. theme.colorscheme .. ': ' .. err)
+            vim.cmd.colorscheme('default')
           end
         end
+
+        HomenixApplyTheme()
       '';
     };
 
     home.activation.createUserManagedFolder = lib.hm.dag.entryAfter [ "setupHomenixConfigFolder" ] ''
       mkdir -p ${cfg.userManagedFolder}
-      if [ ! -f ${cfg.userManagedFolder}/theme.lua ]; then
-        cat > ${cfg.userManagedFolder}/theme.lua << 'EOF'
-        vim.g.lualine_theme = "kanagawa-paper-ink"
-        vim.g.config_colorscheme = "kanagawa-paper-ink"
-      EOF
-      fi
     '';
+
+    # Theme-change hook: homenix-themes runs every executable file in
+    # ~/.config/homenix/hooks/themes/ after switching ~/.config/homenix/current/theme.
+    # New nvim instances read the theme at startup; this re-applies it in the
+    # running ones through their RPC sockets ($XDG_RUNTIME_DIR on Linux,
+    # $TMPDIR/nvim.$USER/* on macOS). vim.schedule keeps the colorscheme change
+    # out of the RPC request, and the timeout skips sockets of hung instances.
+    home.file.".config/homenix/hooks/themes/nvim" = {
+      executable = true;
+      text = ''
+        #!/usr/bin/env bash
+        shopt -s nullglob
+        tmp="''${TMPDIR:-/tmp}"
+        for socket in "''${XDG_RUNTIME_DIR:-/nonexistent}"/nvim.* "''${tmp%/}/nvim.$USER"/*/nvim.*; do
+          [[ -S "$socket" ]] || continue
+          ${pkgs.coreutils}/bin/timeout 2 ${config.programs.nixvim.package}/bin/nvim --server "$socket" \
+            --remote-expr "luaeval('vim.schedule(_G.HomenixApplyTheme)')" >/dev/null 2>&1 || true
+        done
+      '';
+    };
   };
 }

@@ -1,10 +1,6 @@
 return {
-	{ "neanias/everforest-nvim" },
-	{
-		"LazyVim/LazyVim",
-		opts = {
-			colorscheme = "everforest",
-			background = "soft",
-		},
-	},
+  colorscheme = "everforest",
+  setup = function()
+    require("everforest").setup({ background = "soft" })
+  end,
 }

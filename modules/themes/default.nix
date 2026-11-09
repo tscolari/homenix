@@ -1,4 +1,9 @@
-{ lib, config, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 
 with lib;
 
@@ -23,11 +28,26 @@ let
     "tokyo-night"
   ];
 
+  nvimThemes = import ./nvim-themes.nix { inherit pkgs; };
+
+  # Each theme dir is the repo's themes/<theme> plus nvim/<plugin> links to the
+  # colorscheme plugins in nvimThemes, so the theme stays self-contained at runtime.
+  mkTheme =
+    theme:
+    pkgs.runCommandLocal "homenix-theme-${theme}" { } ''
+      cp -r ${../../themes/${theme}} $out
+      chmod -R u+w $out
+      mkdir $out/nvim
+      ${concatMapStrings (plugin: ''
+        ln -s ${plugin} $out/nvim/${getName plugin}
+      '') (nvimThemes.${theme} or [ ])}
+    '';
+
   themeLinks = builtins.listToAttrs (
     map (theme: {
       name = ".config/homenix/themes/${theme}";
       value = {
-        source = ../../themes/${theme};
+        source = mkTheme theme;
       };
     }) themes
   );
