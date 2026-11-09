@@ -30,7 +30,6 @@ in
 
   imports = [
     ./sketchybar.nix
-    ./jankyborders.nix
   ];
 
   config = mkIf (config.programs.homenix.enable && cfg.enable) {

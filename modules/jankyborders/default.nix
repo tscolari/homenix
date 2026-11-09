@@ -9,20 +9,39 @@ with lib;
 
 let
 
-  cfg = config.programs.homenix.aerospace;
-
-  baseSettings = {
-    width = "5.0";
-    hidpi = "off";
-  };
+  cfg = config.programs.homenix.jankyborders;
 
 in
 {
+  options.programs.homenix.jankyborders = {
+    enable = mkOption {
+      type = types.bool;
+      default = false;
+      description = "Enable Jankiborders (macOS)";
+    };
+
+    package = mkOption {
+      type = types.package;
+      default = pkgs.jankyborders;
+      defaultText = literalExpression "pkgs.jankyborders";
+      description = "Jankyborders package to use.";
+    };
+
+    width = mkOption {
+      type = types.float;
+      default = 5.0;
+      description = "Border width";
+    };
+  };
 
   config = mkIf (config.programs.homenix.enable && cfg.enable) {
     services.jankyborders = {
       enable = true;
-      settings = baseSettings;
+      package = cfg.package;
+      settings = {
+        width = cfg.width;
+        hidpi = "off";
+      };
     };
 
     xdg.configFile."borders/bordersrc".source = mkForce (
