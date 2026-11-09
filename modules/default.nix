@@ -26,11 +26,13 @@ with lib;
     ./gnome
     ./gtk
     ./hyprland
+    ./jankyborders
     ./non-nixos-compat.nix
     ./omniwm
     ./packages
     ./programs/pi-coding-agent.nix
     ./qt
+    ./sketchybar
   ];
 
   options.programs.homenix = {
@@ -62,6 +64,8 @@ with lib;
       # MacOS-only modules default to false on Linux.
       programs.homenix.aerospace.enable = mkDefault false;
       programs.homenix.omniwm.enable = mkDefault false;
+      programs.homenix.jankyborders.enable = mkDefault false;
+      programs.homenix.sketchybar.enable = mkDefault false;
     })
 
     (mkIf pkgs.stdenv.isDarwin {

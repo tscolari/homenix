@@ -8,8 +8,7 @@
 # sketchybar keeps counting label.padding_* toward an item's width even when
 # the label isn't drawn. With the 8/4/4/8 defaults an icon-only item therefore
 # gets 8pt to the left of the glyph and 4+4+8=16pt to the right, leaving the
-# glyph sitting 4pt left of the centre of its chip — visible on the focused
-# workspace, and on every icon-only status chip.
+# glyph sitting 4pt left of the centre of its chip.
 #
 # Zeroing the label padding and splitting the same 24pt total evenly centres
 # the glyph without changing the item's width, so nothing else on the bar
@@ -26,44 +25,36 @@ ICON_ONLY=(
 # LEFT — Apple power menu (leftmost, where the native Apple menu sits)
 ########################################################################
 # In-bar replacement for waybar's custom/power (Lock / Sleep / Log Out /
-# Restart / Shut Down). Sourced before the workspaces so the glyph is leftmost.
+# Restart / Shut Down). Sourced first so the glyph is leftmost.
 source "$CONFIG_DIR/apple.sh"
 
 ########################################################################
-# LEFT — AeroSpace workspaces
+# CENTER — workspaces (optional)
 ########################################################################
-# Static items for workspaces 1..9 (matches the cmd-1..9 binds). Workspaces
-# 1..$PERSISTENT_SPACES are always drawn (waybar's persistent-workspaces);
-# above that they appear only while occupied, like waybar's
-# hyprland/workspaces. The plugin does the highlighting/hiding.
-#
-# updates=on is required, not cosmetic: with the default `when_shown` an item
-# that the plugin hides with drawing=off stops running its script, so it can
-# never decide to come back — which is why only one workspace ever showed.
-PERSISTENT_SPACES=4
-
-for sid in $(seq 1 9); do
-  if [ "$sid" -le "$PERSISTENT_SPACES" ]; then persistent=on; else persistent=off; fi
-
-  sketchybar --add item "space.$sid" left \
-    --subscribe "space.$sid" aerospace_workspace_change \
-    --set "space.$sid" \
-      icon="$sid" \
-      icon.color="$FG" \
-      "${ICON_ONLY[@]}" \
-      background.drawing=off \
-      updates=on \
-      click_script="aerospace workspace $sid" \
-      script="$PLUGIN_DIR/aerospace.sh $sid $persistent"
-done
+# AeroSpace workspace indicator, see workspaces.sh. Off under OmniWM, whose
+# built-in workspace bar owns the centre of the row instead.
+if [ "$SKETCHYBAR_WORKSPACES" = on ]; then
+  source "$CONFIG_DIR/workspaces.sh"
+fi
 
 ########################################################################
-# CENTER — focused window title
+# LEFT — focused window title
 ########################################################################
 # Shows the focused window title (waybar hyprland/window), fetched from
-# aerospace. Refreshed on app switch (front_app_switched) and on any aerospace
-# focus change (on-focus-changed in aerospace re-triggers front_app_switched).
-sketchybar --add item front_app center \
+# omniwmctl or aerospace, whichever is installed. Refreshed on app switch via the
+# native front_app_switched event. AeroSpace also re-triggers that event from its
+# on-focus-changed hook, so there the title tracks focus moves within an app too.
+#
+# On `left`, not `center`: the centre belongs to the workspace indicator, either
+# workspaces.sh or OmniWM's own bar. OmniWM's bar is centre-anchored and cannot
+# be moved off centre without it visibly sliding around — its width changes as
+# workspaces and app icons come and go, and it grows about its own centre. See
+# workspaceBar in modules/omniwm/settings.nix.
+#
+# OmniWM has no on-focus-changed hook, so a focus change between two windows of
+# the same app will not refresh this until the next app switch. Closing that gap
+# needs a long-running `omniwmctl watch focus --exec ...` agent.
+sketchybar --add item front_app left \
   --set front_app \
     icon.drawing=off \
     label.color="$MAUVE" \
@@ -102,21 +93,13 @@ sketchybar --add item battery right \
     click_script="open 'x-apple.systempreferences:com.apple.Battery-Settings.extension'" \
   --subscribe battery power_source_change system_woke
 
-# CPU — icon only, like waybar; click launches btop in ghostty (mirrors the
-# waybar launch-or-focus-tui btop). Adjust the app path if yours differs, or
-# swap in a launch-or-focus helper for focus-if-already-running behaviour.
-# (Uncomment update_freq + script to show a live percentage instead.)
+# CPU — icon only, like waybar; click launches btop in ghostty.
 sketchybar --add item cpu right \
   --set cpu \
     icon="$ICON_CPU" \
     icon.color="$TEAL" \
     "${ICON_ONLY[@]}" \
-    click_script="open -na /Applications/ghostty.app --args -e zsh -c 'btop'"
-# To show a live percentage instead, re-add the label padding that ICON_ONLY
-# zeroed, otherwise the text sits flush against the chip edge:
-# --set cpu update_freq=5 script="$PLUGIN_DIR/cpu.sh" \
-#   label.drawing=on icon.padding_left=8 icon.padding_right=4 \
-#   label.padding_left=4 label.padding_right=8
+    click_script="open -na /Applications/Ghostty.app --args -e zsh -c 'btop'"
 
 # Volume — click opens Sound settings, right-click mutes, scroll adjusts.
 sketchybar --add item volume right \
@@ -148,8 +131,7 @@ sketchybar --add item bluetooth right \
 
 # Tray — waybar's `tray`, as close as macOS allows. The items themselves are
 # created and destroyed by the plugin as apps come and go; this watcher is an
-# invisible item whose only job is to re-scan. See plugins/tray.sh for why this
-# can't use sketchybar's native aliases.
+# invisible item whose only job is to re-scan.
 #
 # updates=on is required: a drawing=off item never runs its script under the
 # default `when_shown`.
@@ -159,6 +141,3 @@ sketchybar --add item tray_watcher right \
     updates=on \
     update_freq=15 \
     script="$PLUGIN_DIR/tray.sh"
-
-# The Apple power menu is sourced at the top (LEFT section). To fall back to the
-# native Apple menu instead, remove that `source "$CONFIG_DIR/apple.sh"` line.

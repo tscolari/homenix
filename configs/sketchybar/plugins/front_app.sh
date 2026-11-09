@@ -1,16 +1,31 @@
 #!/usr/bin/env bash
 #
-# Center item: focused window title (waybar hyprland/window).
+# Focused window title (waybar hyprland/window), asked from whichever window
+# manager is installed: omniwmctl (OmniWM) or aerospace (AeroSpace). Falls back
+# to the app name from the native event's $INFO when neither answers.
 #
-# Fetched from aerospace so it tracks window focus, not just app switches. Runs
-# on front_app_switched (native app change) and whenever aerospace's
-# on-focus-changed re-triggers front_app_switched. Falls back to the app name
-# when a window has no title, and applies the same rewrites as the waybar config.
+# Runs on the native front_app_switched event, which AeroSpace also re-triggers
+# from its on-focus-changed hook. OmniWM has no such hook, so there a focus move
+# between two windows of the *same* app will not refresh the title until the
+# next app switch. OmniWM needs [general] ipcEnabled = true, which
+# modules/omniwm/settings.nix forces on.
 
-title="$(aerospace list-windows --focused --format '%{window-title}' 2>/dev/null)"
-app="$(aerospace list-windows --focused --format '%{app-name}' 2>/dev/null)"
+app=""
+title=""
 
-# Fall back to app name (or the native event's $INFO) when there's no title.
+if command -v omniwmctl >/dev/null 2>&1; then
+  # One IPC round-trip, parsed twice — the title can contain tabs and newlines,
+  # so it is not safe to pack both fields into a single delimited line.
+  focused="$(omniwmctl query windows --focused --json 2>/dev/null)"
+  app="$(printf '%s' "$focused" | jq -r '.result.payload.windows[0].app.name // ""' 2>/dev/null)"
+  title="$(printf '%s' "$focused" | jq -r '.result.payload.windows[0].title // ""' 2>/dev/null)"
+elif command -v aerospace >/dev/null 2>&1; then
+  app="$(aerospace list-windows --focused --format '%{app-name}' 2>/dev/null)"
+  title="$(aerospace list-windows --focused --format '%{window-title}' 2>/dev/null)"
+fi
+
+# Fall back to the app name, then to the native event's $INFO, when the focused
+# window has no title (or nothing is focused at all).
 [ -z "$title" ] && title="${app:-$INFO}"
 
 # waybar rewrites: "<page> — Mozilla Firefox" -> "<page>"

@@ -11,6 +11,11 @@ let
 
   cfg = config.programs.homenix.jankyborders;
 
+  baseSettings = {
+    width = toString cfg.width;
+    hidpi = "off";
+  };
+
 in
 {
   options.programs.homenix.jankyborders = {
@@ -38,10 +43,7 @@ in
     services.jankyborders = {
       enable = true;
       package = cfg.package;
-      settings = {
-        width = cfg.width;
-        hidpi = "off";
-      };
+      settings = baseSettings;
     };
 
     xdg.configFile."borders/bordersrc".source = mkForce (

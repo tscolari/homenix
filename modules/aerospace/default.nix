@@ -28,11 +28,15 @@ in
     };
   };
 
-  imports = [
-    ./sketchybar.nix
-  ];
-
   config = mkIf (config.programs.homenix.enable && cfg.enable) {
+    programs.homenix.jankyborders.enable = mkDefault true;
+    programs.homenix.sketchybar = {
+      enable = mkDefault true;
+      workspaces.enable = mkDefault true;
+      # front_app.sh and the workspace items call `aerospace`.
+      extraPackages = [ cfg.package ];
+    };
+
     home.file.".config/homenix/bin/settings" = {
       source = ../../bin/darwin-settings;
       executable = true;
@@ -71,11 +75,13 @@ in
         on-focused-monitor-changed = [ "move-mouse monitor-lazy-center" ];
         focus-follows-mouse.enabled = true;
 
-        # Notify sketchybar whenever the focused workspace changes so the space
-        # items can re-highlight. $AEROSPACE_FOCUSED_WORKSPACE is set by aerospace
-        # in the callback environment.
+        # Re-trigger sketchybar's front_app_switched on every focus change so the
+        # window title also tracks focus moves within the same app.
         on-focus-changed = [ "exec-and-forget sketchybar --trigger front_app_switched" ];
-        exec-on-workspace-change = [
+
+        # Repaint sketchybar's workspace items. $AEROSPACE_FOCUSED_WORKSPACE is
+        # set by aerospace in the callback environment.
+        exec-on-workspace-change = mkIf config.programs.homenix.sketchybar.workspaces.enable [
           "/bin/bash"
           "-c"
           "sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE"

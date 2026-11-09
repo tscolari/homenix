@@ -26,9 +26,9 @@ let
   # Hyprland fidelity.
   gapSize = 8.0;
 
-  # Height of the sketchybar bar, mirrored from
-  # configs/sketchybar-omniwm/sketchybarrc (`--bar height=26`). Kept here so the
-  # top gap below stays correct; change it in both places.
+  # Height of the sketchybar bar, mirrored from configs/sketchybar/sketchybarrc
+  # (`--bar height=26`). Kept here so the top gap below stays correct; change it
+  # in both places.
   sketchybarHeight = 26.0;
 
   # macOS does not shrink the display's visibleFrame for either bar — OmniWM
@@ -152,7 +152,7 @@ let
       scrollModifierKey = "command";
     };
 
-    # Workspace half of what waybar did; ./sketchybar.nix supplies the status
+    # Workspace half of what waybar did; modules/sketchybar supplies the status
     # half. Both share the menu bar row, so they divide it up:
     #
     #   left:   sketchybar Apple menu, then the focused-window title

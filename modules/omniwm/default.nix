@@ -56,10 +56,19 @@ in
 
   imports = [
     ./skhd.nix
-    ./sketchybar.nix
   ];
 
   config = mkIf (config.programs.homenix.enable && cfg.enable && pkgs.stdenv.isDarwin) {
+    # Status half of the bar; OmniWM's own workspace bar is the other half
+    # (workspaceBar in ./settings.nix).
+    programs.homenix.sketchybar = {
+      enable = mkDefault true;
+      # OmniWM draws its own workspace bar in the middle of the row.
+      workspaces.enable = mkDefault false;
+      # front_app.sh calls `omniwmctl query`.
+      extraPackages = [ cfg.package ];
+    };
+
     assertions = [
       {
         assertion = !config.programs.homenix.aerospace.enable;
