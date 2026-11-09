@@ -54,10 +54,6 @@ in
     };
   };
 
-  imports = [
-    ./skhd.nix
-  ];
-
   config = mkIf (config.programs.homenix.enable && cfg.enable && pkgs.stdenv.isDarwin) {
     # Status half of the bar; OmniWM's own workspace bar is the other half
     # (workspaceBar in ./settings.nix).
@@ -67,6 +63,20 @@ in
       workspaces.enable = mkDefault false;
       # front_app.sh calls `omniwmctl query`.
       extraPackages = [ cfg.package ];
+    };
+
+    # Exec bindings OmniWM cannot express itself; see modules/skhd.
+    programs.homenix.skhd = {
+      enable = mkDefault true;
+      # Every --format, `text` included, emits a header row and all columns
+      # regardless of --fields, so the PID is column 2 of the first data row.
+      # The regex guard makes this a no-op when nothing is focused.
+      extraBindings = ''
+        # SUPER+SHIFT+Q -- terminate the focused window's process
+        # (bindings.lua: scripts/kill_focus.sh). Goes through the IPC socket,
+        # which is why general.ipcEnabled is forced on in modules/omniwm/settings.nix.
+        cmd + shift - q : pid=$(${getExe cfg.package} query windows --focused --format tsv | awk 'NR>1 && $2 ~ /^[0-9]+$/ { print $2; exit }') && [ -n "$pid" ] && kill -9 "$pid"
+      '';
     };
 
     assertions = [

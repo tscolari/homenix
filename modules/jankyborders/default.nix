@@ -11,10 +11,36 @@ let
 
   cfg = config.programs.homenix.jankyborders;
 
+  # borders only draws outside the window, and only half the width it is given:
+  # the round style strokes `width` centred on the window edge, the square style
+  # fills `width / 2` outward, and both clip away whatever falls inside the
+  # window (border.c, drawing.h). Doubling it makes the option the visible
+  # border width.
+  #
+  # Square, with unfocused windows borderless, as in Hyprland
+  # (decorations.lua: inactive_border = rgba(00000000)). Themes only supply
+  # active_color.
   baseSettings = {
-    width = toString cfg.width;
+    width = toString (cfg.width * 2);
     hidpi = "off";
+    style = "square";
+    inactive_color = "0x00000000";
   };
+
+  bordersrc = pkgs.writeShellScript "bordersrc" ''
+    options=(
+    ${lib.generators.toKeyValue { indent = "  "; } baseSettings})
+
+    theme_options=()
+    theme_file="$HOME/.config/homenix/current/theme/jankyborders.sh"
+
+    if [[ -r "$theme_file" ]]; then
+      source "$theme_file"
+      options+=( "''${theme_options[@]}" )
+    fi
+
+    exec ${lib.getExe config.services.jankyborders.package} "''${options[@]}"
+  '';
 
 in
 {
@@ -35,7 +61,7 @@ in
     width = mkOption {
       type = types.float;
       default = 5.0;
-      description = "Border width";
+      description = "Visible border width outside the window, in points.";
     };
   };
 
@@ -46,22 +72,17 @@ in
       settings = baseSettings;
     };
 
-    xdg.configFile."borders/bordersrc".source = mkForce (
-      pkgs.writeShellScript "bordersrc" ''
-        options=(
-        ${lib.generators.toKeyValue { indent = "  "; } baseSettings})
+    xdg.configFile."borders/bordersrc".source = mkForce bordersrc;
 
-        theme_options=()
-        theme_file="$HOME/.config/homenix/current/theme/jankyborders.sh"
-
-        if [[ -r "$theme_file" ]]; then
-          source "$theme_file"
-          options+=( "''${theme_options[@]}" )
-        fi
-
-        exec ${lib.getExe config.services.jankyborders.package} "''${options[@]}"
-      ''
-    );
+    # The agent runs bordersrc itself, so borders starts with its options as
+    # arguments. home-manager's default starts a bare `borders`, which forks
+    # bordersrc and has it message the running instance. That loses the
+    # options in two ways:
+    #   - the agent's plist never changes when only the settings do, so
+    #     home-manager never restarts it and new settings are ignored;
+    #   - on a restart the forked bordersrc can reach the outgoing instance
+    #     before it releases its mach port, leaving the new one on defaults.
+    launchd.agents.jankyborders.config.ProgramArguments = mkForce [ "${bordersrc}" ];
 
     # Theme-change hook: homenix-themes runs every executable file in
     # ~/.config/homenix/hooks/themes/ after switching ~/.config/homenix/current/theme.

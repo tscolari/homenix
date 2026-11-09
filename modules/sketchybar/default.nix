@@ -39,14 +39,28 @@ in
       '';
     };
 
-    workspaces.enable = mkOption {
-      type = types.bool;
-      default = true;
-      description = ''
-        Show the AeroSpace workspace indicator in the middle of the bar. The
-        OmniWM module turns this off, since OmniWM draws its own workspace bar
-        there.
-      '';
+    workspaces = {
+      enable = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Show a workspace indicator in the middle of the bar. The OmniWM
+          module turns this off, since OmniWM draws its own workspace bar there.
+        '';
+      };
+
+      source = mkOption {
+        type = types.enum [
+          "aerospace"
+          "spaces"
+        ];
+        default = "aerospace";
+        description = ''
+          Where the workspace indicator reads workspaces from: `aerospace` for
+          AeroSpace's own workspaces, or `spaces` for native macOS desktops
+          (Mission Control), which the Amethyst module uses.
+        '';
+      };
     };
   };
 
@@ -88,7 +102,7 @@ in
 
     # Nix-side options for the shell config, sourced first by sketchybarrc.
     xdg.configFile."sketchybar/options.sh".text = ''
-      export SKETCHYBAR_WORKSPACES=${if cfg.workspaces.enable then "on" else "off"}
+      export SKETCHYBAR_WORKSPACES=${if cfg.workspaces.enable then cfg.workspaces.source else "off"}
     '';
   };
 }

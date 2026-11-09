@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #
-# CENTER — AeroSpace workspace indicator. Sourced by items.sh only when
-# SKETCHYBAR_WORKSPACES=on, which modules/sketchybar writes to options.sh from
-# programs.homenix.sketchybar.workspaces.enable. OmniWM turns it off because it
-# draws its own workspace bar in the same spot.
+# CENTER — AeroSpace workspace indicator. Sourced by items.sh when
+# SKETCHYBAR_WORKSPACES=aerospace, which modules/sketchybar writes to options.sh
+# from programs.homenix.sketchybar.workspaces. OmniWM turns the indicator off
+# because it draws its own workspace bar in the same spot.
 #
 # Static items for workspaces 1..9 (matches the cmd-1..9 binds). Workspaces
 # 1..$PERSISTENT_SPACES are always drawn (waybar's persistent-workspaces);

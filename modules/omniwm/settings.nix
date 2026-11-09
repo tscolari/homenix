@@ -74,7 +74,8 @@ let
       # every lib/monitors.nix preset.
       defaultLayoutType = "dwindle";
       hotkeysEnabled = true;
-      # Required before omniwmctl works at all, and ./skhd.nix shells out to it.
+      # Required before omniwmctl works at all, and the skhd kill binding in
+      # ./default.nix shells out to it.
       ipcEnabled = true;
       animationsEnabled = true;
       # Nix owns the version; an in-app updater would fight it.

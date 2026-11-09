@@ -32,7 +32,10 @@ in
     programs.homenix.jankyborders.enable = mkDefault true;
     programs.homenix.sketchybar = {
       enable = mkDefault true;
-      workspaces.enable = mkDefault true;
+      workspaces = {
+        enable = mkDefault true;
+        source = mkDefault "aerospace";
+      };
       # front_app.sh and the workspace items call `aerospace`.
       extraPackages = [ cfg.package ];
     };

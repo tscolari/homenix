@@ -31,29 +31,33 @@ source "$CONFIG_DIR/apple.sh"
 ########################################################################
 # CENTER — workspaces (optional)
 ########################################################################
-# AeroSpace workspace indicator, see workspaces.sh. Off under OmniWM, whose
-# built-in workspace bar owns the centre of the row instead.
-if [ "$SKETCHYBAR_WORKSPACES" = on ]; then
-  source "$CONFIG_DIR/workspaces.sh"
-fi
+# SKETCHYBAR_WORKSPACES (options.sh) picks the indicator: `aerospace` for
+# AeroSpace's own workspaces (workspaces-aerospace.sh), `spaces` for native
+# macOS desktops under Amethyst (workspaces-spaces.sh), or `off` under OmniWM,
+# whose built-in workspace bar owns the centre of the row instead.
+case "$SKETCHYBAR_WORKSPACES" in
+  aerospace | spaces) source "$CONFIG_DIR/workspaces-$SKETCHYBAR_WORKSPACES.sh" ;;
+esac
 
 ########################################################################
 # LEFT — focused window title
 ########################################################################
 # Shows the focused window title (waybar hyprland/window), fetched from
-# omniwmctl or aerospace, whichever is installed. Refreshed on app switch via the
-# native front_app_switched event. AeroSpace also re-triggers that event from its
-# on-focus-changed hook, so there the title tracks focus moves within an app too.
+# omniwmctl or aerospace, whichever is installed, or else from System Events.
+# Refreshed on app switch via the native front_app_switched event. AeroSpace
+# also re-triggers that event from its on-focus-changed hook, so there the title
+# tracks focus moves within an app too.
 #
-# On `left`, not `center`: the centre belongs to the workspace indicator, either
-# workspaces.sh or OmniWM's own bar. OmniWM's bar is centre-anchored and cannot
-# be moved off centre without it visibly sliding around — its width changes as
-# workspaces and app icons come and go, and it grows about its own centre. See
+# On `left`, not `center`: the centre belongs to the workspace indicator or to
+# OmniWM's own bar. OmniWM's bar is centre-anchored and cannot be moved off
+# centre without it visibly sliding around — its width changes as workspaces
+# and app icons come and go, and it grows about its own centre. See
 # workspaceBar in modules/omniwm/settings.nix.
 #
-# OmniWM has no on-focus-changed hook, so a focus change between two windows of
-# the same app will not refresh this until the next app switch. Closing that gap
-# needs a long-running `omniwmctl watch focus --exec ...` agent.
+# OmniWM and Amethyst have no on-focus-changed hook, so a focus change between
+# two windows of the same app will not refresh this until the next app switch.
+# Under OmniWM, closing that gap needs a long-running
+# `omniwmctl watch focus --exec ...` agent.
 sketchybar --add item front_app left \
   --set front_app \
     icon.drawing=off \

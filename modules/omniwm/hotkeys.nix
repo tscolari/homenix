@@ -9,7 +9,7 @@
 # Hide and browsers bind Cmd+L to the address bar.)
 #
 # OmniWM has no exec/spawn action, so every shell binding from bindings.lua lives
-# in ./skhd.nix instead. See OMNI-WM-PROJECT.md for the full migration table,
+# in modules/skhd instead. See OMNI-WM-PROJECT.md for the full migration table,
 # including the Hyprland bindings that have no OmniWM equivalent.
 { lib }:
 

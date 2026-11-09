@@ -21,6 +21,7 @@ with lib;
     ./themes
 
     ./aerospace
+    ./amethyst
     ./karabiner
     ./flatpak.nix
     ./gnome
@@ -33,6 +34,7 @@ with lib;
     ./programs/pi-coding-agent.nix
     ./qt
     ./sketchybar
+    ./skhd
   ];
 
   options.programs.homenix = {
@@ -64,8 +66,10 @@ with lib;
       # MacOS-only modules default to false on Linux.
       programs.homenix.aerospace.enable = mkDefault false;
       programs.homenix.omniwm.enable = mkDefault false;
+      programs.homenix.amethyst.enable = mkDefault false;
       programs.homenix.jankyborders.enable = mkDefault false;
       programs.homenix.sketchybar.enable = mkDefault false;
+      programs.homenix.skhd.enable = mkDefault false;
     })
 
     (mkIf pkgs.stdenv.isDarwin {
@@ -76,9 +80,11 @@ with lib;
       programs.homenix.gnome.enable = mkDefault false;
       programs.homenix.qt.enable = mkDefault false;
 
-      # OmniWM is the default macOS window manager; aerospace remains available
-      # but must be opted into (and the two assert against being enabled at once).
+      # OmniWM is the default macOS window manager; aerospace and amethyst remain
+      # available but must be opted into (and they assert against being enabled
+      # together).
       programs.homenix.aerospace.enable = mkDefault false;
+      programs.homenix.amethyst.enable = mkDefault false;
     })
   ]);
 }
