@@ -73,8 +73,13 @@ contains() { # set needle
 #
 # The heredoc lives in a function because macOS's /bin/sh cannot parse one
 # inside a command substitution.
+#
+# `timeout` because System Events blocks on any app that doesn't answer its
+# Accessibility queries. Unbounded, a new scan starts every update_freq tick
+# while the old ones still hang, and the pile of stuck osascript clients stalls
+# input for the whole session. 10s stays under the 15s update_freq.
 scan_status_menus() {
-  osascript <<'APPLESCRIPT'
+  timeout 10 osascript <<'APPLESCRIPT'
 tell application "System Events"
 	set out to {}
 	repeat with proc in every process

@@ -34,6 +34,7 @@ in
       extraPackages = with pkgs; [
         jq
         blueutil # bluetooth status/toggle — no native CLI
+        coreutils # `timeout` — bounds blueutil/osascript calls that can hang
         cfg.package # spaces plugin calls `aerospace list-*`
       ];
     };

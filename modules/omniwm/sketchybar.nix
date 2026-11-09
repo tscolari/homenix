@@ -51,6 +51,7 @@ in
           extraPackages = with pkgs; [
             jq
             blueutil # bluetooth status/toggle — no native CLI
+            coreutils # `timeout` — bounds blueutil/osascript calls that can hang
             cfg.package # front_app.sh calls `omniwmctl query`
           ];
         };
