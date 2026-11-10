@@ -81,7 +81,7 @@ in
           cilium-cli
           unstable.claude-agent-acp
           claude-code
-          unstable.codex
+          codex
           cloudflared
           concurrently
           curl
@@ -102,7 +102,7 @@ in
           unstable.go
           go-migrate
           go-mockery
-          unstable.goose-cli
+          goose-cli
           gci
           unstable.gofumpt
           unstable.golangci-lint
