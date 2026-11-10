@@ -34,6 +34,8 @@ in
         GOTMPDIR = "/tmp";
 
         NPM_CONFIG_PREFIX = "$HOME/.npm-global";
+
+        SOFTHSM2_PATH = "${pkgs.softhsm}/lib/softhsm/libsofthsm2.so";
       } // lib.optionalAttrs pkgs.stdenv.isLinux {
         ELECTRON_DISABLE_SANDBOX = "1";
         ELECTRON_OZONE_PLATFORM_HINT = "wayland";
