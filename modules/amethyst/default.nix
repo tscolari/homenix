@@ -59,7 +59,16 @@ let
     ${builtins.readFile ../../configs/amethyst/hypr-master.js}
   '';
 
-  focusDirection = ../../configs/amethyst/focus-direction.js;
+  focusScript = ../../configs/amethyst/focus.js;
+
+  # ALT+TAB / SHIFT+ALT+TAB roll the master (layout command3 / command4).
+  # Amethyst's own chord for them is all four modifiers plus N / P, which
+  # nobody types: skhd owns the user-facing keys and runs focus.js, which
+  # presses this chord and then focuses the new master. Key codes and the
+  # CGEventFlags for Command+Option+Control+Shift must match mod4 below.
+  rollFlags = 1048576 + 524288 + 262144 + 131072;
+  rollNext = "osascript -l JavaScript ${focusScript} roll 45 ${toString rollFlags}";
+  rollPrev = "osascript -l JavaScript ${focusScript} roll 35 ${toString rollFlags}";
 
   # Hyprland SUPER maps to Command throughout, with Option as the focus axis
   # and Control as the move axis, the same convention as modules/omniwm.
@@ -77,6 +86,12 @@ let
       "command"
       "shift"
     ];
+    mod4 = [
+      "command"
+      "option"
+      "control"
+      "shift"
+    ];
   };
 
   bind = mod: key: { inherit mod key; };
@@ -84,7 +99,7 @@ let
   # Ported from configs/hypr/bindings.lua.
   commands = {
     # SUPER+ALT+hjkl (focus) is not here: Amethyst can only focus by window
-    # order, so skhd runs configs/amethyst/focus-direction.js instead.
+    # order, so skhd runs configs/amethyst/focus.js instead.
 
     # SUPER+CTRL+h / l -- move window. In Hyprland's master layout this swaps
     # with the neighbour, which is what swap-ccw / swap-cw do along the window
@@ -112,6 +127,11 @@ let
     expand-main = bind "mod3" "right";
     command1 = bind "mod3" "down";
     command2 = bind "mod3" "up";
+
+    # ALT+TAB / SHIFT+ALT+TAB -- rollnext / rollprev, driven from skhd (see
+    # rollFlags).
+    command3 = bind "mod4" "n";
+    command4 = bind "mod4" "p";
 
     # SUPER+L -- toggle master / dwindle. bsp is Amethyst's dwindle. Selecting
     # the active layout again returns to the previous one, which makes this a
@@ -375,6 +395,17 @@ in
       '';
     };
 
+    cmdTab = mkOption {
+      type = types.bool;
+      default = true;
+      description = ''
+        Also roll the master on Command+Tab / Command+Shift+Tab, besides
+        Option+Tab / Option+Shift+Tab (Hyprland's ALT+TAB). skhd takes the
+        chord before macOS sees it, so the Command+Tab app switcher stops
+        working.
+      '';
+    };
+
     extraSettings = mkOption {
       type = types.attrs;
       default = { };
@@ -420,10 +451,18 @@ in
       enable = mkDefault true;
       extraBindings = ''
         # SUPER+ALT+hjkl -- directional focus (Hyprland movefocus).
-        cmd + alt - h : osascript -l JavaScript ${focusDirection} left
-        cmd + alt - j : osascript -l JavaScript ${focusDirection} down
-        cmd + alt - k : osascript -l JavaScript ${focusDirection} up
-        cmd + alt - l : osascript -l JavaScript ${focusDirection} right
+        cmd + alt - h : osascript -l JavaScript ${focusScript} left
+        cmd + alt - j : osascript -l JavaScript ${focusScript} down
+        cmd + alt - k : osascript -l JavaScript ${focusScript} up
+        cmd + alt - l : osascript -l JavaScript ${focusScript} right
+
+        # ALT+TAB / SHIFT+ALT+TAB -- rollnext / rollprev, focusing the new master.
+        alt - tab : ${rollNext}
+        shift + alt - tab : ${rollPrev}
+        ${optionalString cfg.cmdTab ''
+          cmd - tab : ${rollNext}
+          shift + cmd - tab : ${rollPrev}
+        ''}
 
         # SUPER+SHIFT+Q -- terminate the focused window's process
         # (bindings.lua: scripts/kill_focus.sh), via the frontmost app's pid.
@@ -504,7 +543,6 @@ in
 #   SUPER+CTRL+j / k                    no directional move
 #   SUPER+SHIFT+CTRL+hjkl               swap shares swap-ccw / swap-cw with move
 #   SUPER+CTRL+1..9, SUPER+CTRL+[ / ]   move silently: following is global
-#   ALT+TAB / SHIFT+ALT+TAB             rollnext / rollprev: no rotate command
 #   SUPER+ALT+G, SUPER+CTRL+TAB         groups
 #   SUPER+P                             pseudo-tiling
 #   SUPER+mouse_up / mouse_down         scroll through workspaces

@@ -19,10 +19,17 @@
 // window the full width, and fills the left column first with a contiguous
 // half of the slaves instead of alternating.
 //
-// Window order is Amethyst's: index 0 is the first master. With
-// `new-windows-to-main: true` a new window lands there and the old master
-// becomes the first slave, which is Hyprland's new_status = master plus
-// new_on_top = true.
+// Window order (index 0 is the first master) is kept here rather than taken
+// from Amethyst: Hyprland's rollnext / rollprev rotate it, and a custom layout
+// cannot reorder Amethyst's own list. Amethyst's operations carry over:
+//
+// - New windows go to the front (`new-windows-to-main: true`), which is
+//   Hyprland's new_status = master plus new_on_top = true. Closed ones drop out.
+// - Amethyst picks a swap partner by its own order: the next / previous window
+//   for swap-cw / swap-ccw, the first for swap-main. Once a roll has made the
+//   two orders differ, the partner is translated to the same position in this
+//   order (translateSwap). Until then the orders are identical and swaps pass
+//   through unchanged.
 //
 // Gaps are not applied here. Amethyst's window margins and screen padding
 // (modules/amethyst) reproduce gaps_in / gaps_out on the frames this returns.
@@ -32,9 +39,91 @@
 // Last arrangement seen by getFrameAssignments. Commands only receive the
 // layout state and the focused window id, while Hyprland's resize rules depend
 // on which column the focused window is in, so the column map is kept here.
-// Each Amethyst layout instance has its own JS context, so this is per screen.
+// Amethyst creates a layout instance, with its own JS context, per screen and
+// desktop, so all of this is per desktop.
 var lastArrangement = { columns: {}, masters: 0, width: 1, height: 1 };
 var focusedWindowID = null;
+
+// The display order, and Amethyst's order as of the last getFrameAssignments.
+// Swap events arrive before the reflow, so that is the pre-swap order.
+var order = [];
+var amethystOrder = [];
+
+// Windows still tiled keep their place; the rest go in front, in Amethyst's
+// order.
+function reconcile(ids) {
+  var kept = order.filter(function (id) {
+    return ids.indexOf(id) !== -1;
+  });
+  var added = ids.filter(function (id) {
+    return kept.indexOf(id) === -1;
+  });
+  order = added.concat(kept);
+  amethystOrder = ids;
+  return order;
+}
+
+// Amethyst swapped `id` with `otherID`, picked from Amethyst's order. Returns
+// the window in the same relative position of the display order.
+//
+// The events carry no command, so some cases look identical. A partner first
+// in Amethyst's order is read as swap-main, even when it was swap-cw from the
+// last window or swap-ccw from the second. A drag onto the next, previous or
+// first window reads as the keyboard swap. Once the orders differ, those land
+// on the translated partner.
+function translateSwap(id, otherID) {
+  var n = amethystOrder.length;
+  var from = amethystOrder.indexOf(id);
+  var to = amethystOrder.indexOf(otherID);
+  var at = order.indexOf(id);
+  if (from === -1 || to === -1 || at === -1 || order.length !== n) {
+    return otherID;
+  }
+  if (to === 0 && from !== 0) {
+    return order[0];
+  }
+  if (to === (from + 1) % n) {
+    return order[(at + 1) % n];
+  }
+  if (to === (from - 1 + n) % n) {
+    return order[(at - 1 + n) % n];
+  }
+  return otherID;
+}
+
+function swapInOrder(a, b) {
+  var i = order.indexOf(a);
+  var j = order.indexOf(b);
+  if (i === -1 || j === -1 || i === j) {
+    return;
+  }
+  order[i] = b;
+  order[j] = a;
+}
+
+// Hyprland's rollnext (dir = 1) / rollprev (dir = -1), MasterAlgorithm.cpp:
+// the first (rollnext) or last (rollprev) slave takes the old master's place.
+// The old master is the focused window if it is a master, else the first
+// master, and it moves to the end (rollnext) or front (rollprev) of the
+// slaves. With one master this rotates the whole order by one.
+function roll(state, focusedID, dir) {
+  var masters = order.slice(0, Math.min(state.mainPaneCount, order.length));
+  var slaves = order.slice(masters.length);
+  if (slaves.length === 0) {
+    return state;
+  }
+  var at = Math.max(masters.indexOf(focusedID), 0);
+  var oldMaster = masters[at];
+  if (dir > 0) {
+    masters[at] = slaves.shift();
+    slaves.push(oldMaster);
+  } else {
+    masters[at] = slaves.pop();
+    slaves.unshift(oldMaster);
+  }
+  order = masters.concat(slaves);
+  return Object.assign({}, state);
+}
 
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
@@ -152,10 +241,25 @@ function layout() {
           return resizeVertical(state, focusedID, -HYPR.resizeStep);
         },
       },
+      command3: {
+        description: "Roll next (Hyprland layoutmsg rollnext)",
+        updateState: function (state, focusedID) {
+          return roll(state, focusedID, 1);
+        },
+      },
+      command4: {
+        description: "Roll previous (Hyprland layoutmsg rollprev)",
+        updateState: function (state, focusedID) {
+          return roll(state, focusedID, -1);
+        },
+      },
     },
     updateWithChange: function (change, state) {
       if (change.change === "focus_changed") {
         focusedWindowID = change.windowID;
+      }
+      if (change.change === "window_swap") {
+        swapInOrder(change.windowID, translateSwap(change.windowID, change.otherWindowID));
       }
       if (change.change === "remove" && state.percSize[change.windowID] !== undefined) {
         var percSize = Object.assign({}, state.percSize);
@@ -174,9 +278,11 @@ function layout() {
       return Object.assign({}, state, { mainPaneRatio: clamp(mfact, 0.05, 0.95) });
     },
     getFrameAssignments: function (windows, screenFrame, state) {
-      var ids = windows.map(function (w) {
-        return w.id;
-      });
+      var ids = reconcile(
+        windows.map(function (w) {
+          return w.id;
+        }),
+      );
       windows.forEach(function (w) {
         if (w.isFocused) {
           focusedWindowID = w.id;
