@@ -15,10 +15,7 @@ let
 
   # nixpkgs' ghostty only builds on Linux; macOS uses the upstream .app bundle.
   package =
-    if pkgs.stdenv.isDarwin then
-      pkgs.unstable.ghostty-bin
-    else
-      nixGLWrapIfReq pkgs.unstable.ghostty;
+    if pkgs.stdenv.isDarwin then pkgs.unstable.ghostty-bin else nixGLWrapIfReq pkgs.unstable.ghostty;
 
 in
 
@@ -51,13 +48,13 @@ in
             # Font
             "font-family" = "JetBrainsMono Nerd Font";
             "font-style" = "Regular";
-            "font-size" = 14;
+            "font-size" = 13;
 
             # Window
             "window-decoration" = false;
             "window-theme" = "ghostty";
-            "window-padding-x" = 14;
-            "window-padding-y" = 14;
+            "window-padding-x" = 10;
+            "window-padding-y" = 10;
             "confirm-close-surface" = false;
             "quit-after-last-window-closed" = true;
             "resize-overlay" = "never";
