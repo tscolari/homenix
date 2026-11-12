@@ -23,7 +23,7 @@ let
   baseSettings = {
     width = toString (cfg.width * 2);
     hidpi = "off";
-    style = "square";
+    style = "round";
     inactive_color = "0x00000000";
   };
 
@@ -44,6 +44,8 @@ let
 
 in
 {
+  imports = [ ./window-appearance.nix ];
+
   options.programs.homenix.jankyborders = {
     enable = mkOption {
       type = types.bool;

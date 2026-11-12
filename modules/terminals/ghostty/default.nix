@@ -51,7 +51,11 @@ in
             "font-size" = 13;
 
             # Window
-            "window-decoration" = false;
+            # On macOS, window-decoration = false drops the frame and with it
+            # the rounded corners (and NSConvolutionOverride1). hidden only
+            # drops the titlebar; drag with Option+click on the frame.
+            "window-decoration" = mkIf pkgs.stdenv.isLinux false;
+            "macos-titlebar-style" = mkIf pkgs.stdenv.isDarwin "hidden";
             "window-theme" = "ghostty";
             "window-padding-x" = 10;
             "window-padding-y" = 10;
