@@ -211,6 +211,17 @@ in
         eslint.enable = true;
         golangci_lint_ls.enable = true;
 
+        # nvim-lspconfig ships `lsp/gitlab_duo.lua`, and `:lsp enable` (no args) enables
+        # every runtime config matching the buffer's filetype. Its `cmd` is `npx`, which
+        # is on PATH, so it starts and nags about signing in. Emit only
+        # `vim.lsp.config` (no `vim.lsp.enable`) with no filetypes so nothing ever
+        # matches it. `__raw`: nixvim drops a plain `[ ]` from the generated Lua.
+        gitlab_duo = {
+          enable = true;
+          activate = false;
+          config.filetypes.__raw = "{}";
+        };
+
         gopls = {
           enable = true;
           # One gopls per Neovim session (no `-remote=auto` shared daemon): memory is
