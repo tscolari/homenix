@@ -77,3 +77,26 @@ package set as `unstable`.
   };
 }
 ```
+
+## Amethyst on macOS
+
+`programs.homenix.amethyst.enable` installs the centered master layout.
+Command+Shift+1..9 and Command+Shift+[ / ] move the focused window between
+native desktops through skhd. Ghostty can keep its hidden titlebar.
+
+On a desktop using the centered layout, a moved window takes the middle
+column, including on return visits. The column keeps its existing width, with
+a 40% default on an empty desktop. Windows Amethyst floats (the `floating`
+list, small windows) keep their own frame, and bsp or fullscreen desktops keep
+Amethyst's placement. Zoom tiles like any other app.
+
+The helper pauses Amethyst's mouse handling during its synthetic drag and
+restores it afterward, so mouse and keyboard resizing stay available between
+moves. Amethyst and skhd need Accessibility access; create the desktops in
+Mission Control before using their shortcuts.
+
+Layout and movement regression tests:
+
+```sh
+node --test configs/amethyst/*.test.cjs
+```

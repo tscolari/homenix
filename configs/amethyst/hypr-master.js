@@ -34,7 +34,7 @@
 // Gaps are not applied here. Amethyst's window margins and screen padding
 // (modules/amethyst) reproduce gaps_in / gaps_out on the frames this returns.
 //
-// HYPR (mfact, resizeStep) is prepended by modules/amethyst at build time.
+// HYPR (mfact, resizeStep, windowMargin) is prepended by modules/amethyst.
 
 // Last arrangement seen by getFrameAssignments. Commands only receive the
 // layout state and the focused window id, while Hyprland's resize rules depend
@@ -42,7 +42,7 @@
 // Amethyst creates a layout instance, with its own JS context, per screen and
 // desktop, so all of this is per desktop.
 var lastArrangement = { columns: {}, masters: 0, width: 1, height: 1 };
-var focusedWindowID = null;
+var mouseResizeCandidates = [];
 
 // The display order, and Amethyst's order as of the last getFrameAssignments.
 // Swap events arrive before the reflow, so that is the pre-swap order.
@@ -255,9 +255,6 @@ function layout() {
       },
     },
     updateWithChange: function (change, state) {
-      if (change.change === "focus_changed") {
-        focusedWindowID = change.windowID;
-      }
       if (change.change === "window_swap") {
         swapInOrder(change.windowID, translateSwap(change.windowID, change.otherWindowID));
       }
@@ -268,13 +265,21 @@ function layout() {
       }
       return state;
     },
-    // Mouse resizing. Amethyst reports the dragged width as a fraction of the
-    // screen: w/W for frames marked isMain, 1 - w/W for the others. A slave is
-    // (1 - mfact) / 2 wide, so its fraction maps back to mfact = 2x - 1. Amethyst
-    // does not say which window was dragged; the focused one is assumed.
+    // Amethyst's ratio names no window. Match it to the native widths from
+    // its frame query, including margins, rather than assuming focus. When
+    // ratios coincide, prefer the window whose width differs from its tile.
     recommendMainPaneRatio: function (ratio, state) {
-      var column = lastArrangement.columns[focusedWindowID] || "master";
-      var mfact = column === "master" ? ratio : 2 * ratio - 1;
+      var candidate = null;
+      mouseResizeCandidates.forEach(function (entry) {
+        if (Math.abs(entry.ratio - ratio) <= 1 / lastArrangement.width &&
+            (!candidate || entry.difference > candidate.difference)) {
+          candidate = entry;
+        }
+      });
+      if (!candidate) {
+        return state;
+      }
+      var mfact = candidate.column === "master" ? ratio : 2 * ratio - 1;
       return Object.assign({}, state, { mainPaneRatio: clamp(mfact, 0.05, 0.95) });
     },
     getFrameAssignments: function (windows, screenFrame, state) {
@@ -283,11 +288,6 @@ function layout() {
           return w.id;
         }),
       );
-      windows.forEach(function (w) {
-        if (w.isFocused) {
-          focusedWindowID = w.id;
-        }
-      });
 
       var masters = Math.min(state.mainPaneCount, ids.length);
       var masterIDs = ids.slice(0, masters);
@@ -318,6 +318,15 @@ function layout() {
       });
       right.forEach(function (id) {
         columns[id] = "right";
+      });
+      mouseResizeCandidates = windows.map(function (w) {
+        var column = columns[w.id];
+        var widthRatio = (w.frame.width + HYPR.windowMargin) / screenFrame.width;
+        return {
+          column: column,
+          ratio: clamp(column === "master" ? widthRatio : 1 - widthRatio, 0, 1),
+          difference: Math.abs(w.frame.width + HYPR.windowMargin - frames[w.id].width),
+        };
       });
       lastArrangement = {
         columns: columns,

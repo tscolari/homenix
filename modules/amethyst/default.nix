@@ -8,9 +8,9 @@
 # Amethyst's native layouts (3column-middle is close but differs, see
 # configs/amethyst/hypr-master.js), so it ships as a custom JavaScript layout.
 #
-# Workspaces are native macOS desktops (Spaces). Amethyst cannot switch between
-# them itself, so "Switch to Desktop N" is bound through the system symbolic
-# hotkeys below, and Amethyst only throws windows between them.
+# Workspaces are native macOS desktops (Spaces). "Switch to Desktop N" is bound
+# through the system symbolic hotkeys below. skhd moves windows with a guarded
+# native drag, including Ghostty windows with hidden titlebars.
 {
   lib,
   pkgs,
@@ -54,12 +54,25 @@ let
   layoutKey = "hypr-master";
 
   layoutFile = pkgs.writeText "${layoutKey}.js" ''
-    var HYPR = ${builtins.toJSON { inherit mfact resizeStep; }};
+    var HYPR = ${builtins.toJSON {
+      inherit mfact resizeStep;
+      windowMargin = if finalSettings.window-margins then finalSettings.window-margin-size else 0;
+    }};
 
     ${builtins.readFile ../../configs/amethyst/hypr-master.js}
   '';
 
   focusScript = ../../configs/amethyst/focus.js;
+  # move-space.js sends Amethyst's reevaluate-windows and swap-ccw chords, so
+  # they come from the final bindings, extraSettings included.
+  moveSpaceScript = pkgs.writeText "move-space.js" ''
+    var AMETHYST_KEYS = ${builtins.toJSON {
+      reevaluate = chord "reevaluate-windows";
+      swapPrevious = chord "swap-ccw";
+    }};
+
+    ${builtins.readFile ../../configs/amethyst/move-space.js}
+  '';
 
   # ALT+TAB / SHIFT+ALT+TAB roll the master (layout command3 / command4).
   # Amethyst's own chord for them is all four modifiers plus N / P, which
@@ -147,16 +160,9 @@ let
     # Amethyst only toggles the focused one.
     toggle-float = bind "mod1" "space";
 
-    # SUPER+SHIFT+[ / ] -- move window to previous / next workspace.
-    throw-space-left = bind "mod3" "[";
-    throw-space-right = bind "mod3" "]";
-  }
-  # SUPER+SHIFT+1..9 -- move window to workspace N and follow it
-  # (follow-space-thrown-windows). Hyprland's tenth workspace is left out, as in
-  # modules/omniwm and modules/aerospace.
-  // listToAttrs (
-    map (n: nameValuePair "throw-space-${toString n}" (bind "mod3" (toString n))) (range 1 9)
-  );
+    # move-space.js refreshes tracking after its native drag reaches the Space.
+    reevaluate-windows = bind "mod4" "r";
+  };
 
   # Every command Amethyst registers (HotKeyManager.swift, v0.25.0). Once mod1 /
   # mod2 are customised, Amethyst re-applies its own default bindings to any
@@ -263,10 +269,9 @@ let
 
     # Hyprland's float rules (window_rules.lua), for the macOS apps that have
     # an equivalent. Small dialogs float on their own via float-small-windows,
-    # which covers the popup / dialogue rules.
+    # which covers the popup / dialogue rules. Zoom tiles like any other app.
     floating-is-blacklist = true;
     floating = [
-      "us.zoom.xos" # Zoom
       "com.apple.calculator" # Calculator
       "io.mpv" # mpv
       "com.apple.systempreferences" # settings tag
@@ -284,6 +289,36 @@ let
   // mods
   // disabledCommands
   // commands;
+
+  finalSettings = recursiveUpdate settings cfg.extraSettings;
+
+  # Virtual key codes and CGEventFlags for the chords move-space.js presses.
+  keyCodes = {
+    a = 0; s = 1; d = 2; f = 3; h = 4; g = 5; z = 6; x = 7; c = 8; v = 9;
+    b = 11; q = 12; w = 13; e = 14; r = 15; y = 16; t = 17; o = 31; u = 32;
+    i = 34; p = 35; l = 37; j = 38; k = 40; n = 45; m = 46;
+    "1" = 18; "2" = 19; "3" = 20; "4" = 21; "5" = 23; "6" = 22; "7" = 26;
+    "8" = 28; "9" = 25; "0" = 29; enter = 36; space = 49;
+  };
+  modifierFlags = {
+    command = 1048576;
+    option = 524288;
+    control = 262144;
+    shift = 131072;
+  };
+  chord =
+    name:
+    let
+      binding = finalSettings.${name};
+    in
+    if !(isAttrs binding) then
+      throw "programs.homenix.amethyst: move-space.js needs Amethyst's ${name} command bound"
+    else
+      {
+        keyCode =
+          keyCodes.${binding.key} or (throw "programs.homenix.amethyst: no key code for ${name} key ${binding.key}");
+        flags = foldl' (acc: modifier: acc + modifierFlags.${modifier}) 0 finalSettings.${binding.mod};
+      };
 
   # Native macOS shortcuts (com.apple.symbolichotkeys): "Switch to Desktop N"
   # (ids 118..), "Move left / right a space" (79 / 81), Mission Control (32)
@@ -456,6 +491,14 @@ in
         cmd + alt - k : osascript -l JavaScript ${focusScript} up
         cmd + alt - l : osascript -l JavaScript ${focusScript} right
 
+        # SUPER+SHIFT+1..9 / [ / ] -- move and follow, including hidden Ghostty
+        # windows. Native throws also feed their drag into Amethyst's resizing.
+        ${concatMapStrings (n: ''
+          cmd + shift - ${toString n} : osascript -l JavaScript ${moveSpaceScript} ${toString n}
+        '') (range 1 9)}
+        cmd + shift - 0x21 : osascript -l JavaScript ${moveSpaceScript} left
+        cmd + shift - 0x1E : osascript -l JavaScript ${moveSpaceScript} right
+
         # ALT+TAB / SHIFT+ALT+TAB -- rollnext / rollprev, focusing the new master.
         alt - tab : ${rollNext}
         shift + alt - tab : ${rollPrev}
@@ -495,7 +538,7 @@ in
 
     # Amethyst only reads its config and layouts at launch.
     xdg.configFile."amethyst/amethyst.yml" = {
-      source = yaml.generate "amethyst.yml" (recursiveUpdate settings cfg.extraSettings);
+      source = yaml.generate "amethyst.yml" finalSettings;
       onChange = restartAmethyst;
     };
 
