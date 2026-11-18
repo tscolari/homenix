@@ -73,6 +73,25 @@ in
           };
         }
 
+        {
+          event = "FileType";
+          pattern = [
+            "markdown"
+            "yaml"
+            "json"
+          ];
+          group = "config#basic";
+          desc = "Soft-wrap long lines in markdown, yaml and json";
+          callback = {
+            __raw = ''
+              function()
+                vim.opt_local.wrap = true
+                vim.opt_local.linebreak = true
+              end
+            '';
+          };
+        }
+
       ];
     };
   };
