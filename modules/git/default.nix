@@ -238,6 +238,10 @@ in
           tool = "mvimdiff";
         };
 
+        fetch = {
+          prune = "true";
+        };
+
         # 'git push' will push the current branch to its tracking branch
         push = {
           # the usual default is to push all branches
