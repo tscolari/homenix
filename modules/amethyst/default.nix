@@ -160,6 +160,11 @@ let
     # Amethyst only toggles the focused one.
     toggle-float = bind "mod1" "space";
 
+    # SUPER+ALT+M -- no Hyprland counterpart. Pauses focus-follows-mouse so the
+    # pointer can cross tiled windows to reach a floating one without them
+    # stealing focus and covering it. Press again to resume.
+    toggle-focus-follows-mouse = bind "mod1" "m";
+
     # move-space.js refreshes tracking after its native drag reaches the Space.
     reevaluate-windows = bind "mod4" "r";
   };
