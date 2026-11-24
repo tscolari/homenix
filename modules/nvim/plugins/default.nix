@@ -131,27 +131,10 @@ in
         # customPlugins.join-vim
         customPlugins.lir-git-status-nvim
         customPlugins.goalt-nvim
-        pkgs.nreviewer
         # nvim-neotest-neotest-vim-test
 
         pkgs.homenix.vimExtraPlugins.guihua-lua-ray-x
         pkgs.homenix.vimExtraPlugins.vgit-nvim-tanvirtin
-      ];
-
-      extraConfigLua = ''
-        require("review-browser").setup()
-      '';
-    };
-
-    # The other half of nreviewer: places review-branch.md in the agents' global
-    # command directories, so `/review-branch` exists without ever running
-    # `:ReviewBranchInstall`. Same derivation as the plugin above.
-    programs.nreviewer = {
-      enable = true;
-      package = pkgs.nreviewer;
-      agents = [
-        "claude"
-        "opencode"
       ];
     };
   };

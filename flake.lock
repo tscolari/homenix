@@ -340,26 +340,6 @@
         "type": "github"
       }
     },
-    "nreviewer": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1786455341,
-        "narHash": "sha256-aEiNhUmAnsAPc/sWpVKRyisRE0BC68H6bf2Yw1TMHIU=",
-        "owner": "tscolari",
-        "repo": "nreviewer",
-        "rev": "15997145b0331be132a705f791de80031c846971",
-        "type": "github"
-      },
-      "original": {
-        "owner": "tscolari",
-        "repo": "nreviewer",
-        "type": "github"
-      }
-    },
     "oh-my-pi": {
       "inputs": {
         "bun2nix": "bun2nix",
@@ -437,7 +417,6 @@
         "nixneovimplugins": "nixneovimplugins",
         "nixpkgs": "nixpkgs",
         "nixvim": "nixvim",
-        "nreviewer": "nreviewer",
         "oh-my-pi": "oh-my-pi",
         "pam_shim": "pam_shim",
         "worktool": "worktool"
