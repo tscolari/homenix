@@ -80,11 +80,10 @@ with lib;
       programs.homenix.gnome.enable = mkDefault false;
       programs.homenix.qt.enable = mkDefault false;
 
-      # OmniWM is the default macOS window manager; aerospace and amethyst remain
-      # available but must be opted into (and they assert against being enabled
-      # together).
+      # Amethyst is the macOS window manager. AeroSpace and OmniWM are
+      # unmaintained and must be opted into (they assert against Amethyst).
+      programs.homenix.amethyst.enable = mkDefault config.programs.homenix.enableAllByDefault;
       programs.homenix.aerospace.enable = mkDefault false;
-      programs.homenix.amethyst.enable = mkDefault false;
     })
   ]);
 }

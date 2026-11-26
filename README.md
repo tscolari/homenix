@@ -1,102 +1,112 @@
-# My nix home-manager modules
+# homenix
 
-This is an attempt to decouple my original nix configuration, splitting home-manager into individual modules.
-As most organization have restrictions on which Linux distribution are allowed, I hope with this
-allow most of my packages and configurations to work free at any other distro by using home-manager when necessary,
-and still be fully compatible with my original NixOS configuration/machine.
+Home-manager modules for my desktop and shell setup. They started as a split of my NixOS configuration, and they now run in three places:
 
-* NixOS machines:
-  * Set all things nix, and includes these home-manager modules for the user(s).
-* Non-NixOS machines:
-  * Have only home-manager configured and include these modules to install/setup configurations.
+* NixOS, where the system config imports these modules for each user.
+* Other Linux distributions, through standalone home-manager. Most companies restrict which distro I can use, and this keeps my setup working on whatever I get.
+* macOS, through standalone home-manager as well.
 
-# Usage Example
+Each module sits under `programs.homenix.<name>`. With `enableAllByDefault` (the default), enabling homenix turns on the modules that fit the platform. Linux-only modules like Hyprland and GNOME stay off on macOS, and the macOS ones stay off on Linux.
 
-The Zed module installs `pkgs.unstable.zed-editor`; its settings and keymap
-track that release, so the consumer's `pkgs` must expose a nixpkgs-unstable
-package set as `unstable`.
+## Usage
 
 ```nix
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
-    home-manager.url = "github:nix-community/home-manager";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    home-manager.url = "github:nix-community/home-manager/release-26.05";
     homenix = {
       url = "github:tscolari/homenix/26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { nixpkgs, homenix, home-manager, ... }: {
+  outputs = { nixpkgs, nixpkgs-unstable, homenix, home-manager, ... }: {
     homeConfigurations."user" = home-manager.lib.homeManagerConfiguration {
-
       pkgs = import nixpkgs {
         system = "x86_64-linux";
-        overlays = [ homenix.overlays.default ]; # Required for the nvim and themes modules
+        overlays = [
+          homenix.overlays.default
+          (final: prev: {
+            unstable = import nixpkgs-unstable {
+              system = final.stdenv.hostPlatform.system;
+              config.allowUnfree = true;
+            };
+          })
+        ];
       };
-
 
       modules = [
         homenix.homeModules.default
-
         {
-            programs.homenix = {
-              enable = true;
-              isNixOS = false; # If using on non-nixos (defaults to true)
+          programs.homenix = {
+            enable = true;
+            isNixOS = false; # defaults to true, ignored on macOS
 
-              enableAllByDefault = true; # (true by default)
+            # git = {
+            #   name = "Your commit name";
+            #   email = "git@example.com";
+            #   githubUser = "example";
+            # };
 
-              # git = {
-              #   enable = true;
-              #   name = "Your commit name";
-              #   email = "git@example.com";
-              #   githubUser = "example";
-              # };
-
-              # firefox_profiles = {
-              #   enable = true;
-              #   package = pkgs.unstable.firefox;
-              # };
-
-              # packages = {
-              #   enable = true;
-              #   skipFirefox = true;
-              # };
-
-              # tmux.enable = true;
-              # zsh.enable = true;
-
-              # hyprland.enable = true;
-              # nvim.enable = true;
-              # zed.enable = true;
-            };
+            # Turn everything off and opt in module by module instead:
+            # enableAllByDefault = false;
+            # zsh.enable = true;
+            # nvim.enable = true;
+          };
         }
-
       ];
     };
   };
 }
 ```
 
-## Amethyst on macOS
+Both overlays are required. `homenix.overlays.default` provides the nvim plugin set, the hyprexpo plugin and `work`. Several modules (Zed, Ghostty, Chromium) track nixpkgs-unstable releases and read them from `pkgs.unstable`.
 
-`programs.homenix.amethyst.enable` installs the centered master layout.
-Command+Shift+1..9 and Command+Shift+[ / ] move the focused window between
-native desktops through skhd. Ghostty can keep its hidden titlebar.
+## Linux
 
-On a desktop using the centered layout, a moved window takes the middle
-column, including on return visits. The column keeps its existing width, with
-a 40% default on an empty desktop. Windows Amethyst floats (the `floating`
-list, small windows) keep their own frame, and bsp or fullscreen desktops keep
-Amethyst's placement. Zoom tiles like any other app.
+Hyprland runs as a UWSM session, and its helpers (waybar, hypridle, hyprsunset and the rest) run as systemd user services.
 
-The helper pauses Amethyst's mouse handling during its synthetic drag and
-restores it afterward, so mouse and keyboard resizing stay available between
-moves. Amethyst and skhd need Accessibility access; create the desktops in
-Mission Control before using their shortcuts.
+### Quick start
 
-Layout and movement regression tests:
+* Super+Enter opens a terminal.
+* Super+Shift+B opens the browser.
+* Super+Shift+F opens the file manager.
+* Super+Shift+E opens a settings menu with most of the day-to-day system configuration: themes, wallpapers, animations, monitor profiles, power profiles, hyprsunset, the master/dwindle toggle, game mode, GTK and Qt settings, and a keybind search for everything else.
+
+On non-NixOS machines, set `isNixOS = false`. This enables `pam_shim` for hyprlock and adds the system XDG, GSettings and GI paths that GTK apps expect. GPU apps get wrapped through home-manager's nixGL support when it is configured:
+
+```nix
+targets.genericLinux.nixGL.packages = nixgl.packages;
+```
+
+Monitor layouts are defined as presets and switched at runtime. `homenix.lib.hyprlandMonitors` has the ones I use, and they double as examples:
+
+```nix
+programs.homenix.hyprland.presetMonitors = with homenix.lib.hyprlandMonitors; [
+  laptop-home
+  {
+    name = "Desk";
+    config = ''hl.monitor({ output = "DP-1", mode = "2560x1440@144", position = "0x0", scale = 1 })'';
+  }
+];
+```
+
+## macOS
+
+Amethyst is the window manager (`programs.homenix.amethyst`) and is on by default. The setup tries to mimic the Hyprland one as closely as macOS allows, from the centered master layout to the keybindings and the bar. It brings sketchybar, JankyBorders and skhd along with it. Command+Shift+1..9 and Command+Shift+[ / ] move the focused window between native desktops through skhd. A window moved to a centered desktop takes the middle column and keeps that column's width (40% on an empty desktop). Floating windows and bsp or fullscreen desktops keep Amethyst's own placement. Amethyst and skhd need Accessibility access, and the desktops have to exist in Mission Control before the shortcuts work.
+
+The layout and movement logic has tests:
 
 ```sh
 node --test configs/amethyst/*.test.cjs
 ```
+
+## Themes
+
+The themes module installs 14 themes into `~/.config/homenix/themes` and starts on kanagawa. `homenix-themes set <name>` switches between them, and a picker (rofi on Linux, `choose` on macOS) wraps it.
+
+A theme covers Hyprland, hyprlock, waybar, rofi, swayosd, swaync, sketchybar, JankyBorders, Ghostty, Kitty, btop, Neovim, Zed, pi, oh-my-pi and the wallpaper.
+
+Most of these reload on their own. Neovim, Zed, JankyBorders, pi and oh-my-pi each install a hook under `~/.config/homenix/hooks/themes` that applies the theme in place, and on Linux the picker also reloads Hyprland, waybar and swaync. The terminals and btop pick it up the next time they load their config.
